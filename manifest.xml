@@ -14,7 +14,7 @@
   <Description DefaultValue="A template to get started."/>
   <IconUrl DefaultValue="https://127.0.0.1:10041/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://127.0.0.1:10041/assets/icon-128.png"/>
-  <SupportUrl DefaultValue="https://gitlab.com/HashidaTKS/flex-confirm-mail-outlook-web"/>
+  <SupportUrl DefaultValue="https://github.com/FlexConfirmMail/Outlook-Office-Addin"/>
   <Requirements>
     <Sets DefaultMinVersion="1.1">
       <Set Name="Mailbox" />
