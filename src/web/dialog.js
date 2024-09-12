@@ -58,9 +58,9 @@ function onMessageFromParent(arg) {
 
   console.log(data);
 
-  let trustedRecipients = new Set();
-  let untrustedRecipients = new Set();
-  let matchedAttachments = new Set();
+  const trustedRecipients = new Set();
+  const untrustedRecipients = new Set();
+  //const matchedAttachments = new Set();
 
   let recipients = [];
   if (data.target.to) {

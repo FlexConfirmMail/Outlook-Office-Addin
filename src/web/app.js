@@ -1,4 +1,4 @@
-let data = {
+const data = {
   target: {
     to: null,
     cc: null,
@@ -19,7 +19,7 @@ function toArray(str) {
   }
   const resultList = [];
   str = str.trim();
-  for (var item of str.split("\n")) {
+  for (let item of str.split("\n")) {
     item = item.trim();
     if (item.length <= 0) {
       continue;
