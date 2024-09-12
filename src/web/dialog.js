@@ -1,5 +1,6 @@
 let totalCheckboxCount = 0;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = function (reason) {};
 
 Office.onReady(function () {
@@ -13,14 +14,17 @@ function sendStatusToParent(status) {
   Office.context.ui.messageParent(jsonMessage);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onOk() {
   sendStatusToParent("ok");
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onCancel() {
   sendStatusToParent("cancel");
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function checkboxChanged() {
   const checkedCount = $(".check-target:checked").length;
   const isAllBoxChecked = checkedCount === totalCheckboxCount;
