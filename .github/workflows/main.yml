@@ -1,0 +1,20 @@
+name: CI/CD
+
+on: [push]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: install dependencies
+      run: npm install
+    - name: lint
+      run: npm run lint
+    - name: unit test
+      run: npm run test

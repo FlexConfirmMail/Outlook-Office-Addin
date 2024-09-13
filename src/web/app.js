@@ -1,4 +1,4 @@
-let data = {
+const data = {
   target: {
     to: null,
     cc: null,
@@ -11,6 +11,7 @@ let data = {
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = function (reason) {};
 
 function toArray(str) {
@@ -19,7 +20,7 @@ function toArray(str) {
   }
   const resultList = [];
   str = str.trim();
-  for (var item of str.split("\n")) {
+  for (let item of str.split("\n")) {
     item = item.trim();
     if (item.length <= 0) {
       continue;
@@ -97,6 +98,7 @@ function getAllData(callback) {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onMessageSend(event) {
   getAllData(function () {
     console.debug(data);
@@ -122,6 +124,7 @@ function onMessageSend(event) {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onNewMessageComposeCreated(event) {
   Office.context.mailbox.item.subject.setAsync("新規メールの件名", function (asyncResult) {
     if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
