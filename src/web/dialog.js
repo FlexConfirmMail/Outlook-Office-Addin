@@ -105,19 +105,10 @@ function onCancel() {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function checkboxChanged(target_element) {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
-  let checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
+  const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
-  const is_currently_checked = $(target_element).hasClass('checked');
-  
-  if (is_currently_checked)
-  {
-    checkedTargetLength -= 1;
-  }
-  else
-  {
-    checkedTargetLength += 1;
-  }
-  const hasUnchecked = checkTargetLength !== checkedTargetLength;
+  const adjustmentValue = $(target_element).hasClass('checked') ? -1 : 1;
+  const hasUnchecked = checkTargetLength !== (checkedTargetLength + adjustmentValue);
   $("#ok-button").prop("disabled", hasUnchecked);
 }
 
