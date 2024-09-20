@@ -103,8 +103,8 @@ function onMessageSend(event) {
   getAllData(function () {
     Office.context.ui.displayDialogAsync(
       window.location.origin + "/dialog.html",
-      { 
-        asyncContext: event, 
+      {
+        asyncContext: event,
         height: 60,
         width: 60,
       },

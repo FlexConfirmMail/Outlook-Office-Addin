@@ -1,6 +1,6 @@
 function parse(recipient) {
   const address = /<([^@]+@[^>]+)>\s*$/.test(recipient) ? RegExp.$1 : recipient;
-  const domain = address.split('@')[1].toLowerCase();
+  const domain = address.split("@")[1].toLowerCase();
   return {
     recipient,
     address,
@@ -12,31 +12,34 @@ class RecipientClassifier {
   constructor({ internalDomains } = {}) {
     const uniquePatterns = new Set(
       (internalDomains || [])
-        .filter(pattern => !pattern.startsWith('#')) // reject commented out items
+        .filter((pattern) => !pattern.startsWith("#")) // reject commented out items
         .map(
-          pattern => pattern.toLowerCase()
-            .replace(/^(-?)@/, '$1') // delete needless "@" from domain only patterns: "@example.com" => "example.com"
-            .replace(/^(-?)(?![^@]+@)/, '$1*@') // normalize to full address patterns: "foo@example.com" => "foo@example.com", "example.com" => "*@example.com"
+          (pattern) =>
+            pattern
+              .toLowerCase()
+              .replace(/^(-?)@/, "$1") // delete needless "@" from domain only patterns: "@example.com" => "example.com"
+              .replace(/^(-?)(?![^@]+@)/, "$1*@") // normalize to full address patterns: "foo@example.com" => "foo@example.com", "example.com" => "*@example.com"
         )
     );
     const negativeItems = new Set(
-      [...uniquePatterns]
-        .filter(pattern => pattern.startsWith('-'))
-        .map(pattern => pattern.replace(/^-/, ''))
+      [...uniquePatterns].filter((pattern) => pattern.startsWith("-")).map((pattern) => pattern.replace(/^-/, ""))
     );
     for (const negativeItem of negativeItems) {
       uniquePatterns.delete(negativeItem);
       uniquePatterns.delete(`-${negativeItem}`);
     }
-    this.$internalPatternsMatcher = new RegExp(`^(${[...uniquePatterns].map(pattern => this.$toRegExpSource(pattern)).join('|')})$`, 'i');
+    this.$internalPatternsMatcher = new RegExp(
+      `^(${[...uniquePatterns].map((pattern) => this.$toRegExpSource(pattern)).join("|")})$`,
+      "i"
+    );
     this.classify = this.classify.bind(this);
   }
 
   $toRegExpSource(source) {
     // https://stackoverflow.com/questions/6300183/sanitize-string-of-regex-characters-before-regexp-build
-    const sanitized = source.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&');
+    const sanitized = source.replace(/[#-.]|[[-^]|[?|{}]/g, "\\$&");
 
-    const wildcardAccepted = sanitized.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
+    const wildcardAccepted = sanitized.replace(/\\\*/g, ".*").replace(/\\\?/g, ".");
 
     return wildcardAccepted;
   }
@@ -50,10 +53,8 @@ class RecipientClassifier {
         ...parse(recipient),
       };
       const address = classifiedRecipient.address;
-      if (this.$internalPatternsMatcher.test(address))
-        internals.add(classifiedRecipient);
-      else
-        externals.add(classifiedRecipient);
+      if (this.$internalPatternsMatcher.test(address)) internals.add(classifiedRecipient);
+      else externals.add(classifiedRecipient);
     }
 
     return {
@@ -62,7 +63,6 @@ class RecipientClassifier {
     };
   }
 }
-
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = function (reason) {};
@@ -83,12 +83,13 @@ function sendStatusToParent(status) {
   Office.context.ui.messageParent(jsonMessage);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onCheckAllTrusted() {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
-  const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not('.checked').length;
-  $("#trusted-domains fluent-checkbox.check-target").prop('checked', true);
-  const hasUnchecked = checkTargetLength !== (checkedTargetLength + toBeCheckedNumber);
+  const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not(".checked").length;
+  $("#trusted-domains fluent-checkbox.check-target").prop("checked", true);
+  const hasUnchecked = checkTargetLength !== checkedTargetLength + toBeCheckedNumber;
   $("#ok-button").prop("disabled", hasUnchecked);
 }
 
@@ -107,15 +108,13 @@ function checkboxChanged(target_element) {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
-  const adjustmentValue = $(target_element).hasClass('checked') ? -1 : 1;
-  const hasUnchecked = checkTargetLength !== (checkedTargetLength + adjustmentValue);
+  const adjustmentValue = $(target_element).hasClass("checked") ? -1 : 1;
+  const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
   $("#ok-button").prop("disabled", hasUnchecked);
 }
 
-function appendCheckboxes(target, groupedRecipients)
-{
-  for (const key in groupedRecipients)
-  {
+function appendCheckboxes(target, groupedRecipients) {
+  for (const key in groupedRecipients) {
     const recipients = groupedRecipients[key];
     const idForGroup = generateTempId();
     const idForGroupTitle = generateTempId();
@@ -126,8 +125,8 @@ function appendCheckboxes(target, groupedRecipients)
       </div>`);
     //In order to escape special chars, adding values with the text function.
     $(`#${idForGroupTitle}`).text(key);
-    const targetElement = $(`#${idForGroup}`)
-    for(const recipient of recipients){
+    const targetElement = $(`#${idForGroup}`);
+    for (const recipient of recipients) {
       appendCheckbox(targetElement, generateTempId(), recipient.address);
     }
   }
@@ -146,18 +145,18 @@ function classifyRecipients({ to, cc, bcc, trustedDomains }) {
   const classifiedTo = classifier.classify(to);
   const classifiedCc = classifier.classify(cc);
   const classifiedBcc = classifier.classify(bcc);
-  console.log('classified results: ', { classifiedTo, classifiedCc, classifiedBcc });
+  console.log("classified results: ", { classifiedTo, classifiedCc, classifiedBcc });
 
   return {
     internals: new Set([
-      ...classifiedTo.internals.map(recipient => ({ ...recipient, type: 'To' })),
-      ...classifiedCc.internals.map(recipient => ({ ...recipient, type: 'Cc' })),
-      ...classifiedBcc.internals.map(recipient => ({ ...recipient, type: 'Bcc' })),
+      ...classifiedTo.internals.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.internals.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.internals.map((recipient) => ({ ...recipient, type: "Bcc" })),
     ]),
     externals: new Set([
-      ...classifiedTo.externals.map(recipient => ({ ...recipient, type: 'To' })),
-      ...classifiedCc.externals.map(recipient => ({ ...recipient, type: 'Cc' })),
-      ...classifiedBcc.externals.map(recipient => ({ ...recipient, type: 'Bcc' })),
+      ...classifiedTo.externals.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.externals.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.externals.map((recipient) => ({ ...recipient, type: "Bcc" })),
     ]),
   };
 }
@@ -180,22 +179,16 @@ function onMessageFromParent(arg) {
   // }
 
   console.log(data);
-  const to = data.target.to ? 
-    data.target.to.map((_) => _.emailAddress): 
-    [];
-  let cc = data.target.cc ?
-    data.target.cc.map((_) => _.emailAddress):
-    [];
-  let bcc = data.target.cc ?
-    data.target.bcc.map((_) => _.emailAddress):
-    [];
+  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
+  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
+  const bcc = data.target.cc ? data.target.bcc.map((_) => _.emailAddress) : [];
   const trustedDomains = data.config.trustedDomains;
 
-  const classifiedRecipients = classifyRecipients({to, cc, bcc, trustedDomains});
+  const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains });
   console.log(classifiedRecipients);
 
-  const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, item => item.domain);
+  const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, (item) => item.domain);
   appendCheckboxes($("#trusted-domains"), groupedByTypeInternals);
-  const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, item => item.domain);
+  const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
   appendCheckboxes($("#untrusted-domains"), groupedByTypeExternals);
 }
