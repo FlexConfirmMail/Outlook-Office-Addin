@@ -15,7 +15,9 @@
 <body>
     <div id="myCardContainer" style="margin-left: 20px; margin-right: 20px;">
         <fluent-card>
-            <h3>登録済みドメインのメールアドレス</h3>
+            <div class="heading-container">
+                <h3>登録済みドメインのメールアドレス</h3><fluent-button onclick="onCheckAllTrusted()">全てチェック</fluent-button>
+            </div>
             <fluent-divider></fluent-divider>
             <div id="trusted-domains">
             </div>

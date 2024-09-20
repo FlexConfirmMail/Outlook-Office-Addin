@@ -83,6 +83,15 @@ function sendStatusToParent(status) {
   Office.context.ui.messageParent(jsonMessage);
 }
 
+function onCheckAllTrusted() {
+  const checkTargetLength = $("fluent-checkbox.check-target").length;
+  const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
+  const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not('.checked').length;
+  $("#trusted-domains fluent-checkbox.check-target").prop('checked', true);
+  const hasUnchecked = checkTargetLength !== (checkedTargetLength + toBeCheckedNumber);
+  $("#ok-button").prop("disabled", hasUnchecked);
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onOk() {
   sendStatusToParent("ok");
@@ -99,6 +108,7 @@ function checkboxChanged(target_element) {
   let checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
   const is_currently_checked = $(target_element).hasClass('checked');
+  
   if (is_currently_checked)
   {
     checkedTargetLength -= 1;
