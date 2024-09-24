@@ -27,27 +27,27 @@ window.onCheckAllTrusted = () => {
   $("#trusted-domains fluent-checkbox.check-target").prop("checked", true);
   const hasUnchecked = checkTargetLength !== checkedTargetLength + toBeCheckedNumber;
   $("#ok-button").prop("disabled", hasUnchecked);
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 window.onOk = () => {
   sendStatusToParent("ok");
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 window.onCancel = () => {
   sendStatusToParent("cancel");
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-window.checkboxChanged  = (target_element) => {
+window.checkboxChanged = (target_element) => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
   const adjustmentValue = $(target_element).hasClass("checked") ? -1 : 1;
   const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
   $("#ok-button").prop("disabled", hasUnchecked);
-}
+};
 
 function appendCheckboxes(target, groupedRecipients) {
   for (const key in groupedRecipients) {
