@@ -127,7 +127,8 @@ function appendCheckboxes(target, groupedRecipients) {
     $(`#${idForGroupTitle}`).text(key);
     const targetElement = $(`#${idForGroup}`);
     for (const recipient of recipients) {
-      appendCheckbox(targetElement, generateTempId(), recipient.address);
+      const value = `${recipient.type}: ${recipient.address}`;
+      appendCheckbox(targetElement, generateTempId(), value);
     }
   }
 }
