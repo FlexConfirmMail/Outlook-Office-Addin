@@ -10,6 +10,11 @@ fluent-card {
   align-items: center;
 }
 
+.card-container {
+  margin-left: 20px; 
+  margin-right: 20px;
+}
+
 .heading-container fluent-button {
   margin-left: 10px;
 }
