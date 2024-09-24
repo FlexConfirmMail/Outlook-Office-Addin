@@ -1,68 +1,4 @@
-function parse(recipient) {
-  const address = /<([^@]+@[^>]+)>\s*$/.test(recipient) ? RegExp.$1 : recipient;
-  const domain = address.split("@")[1].toLowerCase();
-  return {
-    recipient,
-    address,
-    domain,
-  };
-}
-
-class RecipientClassifier {
-  constructor({ internalDomains } = {}) {
-    const uniquePatterns = new Set(
-      (internalDomains || [])
-        .filter((pattern) => !pattern.startsWith("#")) // reject commented out items
-        .map(
-          (pattern) =>
-            pattern
-              .toLowerCase()
-              .replace(/^(-?)@/, "$1") // delete needless "@" from domain only patterns: "@example.com" => "example.com"
-              .replace(/^(-?)(?![^@]+@)/, "$1*@") // normalize to full address patterns: "foo@example.com" => "foo@example.com", "example.com" => "*@example.com"
-        )
-    );
-    const negativeItems = new Set(
-      [...uniquePatterns].filter((pattern) => pattern.startsWith("-")).map((pattern) => pattern.replace(/^-/, ""))
-    );
-    for (const negativeItem of negativeItems) {
-      uniquePatterns.delete(negativeItem);
-      uniquePatterns.delete(`-${negativeItem}`);
-    }
-    this.$internalPatternsMatcher = new RegExp(
-      `^(${[...uniquePatterns].map((pattern) => this.$toRegExpSource(pattern)).join("|")})$`,
-      "i"
-    );
-    this.classify = this.classify.bind(this);
-  }
-
-  $toRegExpSource(source) {
-    // https://stackoverflow.com/questions/6300183/sanitize-string-of-regex-characters-before-regexp-build
-    const sanitized = source.replace(/[#-.]|[[-^]|[?|{}]/g, "\\$&");
-
-    const wildcardAccepted = sanitized.replace(/\\\*/g, ".*").replace(/\\\?/g, ".");
-
-    return wildcardAccepted;
-  }
-
-  classify(recipients) {
-    const internals = new Set();
-    const externals = new Set();
-
-    for (const recipient of recipients) {
-      const classifiedRecipient = {
-        ...parse(recipient),
-      };
-      const address = classifiedRecipient.address;
-      if (this.$internalPatternsMatcher.test(address)) internals.add(classifiedRecipient);
-      else externals.add(classifiedRecipient);
-    }
-
-    return {
-      internals: Array.from(internals),
-      externals: Array.from(externals),
-    };
-  }
-}
+import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = function (reason) {};
@@ -84,7 +20,7 @@ function sendStatusToParent(status) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onCheckAllTrusted() {
+window.onCheckAllTrusted = () => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not(".checked").length;
@@ -94,17 +30,17 @@ function onCheckAllTrusted() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onOk() {
+window.onOk = () => {
   sendStatusToParent("ok");
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onCancel() {
+window.onCancel = () => {
   sendStatusToParent("cancel");
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function checkboxChanged(target_element) {
+window.checkboxChanged  = (target_element) => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
