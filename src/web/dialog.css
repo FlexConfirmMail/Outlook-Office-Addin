@@ -1,0 +1,42 @@
+fluent-card {
+  margin-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.heading-container {
+  display: flex;
+  align-items: center;
+}
+
+.card-container {
+  margin-left: 20px; 
+  margin-right: 20px;
+}
+
+.heading-container fluent-button {
+  margin-left: 10px;
+}
+
+.check-target {
+  margin-left: 20px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+#untrusted-domains fluent-checkbox::part(label) {
+  color: red;
+}
+
+#attachment-and-others fluent-checkbox::part(label) {
+  color:red;
+}
+
+#ok-button {
+  margin-top: 20px;
+}
+
+#cancel-button {
+  margin-top: 20px;
+}

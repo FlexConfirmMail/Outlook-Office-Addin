@@ -1,4 +1,4 @@
-let totalCheckboxCount = 0;
+import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = function (reason) {};
@@ -8,39 +8,89 @@ Office.onReady(function () {
   sendStatusToParent("ready");
 });
 
+let counter = 0;
+function generateTempId() {
+  return `fcm_temp_${counter++}_${Date.now()}`;
+}
+
 function sendStatusToParent(status) {
   const messageObject = { status: status };
   const jsonMessage = JSON.stringify(messageObject);
   Office.context.ui.messageParent(jsonMessage);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onOk() {
+window.onCheckAllTrusted = () => {
+  const checkTargetLength = $("fluent-checkbox.check-target").length;
+  const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
+  const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not(".checked").length;
+  $("#trusted-domains fluent-checkbox.check-target").prop("checked", true);
+  const hasUnchecked = checkTargetLength !== checkedTargetLength + toBeCheckedNumber;
+  $("#ok-button").prop("disabled", hasUnchecked);
+};
+
+window.onOk = () => {
   sendStatusToParent("ok");
-}
+};
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onCancel() {
+window.onCancel = () => {
   sendStatusToParent("cancel");
-}
+};
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function checkboxChanged() {
-  const checkedCount = $(".check-target:checked").length;
-  const isAllBoxChecked = checkedCount === totalCheckboxCount;
-  $("#ok-button").prop("disabled", !isAllBoxChecked);
+window.checkboxChanged = (target_element) => {
+  const checkTargetLength = $("fluent-checkbox.check-target").length;
+  const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
+  // If the target is currently checked, the target is unchecked after this function and vice versa.
+  const adjustmentValue = $(target_element).hasClass("checked") ? -1 : 1;
+  const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
+  $("#ok-button").prop("disabled", hasUnchecked);
+};
+
+function appendCheckboxes(target, groupedRecipients) {
+  for (const [key, recipients] of Object.entries(groupedRecipients)) {
+    const idForGroup = generateTempId();
+    const idForGroupTitle = generateTempId();
+    target.append(`
+      <div>
+        <h4 id="${idForGroupTitle}"></h4>
+        <fluent-stack id=${idForGroup} orientation="vertical" vertical-align="start"></fluent-stack>
+      </div>`);
+    //In order to escape special chars, adding values with the text function.
+    $(`#${idForGroupTitle}`).text(key);
+    const targetElement = $(`#${idForGroup}`);
+    for (const recipient of recipients) {
+      const value = `${recipient.type}: ${recipient.address}`;
+      appendCheckbox(targetElement, generateTempId(), value);
+    }
+  }
 }
 
 function appendCheckbox(target, id, value) {
-  target.append(`
-    <div class="form-check">
-        <input class="form-check-input check-target" type="checkbox" id="${id}" onchange="checkboxChanged()">
-        <label class="form-check-label" for="${id}">
-        </label>
-    </div>`);
+  target.append(`<fluent-checkbox id="${id}" class="check-target" onchange="checkboxChanged(this)"></fluent-checkbox>`);
   //In order to escape special chars, adding values with the text function.
-  $('label[for="' + id + '"]').text(value);
-  totalCheckboxCount += 1;
+  $(`#${id}`).text(value);
+}
+
+function classifyRecipients({ to, cc, bcc, trustedDomains }) {
+  const classifier = new RecipientClassifier({
+    internalDomains: trustedDomains || [],
+  });
+  const classifiedTo = classifier.classify(to);
+  const classifiedCc = classifier.classify(cc);
+  const classifiedBcc = classifier.classify(bcc);
+  console.log("classified results: ", { classifiedTo, classifiedCc, classifiedBcc });
+
+  return {
+    internals: new Set([
+      ...classifiedTo.internals.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.internals.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.internals.map((recipient) => ({ ...recipient, type: "Bcc" })),
+    ]),
+    externals: new Set([
+      ...classifiedTo.externals.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.externals.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.externals.map((recipient) => ({ ...recipient, type: "Bcc" })),
+    ]),
+  };
 }
 
 function onMessageFromParent(arg) {
@@ -61,59 +111,16 @@ function onMessageFromParent(arg) {
   // }
 
   console.log(data);
+  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
+  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
+  const bcc = data.target.cc ? data.target.bcc.map((_) => _.emailAddress) : [];
+  const trustedDomains = data.config.trustedDomains;
 
-  const trustedRecipients = new Set();
-  const untrustedRecipients = new Set();
-  //const matchedAttachments = new Set();
+  const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains });
+  console.log(classifiedRecipients);
 
-  let recipients = [];
-  if (data.target.to) {
-    recipients = recipients.concat(data.target.to.map((_) => _.emailAddress));
-  }
-  if (data.target.cc) {
-    recipients = recipients.concat(data.target.cc.map((_) => _.emailAddress));
-  }
-  if (data.target.bcc) {
-    recipients = recipients.concat(data.target.bcc.map((_) => _.emailAddress));
-  }
-
-  console.log(recipients);
-
-  if (data.config.trustedDomains) {
-    for (const recipient of recipients) {
-      let matched = false;
-      for (const trustedDomain of data.config.trustedDomains) {
-        matched = recipient.indexOf(trustedDomain) >= 0;
-        if (matched) {
-          break;
-        }
-      }
-      if (matched) {
-        trustedRecipients.add(recipient);
-      } else {
-        untrustedRecipients.add(recipient);
-      }
-    }
-  }
-
-  console.debug(trustedRecipients);
-  console.debug(untrustedRecipients);
-
-  if (trustedRecipients.size > 0) {
-    //Make id uniq in this page by adding a trailing number.
-    //This is a temporary implementation.
-    let num = 0;
-    for (const trustedRecipient of trustedRecipients) {
-      const id = `trusted-${num++}`;
-      appendCheckbox($("#trusted-domains"), id, trustedRecipient);
-    }
-  }
-
-  if (untrustedRecipients.size > 0) {
-    let num = 0;
-    for (const untrustedRecipient of untrustedRecipients) {
-      const id = `untrusted-${num++}`;
-      appendCheckbox($("#untrusted-domains"), id, untrustedRecipient);
-    }
-  }
+  const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, (item) => item.domain);
+  appendCheckboxes($("#trusted-domains"), groupedByTypeInternals);
+  const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
+  appendCheckboxes($("#untrusted-domains"), groupedByTypeExternals);
 }

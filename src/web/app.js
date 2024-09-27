@@ -101,10 +101,13 @@ function getAllData(callback) {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onMessageSend(event) {
   getAllData(function () {
-    console.debug(data);
     Office.context.ui.displayDialogAsync(
       window.location.origin + "/dialog.html",
-      { asyncContext: event },
+      {
+        asyncContext: event,
+        height: 60,
+        width: 60,
+      },
       function (asyncResult) {
         const dialog = asyncResult.value;
         dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
