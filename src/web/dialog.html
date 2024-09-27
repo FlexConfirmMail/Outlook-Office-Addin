@@ -28,8 +28,25 @@
             <fluent-divider></fluent-divider>
             <div id="attachment-and-others"></div>
         </fluent-card>
-        <fluent-button id="ok-button" appearance="accent" onclick="onOk()" disabled>OK</fluent-button>
-        <fluent-button id="cancel-button" onclick="onCancel()">Cancel</button>
+        <div class="button-container">
+            <fluent-button id="send-button" onclick="onSend()" disabled>送信</fluent-button>
+            <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+        </div>
     </div>
+    <fluent-dialog id="newly-added-domain-address-dialog" hidden trap-focus modal>
+        <h2>CAUTION!</h2>
+        <div class="newly-added-domain-container">
+            <fluent-card id="newly-added-domains-card" class="newly-added-domain-content">
+                返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。<br/><br/>
+                <div id="newly-added-domain-address-list">
+                </div>
+                <br/>送信してよろしいですか？
+            </fluent-card>
+            <div class="new-domain-button-container">
+                <fluent-button id="send-new-domain-button" onclick="onSendNewDomain()">送信</fluent-button>
+                <fluent-button id="cancel-new-domain-button" onclick="onCancelNewDomain()">キャンセル</fluent-button>
+            </div>
+        </div>
+    </fluent-dialog>
 </body>
 </html>

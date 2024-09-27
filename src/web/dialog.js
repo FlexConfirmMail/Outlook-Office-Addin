@@ -1,4 +1,7 @@
+import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
+
+let hasNewDomainAddress = false;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = (reason) => {};
@@ -25,11 +28,24 @@ window.onCheckAllTrusted = () => {
   const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not(".checked").length;
   $("#trusted-domains fluent-checkbox.check-target").prop("checked", true);
   const hasUnchecked = checkTargetLength !== checkedTargetLength + toBeCheckedNumber;
-  $("#ok-button").prop("disabled", hasUnchecked);
+  $("#send-button").prop("disabled", hasUnchecked);
 };
 
-window.onOk = () => {
+window.onSendNewDomain = () => {
+  $("#newly-added-domain-address-dialog").prop("hidden", true);
   sendStatusToParent("ok");
+};
+
+window.onCancelNewDomain = () => {
+  $("#newly-added-domain-address-dialog").prop("hidden", true);
+};
+
+window.onSend = () => {
+  if (hasNewDomainAddress) {
+    $("#newly-added-domain-address-dialog").prop("hidden", false);
+  } else {
+    sendStatusToParent("ok");
+  }
 };
 
 window.onCancel = () => {
@@ -42,8 +58,58 @@ window.checkboxChanged = (targetElement) => {
   // If the target is currently checked, the target is unchecked after this function and vice versa.
   const adjustmentValue = $(targetElement).hasClass("checked") ? -1 : 1;
   const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
-  $("#ok-button").prop("disabled", hasUnchecked);
+  $("#send-button").prop("disabled", hasUnchecked);
 };
+
+/**
+ * Parse domain and address of resipients.
+ * @param {*} recipients
+ * @returns Array<{
+ *  recipient,
+ *  address,
+ *  domain,
+ * }>
+ */
+function parse(recipients) {
+  if (!recipients) {
+    return [];
+  }
+  return recipients.map((_) => RecipientParser.parse(_.emailAddress));
+}
+
+function appendNewlyAddedDomain(data) {
+  if (!data.originalRecipients) {
+    return;
+  }
+  const originalToDomains = parse(data.originalRecipients.to).map((_) => _.domain);
+  const originalCcDomains = parse(data.originalRecipients.cc).map((_) => _.domain);
+  const originalBccDomains = parse(data.originalRecipients.bcc).map((_) => _.domain);
+  const originalDomains = new Set([...originalToDomains, ...originalCcDomains, ...originalBccDomains]);
+  if (originalDomains.size === 0) {
+    return;
+  }
+  const targetToRecipients = parse(data.target.to);
+  const targetCcRecipients = parse(data.target.cc);
+  const targetBccRecipients = parse(data.target.bcc);
+  const targetRecipients = new Set([...targetToRecipients, ...targetCcRecipients, ...targetBccRecipients]);
+  const newDomainAddresses = new Set();
+  for (const recipient of targetRecipients) {
+    if (originalDomains.has(recipient.domain)) {
+      continue;
+    }
+    newDomainAddresses.add(recipient.address);
+  }
+  hasNewDomainAddress = newDomainAddresses.size > 0;
+  if (!hasNewDomainAddress) {
+    return;
+  }
+  const targetElement = $("#newly-added-domain-address-list");
+  for (const address of newDomainAddresses) {
+    const id = generateTempId();
+    targetElement.append(`<div><strong id=${id}></strong></div>`);
+    $(`#${id}`).text(address);
+  }
+}
 
 function appendCheckboxes(target, groupedRecipients) {
   for (const [key, recipients] of Object.entries(groupedRecipients)) {
@@ -113,7 +179,7 @@ function onMessageFromParent(arg) {
   console.log(data);
   const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
   const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
-  const bcc = data.target.cc ? data.target.bcc.map((_) => _.emailAddress) : [];
+  const bcc = data.target.bcc ? data.target.bcc.map((_) => _.emailAddress) : [];
   const trustedDomains = data.config.trustedDomains;
 
   const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains });
@@ -123,4 +189,6 @@ function onMessageFromParent(arg) {
   appendCheckboxes($("#trusted-domains"), groupedByTypeInternals);
   const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
   appendCheckboxes($("#untrusted-domains"), groupedByTypeExternals);
+
+  appendNewlyAddedDomain(data);
 }

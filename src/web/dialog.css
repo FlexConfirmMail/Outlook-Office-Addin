@@ -33,10 +33,54 @@ fluent-card {
   color:red;
 }
 
-#ok-button {
+.button-container {
   margin-top: 20px;
+  text-align: right;
 }
 
 #cancel-button {
+  margin-left: 10px;
+}
+
+/* fluent-dialog {
+  --dialog-background-color: red;
+  background: red !important;
+  padding: 1.5em;
+  color: white !important;
+  font-size: x-large !important;
+  font-weight: bold !important;
+  text-align: center;
+} */
+
+fluent-dialog::part(control) {
+  color: white;
+  background-color: red;
+  padding: 0 1.5em 1.5em 1.5em;
+  text-align: center;
+  --dialog-width: fit-content;
+  --dialog-height: fit-content;
+}
+
+fluent-dialog::part(control) .newly-added-domain-content {
+  background-color: white;
+  background: var(--bg-color) !important;
+}
+
+fluent-dialog .newly-added-domain-content {
+  color: black;
+  padding: 2em;
+  text-align: left;
+}
+
+fluent-dialog .newly-added-domain-content strong {
+  font-size: large;
+  font-weight: bold;
+}
+
+#cancel-new-domain-button {
+  margin-left: 10px;
+}
+
+.new-domain-button-container {
   margin-top: 20px;
 }

@@ -1,3 +1,5 @@
+const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
+
 Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
 };
@@ -69,15 +71,37 @@ function getToAsync() {
   });
 }
 
+function getMailIdAsync() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.getItemIdAsync((asyncResult) => {
+        resolve(asyncResult.value);
+      });
+    } catch (error) {
+      console.log(`Error while getting ItemId: ${error}`);
+      reject(error);
+    }
+  });
+}
+
 async function getAllData() {
-  const [to, cc, bcc, trustedString, untrustedString, attachmentsString] = await Promise.all([
+  const [to, cc, bcc, trustedString, untrustedString, attachmentsString, mailId] = await Promise.all([
     getToAsync(),
     getCcAsync(),
     getBccAsync(),
     loadFile("configs/trusted.txt"),
     loadFile("configs/untrusted.txt"),
     loadFile("configs/attachment.txt"),
+    getMailIdAsync(),
   ]);
+  let originalRecipients = {};
+  if (mailId) {
+    const id = `${ORIGINAL_RECIPIENTS_KEY_PREFIX}_${mailId}`;
+    const originalRecipientsJson = sessionStorage.getItem(id);
+    if (originalRecipientsJson) {
+      originalRecipients = JSON.parse(originalRecipientsJson);
+    }
+  }
   const trustedDomains = toArray(trustedString);
   const untrustedDomains = toArray(untrustedString);
   const attachments = toArray(attachmentsString);
@@ -92,6 +116,8 @@ async function getAllData() {
       untrustedDomains,
       attachments,
     },
+    mailId,
+    originalRecipients,
   };
 }
 
@@ -128,6 +154,9 @@ async function onItemSend(event) {
         } else {
           dialog.close();
           const allowEvent = messageFromDialog.status === "ok";
+          if (allowEvent && data.mailId) {
+            sessionStorage.removeItem(data.mailId);
+          }
           asyncResult.asyncContext.completed({ allowEvent: allowEvent });
         }
       });
@@ -145,15 +174,18 @@ async function onItemSend(event) {
 window.onItemSend = onItemSend;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onNewMessageComposeCreated(event) {
-  console.debug("onNewMessageComposeCreated ", event);
-  Office.context.mailbox.item.subject.setAsync("新規メールの件名", (asyncResult) => {
-    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-      console.log("件名が設定されました");
-    } else {
-      console.error("件名の設定に失敗しました: " + asyncResult.error.message);
-    }
-  });
+async function onNewMessageComposeCreated(event) {
+  const [to, cc, bcc, mailId] = await Promise.all([getToAsync(), getCcAsync(), getBccAsync(), getMailIdAsync()]);
+  console.log(to);
+  if (mailId && (to.length > 0 || cc.length > 0 || bcc.length > 0)) {
+    const originalRecipients = {
+      to,
+      cc,
+      bcc,
+    };
+    const id = `${ORIGINAL_RECIPIENTS_KEY_PREFIX}_${mailId}`;
+    sessionStorage.setItem(id, JSON.stringify(originalRecipients));
+  }
   event.completed();
 }
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
