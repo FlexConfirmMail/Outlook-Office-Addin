@@ -50,8 +50,7 @@ window.checkboxChanged = (target_element) => {
 };
 
 function appendCheckboxes(target, groupedRecipients) {
-  for (const key in groupedRecipients) {
-    const recipients = groupedRecipients[key];
+  for (const [key, recipients] of Object.entries(groupedRecipients)) {
     const idForGroup = generateTempId();
     const idForGroupTitle = generateTempId();
     target.append(`
