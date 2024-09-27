@@ -19,7 +19,6 @@ function sendStatusToParent(status) {
   Office.context.ui.messageParent(jsonMessage);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 window.onCheckAllTrusted = () => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
@@ -29,17 +28,14 @@ window.onCheckAllTrusted = () => {
   $("#ok-button").prop("disabled", hasUnchecked);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 window.onOk = () => {
   sendStatusToParent("ok");
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 window.onCancel = () => {
   sendStatusToParent("cancel");
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 window.checkboxChanged = (target_element) => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
