@@ -1,2 +1,3 @@
-trusted.com
+trusted.example.com
 mz1.onmicrosoft.com
+*.trusted@example.com
