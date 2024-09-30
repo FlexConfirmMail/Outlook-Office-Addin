@@ -18,8 +18,8 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      app: ["./src/web/app.js", "./src/web/app.html"],
-      dialog: ["./src/web/dialog.js", "./src/web/dialog.html"],
+      app: ["./src/web/app.js"],
+      dialog: ["./src/web/dialog.js"],
     },
     output: {
       clean: true,
@@ -30,7 +30,7 @@ module.exports = async (env, options) => {
     module: {
       rules: [
         {
-          test: /\.js$/,
+          test: /\.m?js$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
@@ -38,11 +38,6 @@ module.exports = async (env, options) => {
               presets: ["@babel/preset-env"],
             },
           },
-        },
-        {
-          test: /\.html$/,
-          exclude: /node_modules/,
-          use: "html-loader",
         },
         {
           test: /\.(png|jpg|jpeg|gif|ico)$/,
@@ -57,10 +52,14 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "app.html",
         template: "./src/web/app.html",
-        chunks: ["polyfill", "app"],
+        chunks: ["polyfill"],
       }),
       new CopyWebpackPlugin({
         patterns: [
+          {
+            from: "src/web/*.css",
+            to: "[name][ext][query]",
+          },
           {
             from: "assets/*",
             to: "assets/[name][ext][query]",
@@ -81,7 +80,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "dialog.html",
         template: "./src/web/dialog.html",
-        chunks: ["polyfill", "dialog"],
+        chunks: ["polyfill"],
       }),
     ],
     devServer: {
