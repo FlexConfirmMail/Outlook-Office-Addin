@@ -52,10 +52,13 @@
             </Runtime>
           </Runtimes>
           <DesktopFormFactor>
+            <FunctionFile resid="residUILessFunctionFileUrl" />
+            <ExtensionPoint xsi:type="Events">
+              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="onMessageSend" />
+            </ExtensionPoint>
             <ExtensionPoint xsi:type="LaunchEvent">
               <LaunchEvents>
                 <LaunchEvent Type="OnNewMessageCompose" FunctionName="onNewMessageComposeCreated"/>
-                <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSend" SendMode="SoftBlock"/>
               </LaunchEvents>
               <SourceLocation resid="residUILessFunctionFileUrl"/>
             </ExtensionPoint>
