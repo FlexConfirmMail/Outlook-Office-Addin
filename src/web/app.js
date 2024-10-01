@@ -11,8 +11,9 @@ const data = {
   },
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-Office.initialize = function (reason) {};
+Office.initialize = function (reason) {
+  console.debug('Office.initialize reasion = ', reason);
+};
 
 function toArray(str) {
   if (!str) {
@@ -31,6 +32,7 @@ function toArray(str) {
 }
 
 async function loadFile(url) {
+  console.debug('loadFile ', url);
   try {
     const response = await fetch(url);
     const data = await response.text();
@@ -100,6 +102,7 @@ function getAllData(callback) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onMessageSend(event) {
+  console.debug('onMessageSend ', event);
   getAllData(function () {
     Office.context.ui.displayDialogAsync(
       window.location.origin + "/dialog.html",
@@ -130,6 +133,7 @@ window.onMessageSend = onMessageSend;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onNewMessageComposeCreated(event) {
+  console.debug('onNewMessageComposeCreated ', event);
   Office.context.mailbox.item.subject.setAsync("新規メールの件名", function (asyncResult) {
     if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
       console.log("件名が設定されました");
