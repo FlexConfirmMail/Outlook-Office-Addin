@@ -52,7 +52,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "app.html",
         template: "./src/web/app.html",
-        chunks: ["polyfill"],
+        chunks: ["polyfill", "app"],
       }),
       new CopyWebpackPlugin({
         patterns: [
@@ -80,7 +80,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "dialog.html",
         template: "./src/web/dialog.html",
-        chunks: ["polyfill"],
+        chunks: ["polyfill", "dialog"],
       }),
     ],
     devServer: {
