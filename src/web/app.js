@@ -126,6 +126,7 @@ function onMessageSend(event) {
     );
   });
 }
+window.onMessageSend = onMessageSend;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onNewMessageComposeCreated(event) {
@@ -138,3 +139,4 @@ function onNewMessageComposeCreated(event) {
   });
   event.completed();
 }
+window.onNewMessageComposeCreated = onNewMessageComposeCreated;
