@@ -18,14 +18,14 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      app: ["./src/web/app.js", "./src/web/app.html"],
-      dialog: ["./src/web/dialog.js", "./src/web/dialog.html"],
+      app: ["./src/web/app.js"],
+      dialog: ["./src/web/dialog.js"],
     },
     output: {
       clean: true,
     },
     resolve: {
-      extensions: [".html", ".js", ".mjs"],
+      extensions: [".html", ".js"],
     },
     module: {
       rules: [
@@ -36,16 +36,6 @@ module.exports = async (env, options) => {
             loader: "babel-loader",
             options: {
               presets: ["@babel/preset-env"],
-            },
-          },
-        },
-        {
-          test: /\.html$/,
-          exclude: /node_modules/,
-          use: {
-            loader: "html-loader",
-            options: {
-              esModule: true,
             },
           },
         },
@@ -66,6 +56,10 @@ module.exports = async (env, options) => {
       }),
       new CopyWebpackPlugin({
         patterns: [
+          {
+            from: "src/web/*.css",
+            to: "[name][ext][query]",
+          },
           {
             from: "assets/*",
             to: "assets/[name][ext][query]",
