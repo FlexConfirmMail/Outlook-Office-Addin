@@ -36,11 +36,11 @@ window.onCancel = () => {
   sendStatusToParent("cancel");
 };
 
-window.checkboxChanged = (target_element) => {
+window.checkboxChanged = (targetElement) => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
-  const adjustmentValue = $(target_element).hasClass("checked") ? -1 : 1;
+  const adjustmentValue = $(targetElement).hasClass("checked") ? -1 : 1;
   const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
   $("#ok-button").prop("disabled", hasUnchecked);
 };
