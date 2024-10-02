@@ -1,16 +1,3 @@
-const data = {
-  target: {
-    to: null,
-    cc: null,
-    bcc: null,
-  },
-  config: {
-    trustedDomains: null,
-    untrustedDomains: null,
-    attachments: null,
-  },
-};
-
 Office.initialize = function (reason) {
   console.debug("Office.initialize reasion = ", reason);
 };
@@ -49,12 +36,11 @@ function getBccAsync() {
       Office.context.mailbox.item.bcc.getAsync(function (asyncResult) {
         resolve(asyncResult.value);
       });
+    } catch (error) {
+      console.log(`Error while getting Bcc: ${error}`);
+      reject(error);
     }
-    catch (error) {
-      console.log(`Error while getting Bcc: ${asyncResult.error.message}`);
-      reject(asyncResult.error);
-    }
-  })
+  });
 }
 
 function getCcAsync() {
@@ -63,12 +49,11 @@ function getCcAsync() {
       Office.context.mailbox.item.cc.getAsync(function (asyncResult) {
         resolve(asyncResult.value);
       });
+    } catch (error) {
+      console.log(`Error while getting Cc: ${error}`);
+      reject(error);
     }
-    catch (error) {
-      console.log(`Error while getting Cc: ${asyncResult.error.message}`);
-      reject(asyncResult.error);
-    }
-  })
+  });
 }
 
 function getToAsync() {
@@ -77,12 +62,11 @@ function getToAsync() {
       Office.context.mailbox.item.to.getAsync(function (asyncResult) {
         resolve(asyncResult.value);
       });
+    } catch (error) {
+      console.log(`Error while getting To: ${error}`);
+      reject(error);
     }
-    catch (error) {
-      console.log(`Error while getting To: ${asyncResult.error.message}`);
-      reject(asyncResult.error);
-    }
-  })
+  });
 }
 
 async function getAllData() {
