@@ -54,7 +54,7 @@
           <DesktopFormFactor>
             <FunctionFile resid="residUILessFunctionFileUrl" />
             <ExtensionPoint xsi:type="Events">
-              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="onMessageSend" />
+              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="onItemSend" />
             </ExtensionPoint>
             <ExtensionPoint xsi:type="LaunchEvent">
               <LaunchEvents>

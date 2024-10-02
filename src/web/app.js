@@ -96,8 +96,8 @@ async function getAllData() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function onMessageSend(event) {
-  console.debug("onMessageSend ", event);
+async function onItemSend(event) {
+  console.debug("onItemSend ", event);
   const data = await getAllData();
   console.debug(data);
   // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
@@ -142,7 +142,7 @@ async function onMessageSend(event) {
     }
   );
 }
-window.onMessageSend = onMessageSend;
+window.onItemSend = onItemSend;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onNewMessageComposeCreated(event) {
