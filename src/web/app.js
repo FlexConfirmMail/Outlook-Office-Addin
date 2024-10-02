@@ -97,7 +97,7 @@ async function getAllData() {
 async function onMessageSend(event) {
   console.debug("onMessageSend ", event);
   const data = await getAllData();
-  console.log(data);
+  console.debug(data);
   // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
   const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
   Office.context.ui.displayDialogAsync(
