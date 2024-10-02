@@ -1,16 +1,3 @@
-const data = {
-  target: {
-    to: null,
-    cc: null,
-    bcc: null,
-  },
-  config: {
-    trustedDomains: null,
-    untrustedDomains: null,
-    attachments: null,
-  },
-};
-
 Office.initialize = function (reason) {
   console.debug("Office.initialize reasion = ", reason);
 };
@@ -43,94 +30,102 @@ async function loadFile(url) {
   }
 }
 
-function getBcc(callback) {
-  Office.context.mailbox.item.bcc.getAsync((asyncResult) => {
-    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-      data.target.bcc = asyncResult.value;
-      callback();
-    } else {
-      console.error(asyncResult.error);
+function getBccAsync() {
+  return new Promise(function (resolve, reject) {
+    try {
+      Office.context.mailbox.item.bcc.getAsync(function (asyncResult) {
+        resolve(asyncResult.value);
+      });
+    } catch (error) {
+      console.log(`Error while getting Bcc: ${error}`);
+      reject(error);
     }
   });
 }
 
-function getCc(callback) {
-  Office.context.mailbox.item.cc.getAsync((asyncResult) => {
-    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-      data.target.cc = asyncResult.value;
-      callback();
-    } else {
-      console.error(asyncResult.error);
+function getCcAsync() {
+  return new Promise(function (resolve, reject) {
+    try {
+      Office.context.mailbox.item.cc.getAsync(function (asyncResult) {
+        resolve(asyncResult.value);
+      });
+    } catch (error) {
+      console.log(`Error while getting Cc: ${error}`);
+      reject(error);
     }
   });
 }
 
-function getTo(callback) {
-  Office.context.mailbox.item.to.getAsync((asyncResult) => {
-    if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-      data.target.to = asyncResult.value;
-      callback();
-    } else {
-      console.error(asyncResult.error);
+function getToAsync() {
+  return new Promise(function (resolve, reject) {
+    try {
+      Office.context.mailbox.item.to.getAsync(function (asyncResult) {
+        resolve(asyncResult.value);
+      });
+    } catch (error) {
+      console.log(`Error while getting To: ${error}`);
+      reject(error);
     }
   });
 }
 
-function getAllRecipients(callback) {
-  getTo(function () {
-    getCc(function () {
-      getBcc(callback);
-    });
-  });
-}
-
-function getConfigs(callback) {
-  loadFile("configs/trusted.txt").then((items) => {
-    data.config.trustedDomains = toArray(items);
-    loadFile("configs/attachment.txt").then((items) => {
-      data.config.attachments = toArray(items);
-      callback();
-    });
-  });
-}
-
-function getAllData(callback) {
-  getAllRecipients(function () {
-    getConfigs(callback);
-  });
+async function getAllData() {
+  const [to, cc, bcc, trustedString, untrustedString, attachmentsString] = await Promise.all([
+    getToAsync(),
+    getCcAsync(),
+    getBccAsync(),
+    loadFile("configs/trusted.txt"),
+    loadFile("configs/untrusted.txt"),
+    loadFile("configs/attachment.txt"),
+  ]);
+  const trusted = toArray(trustedString);
+  const untrusted = toArray(untrustedString);
+  const attachments = toArray(attachmentsString);
+  return {
+    target: {
+      to: to,
+      cc: cc,
+      bcc: bcc,
+    },
+    config: {
+      trustedDomains: trusted,
+      untrustedDomains: untrusted,
+      attachments: attachments,
+    },
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function onMessageSend(event) {
+async function onMessageSend(event) {
   console.debug("onMessageSend ", event);
-  getAllData(function () {
-    // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
-    const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
-    Office.context.ui.displayDialogAsync(
-      window.location.origin + "/dialog.html",
-      {
-        asyncContext: event,
-        height: 60,
-        width: 60,
-        promptBeforeOpen: needToPromptBeforeOpen,
-      },
-      function (asyncResult) {
-        const dialog = asyncResult.value;
-        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
-          const messageFromDialog = JSON.parse(arg.message);
-          console.debug(messageFromDialog);
-          if (messageFromDialog.status == "ready") {
-            const messageToDialog = JSON.stringify(data);
-            dialog.messageChild(messageToDialog);
-          } else {
-            dialog.close();
-            const allowEvent = messageFromDialog.status === "ok";
-            asyncResult.asyncContext.completed({ allowEvent: allowEvent });
-          }
-        });
-      }
-    );
-  });
+  const data = await getAllData();
+  console.debug(data);
+  // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
+  const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
+  Office.context.ui.displayDialogAsync(
+    window.location.origin + "/dialog.html",
+    {
+      asyncContext: event,
+      height: 60,
+      width: 60,
+      promptBeforeOpen: needToPromptBeforeOpen,
+    },
+    function (asyncResult) {
+      const dialog = asyncResult.value;
+      dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
+        const messageFromDialog = JSON.parse(arg.message);
+        console.debug(messageFromDialog);
+        if (messageFromDialog.status == "ready") {
+          const messageToDialog = JSON.stringify(data);
+          dialog.messageChild(messageToDialog);
+        } else {
+          dialog.close();
+          const allowEvent = messageFromDialog.status === "ok";
+          asyncResult.asyncContext.completed({ allowEvent: allowEvent });
+        }
+      });
+    }
+  );
 }
 window.onMessageSend = onMessageSend;
 
