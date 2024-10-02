@@ -111,6 +111,13 @@ async function onMessageSend(event) {
       promptBeforeOpen: needToPromptBeforeOpen,
     },
     (asyncResult) => {
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+        console.log(`Failed to open dialog: ${asyncResult.error.code}`);
+        asyncResult.asyncContext.completed({
+          allowEvent: false,
+        });
+        return;
+      }
       const dialog = asyncResult.value;
       dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
         const messageFromDialog = JSON.parse(arg.message);
@@ -122,6 +129,14 @@ async function onMessageSend(event) {
           dialog.close();
           const allowEvent = messageFromDialog.status === "ok";
           asyncResult.asyncContext.completed({ allowEvent: allowEvent });
+        }
+      });
+      dialog.addEventHandler(Office.EventType.DialogEventReceived, (arg) => {
+        if (arg.error === 12006) {
+          // Closed with the up-right "X" button.
+          asyncResult.asyncContext.completed({
+            allowEvent: false,
+          });
         }
       });
     }
