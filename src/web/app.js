@@ -104,12 +104,15 @@ function getAllData(callback) {
 function onMessageSend(event) {
   console.debug("onMessageSend ", event);
   getAllData(function () {
+    // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
+    const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
     Office.context.ui.displayDialogAsync(
       window.location.origin + "/dialog.html",
       {
         asyncContext: event,
         height: 60,
         width: 60,
+        promptBeforeOpen: needToPromptBeforeOpen,
       },
       function (asyncResult) {
         const dialog = asyncResult.value;
