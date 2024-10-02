@@ -70,12 +70,14 @@ function getToAsync() {
 }
 
 async function getAllData() {
-  const to = await getToAsync();
-  const cc = await getCcAsync();
-  const bcc = await getBccAsync();
-  const trustedString = await loadFile("configs/trusted.txt");
-  const untrustedString = await loadFile("configs/untrusted.txt");
-  const attachmentsString = await loadFile("configs/attachment.txt");
+  const [to, cc, bcc, trustedString, untrustedString, attachmentsString] = await Promise.all([
+    getToAsync(),
+    getCcAsync(),
+    getBccAsync(),
+    loadFile("configs/trusted.txt"),
+    loadFile("configs/untrusted.txt"),
+    loadFile("configs/attachment.txt"),
+  ]);
   const trusted = toArray(trustedString);
   const untrusted = toArray(untrustedString);
   const attachments = toArray(attachmentsString);
