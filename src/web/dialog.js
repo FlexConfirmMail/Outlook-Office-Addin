@@ -1,9 +1,9 @@
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-Office.initialize = function (reason) {};
+Office.initialize = reason => {};
 
-Office.onReady(function () {
+Office.onReady(() => {
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
   sendStatusToParent("ready");
 });
