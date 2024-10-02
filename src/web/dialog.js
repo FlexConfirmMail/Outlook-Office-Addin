@@ -1,7 +1,7 @@
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-Office.initialize = reason => {};
+Office.initialize = (reason) => {};
 
 Office.onReady(() => {
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
@@ -36,7 +36,7 @@ window.onCancel = () => {
   sendStatusToParent("cancel");
 };
 
-window.checkboxChanged = targetElement => {
+window.checkboxChanged = (targetElement) => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
@@ -81,14 +81,14 @@ function classifyRecipients({ to, cc, bcc, trustedDomains }) {
 
   return {
     internals: new Set([
-      ...classifiedTo.internals.map(recipient => ({ ...recipient, type: "To" })),
-      ...classifiedCc.internals.map(recipient => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.internals.map(recipient => ({ ...recipient, type: "Bcc" })),
+      ...classifiedTo.internals.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.internals.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.internals.map((recipient) => ({ ...recipient, type: "Bcc" })),
     ]),
     externals: new Set([
-      ...classifiedTo.externals.map(recipient => ({ ...recipient, type: "To" })),
-      ...classifiedCc.externals.map(recipient => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.externals.map(recipient => ({ ...recipient, type: "Bcc" })),
+      ...classifiedTo.externals.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.externals.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.externals.map((recipient) => ({ ...recipient, type: "Bcc" })),
     ]),
   };
 }
@@ -111,16 +111,16 @@ function onMessageFromParent(arg) {
   // }
 
   console.log(data);
-  const to = data.target.to ? data.target.to.map(_ => _.emailAddress) : [];
-  const cc = data.target.cc ? data.target.cc.map(_ => _.emailAddress) : [];
-  const bcc = data.target.cc ? data.target.bcc.map(_ => _.emailAddress) : [];
+  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
+  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
+  const bcc = data.target.cc ? data.target.bcc.map((_) => _.emailAddress) : [];
   const trustedDomains = data.config.trustedDomains;
 
   const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains });
   console.log(classifiedRecipients);
 
-  const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, item => item.domain);
+  const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, (item) => item.domain);
   appendCheckboxes($("#trusted-domains"), groupedByTypeInternals);
-  const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, item => item.domain);
+  const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
   appendCheckboxes($("#untrusted-domains"), groupedByTypeExternals);
 }

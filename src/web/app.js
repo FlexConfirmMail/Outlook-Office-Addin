@@ -1,4 +1,4 @@
-Office.initialize = reason => {
+Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
 };
 
@@ -33,7 +33,7 @@ async function loadFile(url) {
 function getBccAsync() {
   return new Promise((resolve, reject) => {
     try {
-      Office.context.mailbox.item.bcc.getAsync(asyncResult => {
+      Office.context.mailbox.item.bcc.getAsync((asyncResult) => {
         resolve(asyncResult.value);
       });
     } catch (error) {
@@ -46,7 +46,7 @@ function getBccAsync() {
 function getCcAsync() {
   return new Promise((resolve, reject) => {
     try {
-      Office.context.mailbox.item.cc.getAsync(asyncResult => {
+      Office.context.mailbox.item.cc.getAsync((asyncResult) => {
         resolve(asyncResult.value);
       });
     } catch (error) {
@@ -59,7 +59,7 @@ function getCcAsync() {
 function getToAsync() {
   return new Promise((resolve, reject) => {
     try {
-      Office.context.mailbox.item.to.getAsync(asyncResult => {
+      Office.context.mailbox.item.to.getAsync((asyncResult) => {
         resolve(asyncResult.value);
       });
     } catch (error) {
@@ -110,9 +110,9 @@ async function onMessageSend(event) {
       width: 60,
       promptBeforeOpen: needToPromptBeforeOpen,
     },
-    asyncResult => {
+    (asyncResult) => {
       const dialog = asyncResult.value;
-      dialog.addEventHandler(Office.EventType.DialogMessageReceived, arg => {
+      dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
         const messageFromDialog = JSON.parse(arg.message);
         console.debug(messageFromDialog);
         if (messageFromDialog.status == "ready") {
@@ -132,7 +132,7 @@ window.onMessageSend = onMessageSend;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onNewMessageComposeCreated(event) {
   console.debug("onNewMessageComposeCreated ", event);
-  Office.context.mailbox.item.subject.setAsync("新規メールの件名", asyncResult => {
+  Office.context.mailbox.item.subject.setAsync("新規メールの件名", (asyncResult) => {
     if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
       console.log("件名が設定されました");
     } else {
