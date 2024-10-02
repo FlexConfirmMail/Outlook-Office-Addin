@@ -1,4 +1,4 @@
-Office.initialize = function (reason) {
+Office.initialize = reason => {
   console.debug("Office.initialize reasion = ", reason);
 };
 
