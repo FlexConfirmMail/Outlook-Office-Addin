@@ -1,9 +1,9 @@
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-Office.initialize = function (reason) {};
+Office.initialize = (reason) => {};
 
-Office.onReady(function () {
+Office.onReady(() => {
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
   sendStatusToParent("ready");
 });
@@ -36,11 +36,11 @@ window.onCancel = () => {
   sendStatusToParent("cancel");
 };
 
-window.checkboxChanged = (target_element) => {
+window.checkboxChanged = (targetElement) => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
-  const adjustmentValue = $(target_element).hasClass("checked") ? -1 : 1;
+  const adjustmentValue = $(targetElement).hasClass("checked") ? -1 : 1;
   const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
   $("#ok-button").prop("disabled", hasUnchecked);
 };

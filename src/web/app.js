@@ -1,4 +1,4 @@
-Office.initialize = function (reason) {
+Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
 };
 
@@ -31,9 +31,9 @@ async function loadFile(url) {
 }
 
 function getBccAsync() {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      Office.context.mailbox.item.bcc.getAsync(function (asyncResult) {
+      Office.context.mailbox.item.bcc.getAsync((asyncResult) => {
         resolve(asyncResult.value);
       });
     } catch (error) {
@@ -44,9 +44,9 @@ function getBccAsync() {
 }
 
 function getCcAsync() {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      Office.context.mailbox.item.cc.getAsync(function (asyncResult) {
+      Office.context.mailbox.item.cc.getAsync((asyncResult) => {
         resolve(asyncResult.value);
       });
     } catch (error) {
@@ -57,9 +57,9 @@ function getCcAsync() {
 }
 
 function getToAsync() {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     try {
-      Office.context.mailbox.item.to.getAsync(function (asyncResult) {
+      Office.context.mailbox.item.to.getAsync((asyncResult) => {
         resolve(asyncResult.value);
       });
     } catch (error) {
@@ -78,19 +78,19 @@ async function getAllData() {
     loadFile("configs/untrusted.txt"),
     loadFile("configs/attachment.txt"),
   ]);
-  const trusted = toArray(trustedString);
-  const untrusted = toArray(untrustedString);
+  const trustedDomains = toArray(trustedString);
+  const untrustedDomains = toArray(untrustedString);
   const attachments = toArray(attachmentsString);
   return {
     target: {
-      to: to,
-      cc: cc,
-      bcc: bcc,
+      to,
+      cc,
+      bcc,
     },
     config: {
-      trustedDomains: trusted,
-      untrustedDomains: untrusted,
-      attachments: attachments,
+      trustedDomains,
+      untrustedDomains,
+      attachments,
     },
   };
 }
@@ -110,7 +110,7 @@ async function onMessageSend(event) {
       width: 60,
       promptBeforeOpen: needToPromptBeforeOpen,
     },
-    function (asyncResult) {
+    (asyncResult) => {
       const dialog = asyncResult.value;
       dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
         const messageFromDialog = JSON.parse(arg.message);
@@ -132,7 +132,7 @@ window.onMessageSend = onMessageSend;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onNewMessageComposeCreated(event) {
   console.debug("onNewMessageComposeCreated ", event);
-  Office.context.mailbox.item.subject.setAsync("新規メールの件名", function (asyncResult) {
+  Office.context.mailbox.item.subject.setAsync("新規メールの件名", (asyncResult) => {
     if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
       console.log("件名が設定されました");
     } else {
