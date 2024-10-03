@@ -1,0 +1,3 @@
+[submodule "submodules/webextensions-lib-rich-confirm"]
+	path = submodules/webextensions-lib-rich-confirm
+	url = https://github.com/piroor/webextensions-lib-rich-confirm.git

@@ -20,6 +20,7 @@ module.exports = async (env, options) => {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       app: ["./src/web/app.js"],
       dialog: ["./src/web/dialog.js"],
+      RichConfirm: ["./submodules/webextensions-lib-rich-confirm/RichConfirm.js"],
     },
     output: {
       clean: true,
