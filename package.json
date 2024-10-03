@@ -24,7 +24,8 @@
     "stop": "office-addin-debugging stop manifest.xml",
     "test": "run-tiny-esm-test-runner tests/unit/test-*.mjs",
     "validate": "office-addin-manifest validate manifest.xml",
-    "watch": "webpack --mode development --watch"
+    "watch": "webpack --mode development --watch",
+    "watch:run-test-server": "webpack --mode production --watch --output-path tests/run-test-server/web"
   },
   "dependencies": {
     "@microsoft/office-js": "^1.1.90",
