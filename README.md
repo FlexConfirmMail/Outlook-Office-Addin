@@ -61,8 +61,21 @@
 * 自己署名証明書のインポート
 * パーソナルHTTPS Webサーバーのビルド
 * `dist`を`tests\run-test-server\web`にコピー
+* テスト用の設定ファイル`tests\run-test-server\configs`を`tests\run-test-server\web`にコピー
 * パーソナルHTTPS Webサーバーで`tests\run-test-server\web`をホスティング
   * https://127.0.0.1:10041でアクセスできるようになる
+
+#### `src`配下の変更を`tests\run-test-server\web`に自動で反映する
+
+`run-test-server.bat`を実行中に、`src`配下への変更を`tests\run-test-server\web`に自動で反映したい場合、
+別のコマンドプロンプトを開き、本リポジトリのルートで以下のnpmコマンドを実行する。
+
+```
+npm run watch:run-test-server
+```
+
+上記のコマンドを実行すると、10秒ごとに`src`の変更を監視し、変更があればリビルドして`tests\run-test-server\web`に出力する。
+上記コマンド実行時、証明書のインポートを求められた場合はインポートすること。
 
 ### Outlookでのテストを行う。
 
