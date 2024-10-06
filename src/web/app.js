@@ -4,31 +4,118 @@ Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
 };
 
-function toArray(str) {
-  if (!str) {
+class ConfigLoader {
+  static params = {
+    CountEnabled: "boolean",
+    CountAllowSkip: "boolean",
+    SafeBccEnabled: "boolean",
+    MainSkipIfNoExt: "boolean",
+    SafeNewDomainsEnabled: "boolean",
+    CountSeconds: "number",
+    SafeBccThreshold: "number",
+  }
+
+  static parseBool(str) {
+    const lowerStr = str.toLowerCase();
+    if (lowerStr === "yes" || lowerStr === "true" || lowerStr === "on" || lowerStr === "1") {
+        return true;
+    }
+    if (lowerStr === "no" || lowerStr === "false" || lowerStr === "off" || lowerStr === "0") {
+        return false;
+    }
     return null;
   }
-  const resultList = [];
-  str = str.trim();
-  for (let item of str.split("\n")) {
-    item = item.trim();
-    if (item.length <= 0) {
-      continue;
-    }
-    resultList.push(item);
-  }
-  return resultList;
-}
 
-async function loadFile(url) {
-  console.debug("loadFile ", url);
-  try {
-    const response = await fetch(url);
-    const data = await response.text();
-    console.debug(data);
-    return data;
-  } catch (err) {
-    console.error(err);
+  static toArray(str) {
+    if (!str) {
+      return null;
+    }
+    const resultList = [];
+    str = str.trim();
+    for (let item of str.split("\n")) {
+      item = item.trim();
+      if (item.length <= 0 || item[0] === "#") {
+        continue;
+      }
+      resultList.push(item);
+    }
+    return resultList;
+  }
+
+  static assign(config, key, valStr) {
+    if (!(key in this.params)){
+      return false;
+    }
+    const keyType = this.params[key];
+    if (keyType === "boolean") {
+      const perseResult = this.parseBool(valStr);
+      if (perseResult != null) {
+          config[key] = perseResult;
+          return true;
+      }
+    }
+    else if (keyType === "number") {
+      const perseResult = parseInt(valStr, 10);
+      if (!isNaN(perseResult)) {
+        config[key] = perseResult;
+        return true;        
+      }
+    }
+    return false;
+  }
+
+  static toDictionary(str) {
+    if (!str) {
+      return null;
+    }
+    const resultDictionary = {};
+    str = str.trim();
+    for (let item of str.split("\n")) {
+      item = item.trim();
+      if (item.length <= 0 || item[0] === "#") {
+        continue;
+      }
+      const separaterIndex = item.indexOf('=');
+      if (separaterIndex === -1) {
+        continue;
+      }      
+      const key = item.slice(0, separaterIndex).trim();
+      const value = item.slice(separaterIndex + 1).trim();
+      this.assign(resultDictionary, key, value);
+    }
+    return resultDictionary;
+  }
+
+  static async loadFile(url) {
+    console.debug("loadFile ", url);
+    try {
+      const response = await fetch(url);
+      const data = await response.text();
+      console.debug(data);
+      return data;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  }
+
+  static async load() {
+    const [trustedString, untrustedString, attachmentsString, commonString] = await Promise.all([
+      this.loadFile("configs/trusted.txt"),
+      this.loadFile("configs/untrusted.txt"),
+      this.loadFile("configs/attachment.txt"),
+      this.loadFile("configs/common.txt")]
+    );
+    const trustedDomains = this.toArray(trustedString);
+    const untrustedDomains = this.toArray(untrustedString);
+    const attachments = this.toArray(attachmentsString);
+    const common = this.toDictionary(commonString);
+    return {
+      trustedDomains,
+      untrustedDomains,
+      attachments,
+      common
+    };
   }
 }
 
@@ -85,14 +172,12 @@ function getMailIdAsync() {
 }
 
 async function getAllData() {
-  const [to, cc, bcc, trustedString, untrustedString, attachmentsString, mailId] = await Promise.all([
+  const [to, cc, bcc, mailId, config] = await Promise.all([
     getToAsync(),
     getCcAsync(),
     getBccAsync(),
-    loadFile("configs/trusted.txt"),
-    loadFile("configs/untrusted.txt"),
-    loadFile("configs/attachment.txt"),
     getMailIdAsync(),
+    ConfigLoader.load(),
   ]);
   let originalRecipients = {};
   if (mailId) {
@@ -102,20 +187,13 @@ async function getAllData() {
       originalRecipients = JSON.parse(originalRecipientsJson);
     }
   }
-  const trustedDomains = toArray(trustedString);
-  const untrustedDomains = toArray(untrustedString);
-  const attachments = toArray(attachmentsString);
   return {
     target: {
       to,
       cc,
       bcc,
     },
-    config: {
-      trustedDomains,
-      untrustedDomains,
-      attachments,
-    },
+    config,
     mailId,
     originalRecipients,
   };
