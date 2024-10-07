@@ -6,14 +6,14 @@ class AddedDomainsReconfirmation {
   initialized = false;
 
   /**
-  * Parse domain and address of resipients.
-  * @param {*} recipients
-  * @returns Array<{
-  *  recipient,
-  *  address,
-  *  domain,
-  * }>
-  */
+   * Parse domain and address of resipients.
+   * @param {*} recipients
+   * @returns Array<{
+   *  recipient,
+   *  address,
+   *  domain,
+   * }>
+   */
   parse(recipients) {
     if (!recipients) {
       return [];
@@ -22,7 +22,7 @@ class AddedDomainsReconfirmation {
   }
 
   init(data) {
-    if (this.initialized){
+    if (this.initialized) {
       return;
     }
     this.initialized = true;
@@ -67,7 +67,7 @@ class AddedDomainsReconfirmation {
   }
 
   show() {
-   $("#newly-added-domain-address-dialog").prop("hidden", false);
+    $("#newly-added-domain-address-dialog").prop("hidden", false);
   }
 }
 
