@@ -52,7 +52,7 @@ window.checkboxChanged = (targetElement) => {
   $("#send-button").prop("disabled", hasUnchecked);
 };
 
-function appendCheckboxes(target, groupedRecipients) {
+function appendRecipientCheckboxes(target, groupedRecipients) {
   for (const [key, recipients] of Object.entries(groupedRecipients)) {
     const idForGroup = generateTempId();
     const idForGroupTitle = generateTempId();
@@ -68,6 +68,12 @@ function appendCheckboxes(target, groupedRecipients) {
       const value = `${recipient.type}: ${recipient.address}`;
       appendCheckbox(targetElement, generateTempId(), value);
     }
+  }
+}
+
+function appendAttachmentCheckboxes(target, attachments) {
+  for (const attachment of attachments) {
+    appendCheckbox(target, generateTempId(), attachment.name);
   }
 }
 
@@ -135,10 +141,14 @@ function onMessageFromParent(arg) {
   console.log(classifiedRecipients);
 
   const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, (item) => item.domain);
-  appendCheckboxes($("#trusted-domains"), groupedByTypeInternals);
+  appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeInternals);
   const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
-  appendCheckboxes($("#external-domains"), groupedByTypeExternals);
+  appendRecipientCheckboxes($("#external-domains"), groupedByTypeExternals);
 
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);
+
+  const attachments = data.target.attachments || [];
+  const sensitiveAttachments = data.config.sensitiveAttachments;
+  appendAttachmentCheckboxes($("#attachment-and-others"), attachments);
 }

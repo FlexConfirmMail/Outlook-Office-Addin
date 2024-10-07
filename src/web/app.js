@@ -2,8 +2,9 @@ import { ConfigLoader } from "./config-loader.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
 const CONFIRM_ATTACHMENT_TYPES = new Set([
-  Office.MailboxEnums.AttachmentType.Cloud,
-  Office.MailboxEnums.AttachmentType.File,
+  // Office.MailboxEnums are not accessible before Office.onReady()
+  "cloud", // Office.MailboxEnums.AttachmentType.Cloud,
+  "file", // Office.MailboxEnums.AttachmentType.File,
 ]);
 
 Office.initialize = (reason) => {
@@ -67,8 +68,8 @@ function getAttachmentsAsync() {
     try {
       Office.context.mailbox.item.getAttachmentsAsync((asyncResult) => {
         const attachments = asyncResult.value;
-        const sensitives = attachments.filter((attachment) => CONFIRM_ATTACHMENT_TYPES.has(attachment.attachmentType));
-        resolve(sensitives);
+        const maybeFiles = attachments.filter((attachment) => CONFIRM_ATTACHMENT_TYPES.has(attachment.attachmentType));
+        resolve(maybeFiles);
       });
     } catch (error) {
       console.log(`Error while getting attachments: ${error}`);
