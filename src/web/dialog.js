@@ -1,75 +1,5 @@
-import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
-
-class AddedDomainsReconfirmation {
-  hasNewDomainAddress = false;
-  initialized = false;
-
-  /**
-   * Parse domain and address of resipients.
-   * @param {*} recipients
-   * @returns Array<{
-   *  recipient,
-   *  address,
-   *  domain,
-   * }>
-   */
-  parse(recipients) {
-    if (!recipients) {
-      return [];
-    }
-    return recipients.map((_) => RecipientParser.parse(_.emailAddress));
-  }
-
-  init(data) {
-    if (this.initialized) {
-      return;
-    }
-    this.initialized = true;
-    if (!data.originalRecipients) {
-      return;
-    }
-    const originalToDomains = this.parse(data.originalRecipients.to).map((_) => _.domain);
-    const originalCcDomains = this.parse(data.originalRecipients.cc).map((_) => _.domain);
-    const originalBccDomains = this.parse(data.originalRecipients.bcc).map((_) => _.domain);
-    const originalDomains = new Set([...originalToDomains, ...originalCcDomains, ...originalBccDomains]);
-    if (originalDomains.size === 0) {
-      return;
-    }
-    const targetToRecipients = this.parse(data.target.to);
-    const targetCcRecipients = this.parse(data.target.cc);
-    const targetBccRecipients = this.parse(data.target.bcc);
-    const targetRecipients = new Set([...targetToRecipients, ...targetCcRecipients, ...targetBccRecipients]);
-    const newDomainAddresses = new Set();
-    for (const recipient of targetRecipients) {
-      if (originalDomains.has(recipient.domain)) {
-        continue;
-      }
-      newDomainAddresses.add(recipient.address);
-    }
-    this.hasNewDomainAddress = newDomainAddresses.size > 0;
-    if (!this.hasNewDomainAddress) {
-      return;
-    }
-    const targetElement = $("#newly-added-domain-address-list");
-    for (const address of newDomainAddresses) {
-      const divElement = $(`<div></div>`).appendTo(targetElement);
-      const strongElement = $(`<strong></strong>`).appendTo(divElement);
-      strongElement.text(address);
-    }
-    window.onSendNewDomain = () => {
-      $("#newly-added-domain-address-dialog").prop("hidden", true);
-      sendStatusToParent("ok");
-    };
-    window.onCancelNewDomain = () => {
-      $("#newly-added-domain-address-dialog").prop("hidden", true);
-    };
-  }
-
-  show() {
-    $("#newly-added-domain-address-dialog").prop("hidden", false);
-  }
-}
+import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
 
@@ -175,16 +105,22 @@ function onMessageFromParent(arg) {
 
   // The data scheme:
   // data = {
-  //     target: {
-  //         to : null,
-  //         cc : null,
-  //         bcc : null,
-  //     },
-  //     config: {
-  //         trustedDomains : null,
-  //         untrustedDomains : null,
-  //         attachments : null,
-  //     }
+  //   target: {
+  //     to : [{emailAddress:"mail@example.com"}, ...],
+  //     cc : [...],
+  //     bcc : [...],
+  //   },
+  //   config: {
+  //     trustedDomains : ["example.com", ...],
+  //     untrustedDomains : [...],
+  //     attachments : [...],
+  //   },
+  //   mailId: "FCM_OriginalRecipients_0123",
+  //   originalRecipients: {
+  //     to : [...],
+  //     cc : [...],
+  //     bcc : [...],
+  //   },
   // }
 
   console.log(data);
@@ -202,4 +138,5 @@ function onMessageFromParent(arg) {
   appendCheckboxes($("#untrusted-domains"), groupedByTypeExternals);
 
   addedDomainsReconfirmation.init(data);
+  addedDomainsReconfirmation.initUI(sendStatusToParent);
 }
