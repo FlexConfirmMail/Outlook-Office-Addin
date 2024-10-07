@@ -52,7 +52,7 @@ export class AddedDomainsReconfirmation {
     }
   }
 
-  initUI() {
+  initUI(sendStatusToParent) {
     const targetElement = $("#newly-added-domain-address-list");
     for (const address of this.newDomainAddresses) {
       const divElement = $(`<div></div>`).appendTo(targetElement);

@@ -138,5 +138,5 @@ function onMessageFromParent(arg) {
   appendCheckboxes($("#untrusted-domains"), groupedByTypeExternals);
 
   addedDomainsReconfirmation.init(data);
-  addedDomainsReconfirmation.initUI();
+  addedDomainsReconfirmation.initUI(sendStatusToParent);
 }
