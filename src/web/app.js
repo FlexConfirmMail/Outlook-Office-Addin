@@ -175,12 +175,7 @@ window.onItemSend = onItemSend;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onNewMessageComposeCreated(event) {
-  const [to, cc, bcc, mailId] = await Promise.all([
-    getToAsync(), 
-    getCcAsync(), 
-    getBccAsync(), 
-    getMailIdAsync()
-  ]);
+  const [to, cc, bcc, mailId] = await Promise.all([getToAsync(), getCcAsync(), getBccAsync(), getMailIdAsync()]);
   if (mailId && (to.length > 0 || cc.length > 0 || bcc.length > 0)) {
     const originalRecipients = {
       to,
