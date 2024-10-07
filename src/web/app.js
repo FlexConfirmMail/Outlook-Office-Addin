@@ -1,6 +1,10 @@
 import { ConfigLoader } from "./config-loader.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
+const CONFIRM_ATTACHMENT_TYPES = new Set([
+  Office.MailboxEnums.AttachmentType.Cloud,
+  Office.MailboxEnums.AttachmentType.File,
+]);
 
 Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
@@ -58,6 +62,21 @@ function getMailIdAsync() {
   });
 }
 
+function getAttachmentsAsync() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.getAttachmentsAsync((asyncResult) => {
+        const attachments = asyncResult.value;
+        const sensitives = attachments.filter((attachment) => CONFIRM_ATTACHMENT_TYPES.has(attachment.attachmentType));
+        resolve(sensitives);
+      });
+    } catch (error) {
+      console.log(`Error while getting attachments: ${error}`);
+      reject(error);
+    }
+  });
+}
+
 async function getAllData() {
   const [to, cc, bcc, mailId, config] = await Promise.all([
     getToAsync(),
@@ -79,6 +98,7 @@ async function getAllData() {
       to,
       cc,
       bcc,
+      attachments,
     },
     config,
     mailId,

@@ -110,6 +110,7 @@ function onMessageFromParent(arg) {
   //     to : [{emailAddress:"mail@example.com"}, ...],
   //     cc : [...],
   //     bcc : [...],
+  //     attachments: [{name:"...",size:0,isInline:false}, ...],
   //   },
   //   config: {
   //     trustedDomains : ["example.com", ...],
