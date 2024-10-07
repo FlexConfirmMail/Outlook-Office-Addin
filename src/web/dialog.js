@@ -1,4 +1,3 @@
-import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 
