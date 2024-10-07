@@ -13,25 +13,24 @@ class ConfigLoader {
     SafeNewDomainsEnabled: "boolean",
     CountSeconds: "number",
     SafeBccThreshold: "number",
-  }
+  };
 
-  static assignCommonConfig(config, paramDefs ,key, valStr) {
-    if (!(key in paramDefs)){
+  static assignCommonConfig(config, paramDefs, key, valStr) {
+    if (!(key in paramDefs)) {
       return false;
     }
     const keyType = paramDefs[key];
     if (keyType === "boolean") {
       const perseResult = this.parseBool(valStr);
       if (perseResult != null) {
-          config[key] = perseResult;
-          return true;
+        config[key] = perseResult;
+        return true;
       }
-    }
-    else if (keyType === "number") {
+    } else if (keyType === "number") {
       const perseResult = parseInt(valStr, 10);
       if (!isNaN(perseResult)) {
         config[key] = perseResult;
-        return true;        
+        return true;
       }
     }
     return false;
@@ -40,10 +39,10 @@ class ConfigLoader {
   static parseBool(str) {
     const lowerStr = str.toLowerCase();
     if (lowerStr === "yes" || lowerStr === "true" || lowerStr === "on" || lowerStr === "1") {
-        return true;
+      return true;
     }
     if (lowerStr === "no" || lowerStr === "false" || lowerStr === "off" || lowerStr === "0") {
-        return false;
+      return false;
     }
     return null;
   }
@@ -75,13 +74,13 @@ class ConfigLoader {
       if (item.length <= 0 || item[0] === "#") {
         continue;
       }
-      const separaterIndex = item.indexOf('=');
+      const separaterIndex = item.indexOf("=");
       if (separaterIndex === -1) {
         continue;
-      }      
+      }
       const key = item.slice(0, separaterIndex).trim();
       const value = item.slice(separaterIndex + 1).trim();
-      this.assignCommonConfig(resultDictionary, paramDefs ,key, value);
+      this.assignCommonConfig(resultDictionary, paramDefs, key, value);
     }
     return resultDictionary;
   }
@@ -104,8 +103,8 @@ class ConfigLoader {
       this.loadFile("configs/trusted.txt"),
       this.loadFile("configs/untrusted.txt"),
       this.loadFile("configs/attachment.txt"),
-      this.loadFile("configs/common.txt")]
-    );
+      this.loadFile("configs/common.txt"),
+    ]);
     const trustedDomains = this.toArray(trustedString);
     const untrustedDomains = this.toArray(untrustedString);
     const attachments = this.toArray(attachmentsString);
@@ -114,7 +113,7 @@ class ConfigLoader {
       trustedDomains,
       untrustedDomains,
       attachments,
-      common
+      common,
     };
   }
 }
@@ -253,7 +252,11 @@ window.onItemSend = onItemSend;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onNewMessageComposeCreated(event) {
-  const [to, cc, bcc, mailId] = await Promise.all([getToAsync(), getCcAsync(), getBccAsync(), getMailIdAsync()]);
+  const [to, cc, bcc, mailId] = await Promise.all([
+    getToAsync(),
+    getCcAsync(),
+    getBccAsync(),
+    getMailIdAsync()]);
   if (mailId && (to.length > 0 || cc.length > 0 || bcc.length > 0)) {
     const originalRecipients = {
       to,
