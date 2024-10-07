@@ -1,5 +1,6 @@
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
+import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
 
@@ -71,8 +72,12 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
   }
 }
 
-function appendAttachmentCheckboxes(target, attachments) {
+function appendAttachmentCheckboxes(target, attachments, unsafeFiles) {
+  if (unsafeFiles.length <= 0) return;
+
+  const unsafeAttachmentMatcher = new RegExp(unsafeFiles.map((pattern) => wildcardToRegexp(pattern)).join("|"));
   for (const attachment of attachments) {
+    if (!unsafeAttachmentMatcher.test(attachment.name)) continue;
     appendCheckbox(target, generateTempId(), attachment.name);
   }
 }
@@ -149,6 +154,6 @@ function onMessageFromParent(arg) {
   addedDomainsReconfirmation.initUI(sendStatusToParent);
 
   const attachments = data.target.attachments || [];
-  //const unsafeFiles = data.config.unsafeFiles;
-  appendAttachmentCheckboxes($("#attachment-and-others"), attachments);
+  const unsafeFiles = data.config.unsafeFiles || [];
+  appendAttachmentCheckboxes($("#attachment-and-others"), attachments, unsafeFiles);
 }

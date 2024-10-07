@@ -6,6 +6,7 @@
 'use strict';
 
 import * as RecipientParser from './recipient-parser.mjs';
+import { wildcardToRegexp } from './wildcard-to-regexp.mjs';
 
 export class RecipientClassifier {
   constructor({ internalDomains } = {}) {
@@ -27,17 +28,8 @@ export class RecipientClassifier {
       uniquePatterns.delete(negativeItem);
       uniquePatterns.delete(`-${negativeItem}`);
     }
-    this.$internalPatternsMatcher = new RegExp(`^(${[...uniquePatterns].map(pattern => this.$toRegExpSource(pattern)).join('|')})$`, 'i');
+    this.$internalPatternsMatcher = new RegExp(`^(${[...uniquePatterns].map(pattern => wildcardToRegexp(pattern)).join('|')})$`, 'i');
     this.classify = this.classify.bind(this);
-  }
-
-  $toRegExpSource(source) {
-    // https://stackoverflow.com/questions/6300183/sanitize-string-of-regex-characters-before-regexp-build
-    const sanitized = source.replace(/[#-.]|[[-^]|[?|{}]/g, '\\$&');
-
-    const wildcardAccepted = sanitized.replace(/\\\*/g, '.*').replace(/\\\?/g, '.');
-
-    return wildcardAccepted;
   }
 
   classify(recipients) {
