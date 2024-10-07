@@ -15,7 +15,7 @@ class ConfigLoader {
     SafeBccThreshold: "number",
   };
 
-  static assignCommonConfig(config, paramDefs, key, valStr) {
+  static assign(targetConfig, paramDefs, key, valStr) {
     if (!(key in paramDefs)) {
       return false;
     }
@@ -23,13 +23,13 @@ class ConfigLoader {
     if (keyType === "boolean") {
       const perseResult = this.parseBool(valStr);
       if (perseResult != null) {
-        config[key] = perseResult;
+        targetConfig[key] = perseResult;
         return true;
       }
     } else if (keyType === "number") {
       const perseResult = parseInt(valStr, 10);
       if (!isNaN(perseResult)) {
-        config[key] = perseResult;
+        targetConfig[key] = perseResult;
         return true;
       }
     }
@@ -80,7 +80,7 @@ class ConfigLoader {
       }
       const key = item.slice(0, separaterIndex).trim();
       const value = item.slice(separaterIndex + 1).trim();
-      this.assignCommonConfig(resultDictionary, paramDefs, key, value);
+      this.assign(resultDictionary, paramDefs, key, value);
     }
     return resultDictionary;
   }
