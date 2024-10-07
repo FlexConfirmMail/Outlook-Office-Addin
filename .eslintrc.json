@@ -15,6 +15,7 @@
     "$": "readonly"
   },
   "rules": {
+    "array-bracket-newline": ["error", { "multiline": true }],
     "no-const-assign": "error",
     "prefer-const": ["warn", {
       "destructuring": "any",
