@@ -1,0 +1,5 @@
+CountEnabled = True
+SafeBccThreshold = 2
+CountSeconds = 5
+MainSkipIfNoExt = True
+SafeNewDomainsEnabled = True
