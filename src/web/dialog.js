@@ -149,6 +149,6 @@ function onMessageFromParent(arg) {
   addedDomainsReconfirmation.initUI(sendStatusToParent);
 
   const attachments = data.target.attachments || [];
-  const sensitiveAttachments = data.config.sensitiveAttachments;
+  //const sensitiveAttachments = data.config.sensitiveAttachments;
   appendAttachmentCheckboxes($("#attachment-and-others"), attachments);
 }
