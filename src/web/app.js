@@ -5,7 +5,7 @@ Office.initialize = (reason) => {
 };
 
 class ConfigLoader {
-  static params = {
+  static commonParamDefs = {
     CountEnabled: "boolean",
     CountAllowSkip: "boolean",
     SafeBccEnabled: "boolean",
@@ -13,6 +13,28 @@ class ConfigLoader {
     SafeNewDomainsEnabled: "boolean",
     CountSeconds: "number",
     SafeBccThreshold: "number",
+  }
+
+  static assignCommonConfig(config, paramDefs ,key, valStr) {
+    if (!(key in paramDefs)){
+      return false;
+    }
+    const keyType = paramDefs[key];
+    if (keyType === "boolean") {
+      const perseResult = this.parseBool(valStr);
+      if (perseResult != null) {
+          config[key] = perseResult;
+          return true;
+      }
+    }
+    else if (keyType === "number") {
+      const perseResult = parseInt(valStr, 10);
+      if (!isNaN(perseResult)) {
+        config[key] = perseResult;
+        return true;        
+      }
+    }
+    return false;
   }
 
   static parseBool(str) {
@@ -42,29 +64,7 @@ class ConfigLoader {
     return resultList;
   }
 
-  static assign(config, key, valStr) {
-    if (!(key in this.params)){
-      return false;
-    }
-    const keyType = this.params[key];
-    if (keyType === "boolean") {
-      const perseResult = this.parseBool(valStr);
-      if (perseResult != null) {
-          config[key] = perseResult;
-          return true;
-      }
-    }
-    else if (keyType === "number") {
-      const perseResult = parseInt(valStr, 10);
-      if (!isNaN(perseResult)) {
-        config[key] = perseResult;
-        return true;        
-      }
-    }
-    return false;
-  }
-
-  static toDictionary(str) {
+  static toDictionary(str, paramDefs) {
     if (!str) {
       return null;
     }
@@ -81,7 +81,7 @@ class ConfigLoader {
       }      
       const key = item.slice(0, separaterIndex).trim();
       const value = item.slice(separaterIndex + 1).trim();
-      this.assign(resultDictionary, key, value);
+      this.assignCommonConfig(resultDictionary, paramDefs ,key, value);
     }
     return resultDictionary;
   }
@@ -109,7 +109,7 @@ class ConfigLoader {
     const trustedDomains = this.toArray(trustedString);
     const untrustedDomains = this.toArray(untrustedString);
     const attachments = this.toArray(attachmentsString);
-    const common = this.toDictionary(commonString);
+    const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
       trustedDomains,
       untrustedDomains,
