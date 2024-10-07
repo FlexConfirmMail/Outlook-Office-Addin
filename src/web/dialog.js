@@ -5,15 +5,15 @@ class AddedDomainsReconfirmation {
   hasNewDomainAddress = false;
   initialized = false;
 
- /**
- * Parse domain and address of resipients.
- * @param {*} recipients
- * @returns Array<{
- *  recipient,
- *  address,
- *  domain,
- * }>
- */
+  /**
+  * Parse domain and address of resipients.
+  * @param {*} recipients
+  * @returns Array<{
+  *  recipient,
+  *  address,
+  *  domain,
+  * }>
+  */
   parse(recipients) {
     if (!recipients) {
       return [];
@@ -65,6 +65,7 @@ class AddedDomainsReconfirmation {
       $("#newly-added-domain-address-dialog").prop("hidden", true);
     };
   }
+
   show() {
    $("#newly-added-domain-address-dialog").prop("hidden", false);
   }
