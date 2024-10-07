@@ -1,36 +1,10 @@
+import { ConfigLoader } from "./config-loader.mjs";
+
 const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
 
 Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
 };
-
-function toArray(str) {
-  if (!str) {
-    return null;
-  }
-  const resultList = [];
-  str = str.trim();
-  for (let item of str.split("\n")) {
-    item = item.trim();
-    if (item.length <= 0) {
-      continue;
-    }
-    resultList.push(item);
-  }
-  return resultList;
-}
-
-async function loadFile(url) {
-  console.debug("loadFile ", url);
-  try {
-    const response = await fetch(url);
-    const data = await response.text();
-    console.debug(data);
-    return data;
-  } catch (err) {
-    console.error(err);
-  }
-}
 
 function getBccAsync() {
   return new Promise((resolve, reject) => {
@@ -85,14 +59,12 @@ function getMailIdAsync() {
 }
 
 async function getAllData() {
-  const [to, cc, bcc, trustedString, untrustedString, attachmentsString, mailId] = await Promise.all([
+  const [to, cc, bcc, mailId, config] = await Promise.all([
     getToAsync(),
     getCcAsync(),
     getBccAsync(),
-    loadFile("configs/trusted.txt"),
-    loadFile("configs/untrusted.txt"),
-    loadFile("configs/attachment.txt"),
     getMailIdAsync(),
+    ConfigLoader.load(),
   ]);
   let originalRecipients = {};
   if (mailId) {
@@ -102,20 +74,13 @@ async function getAllData() {
       originalRecipients = JSON.parse(originalRecipientsJson);
     }
   }
-  const trustedDomains = toArray(trustedString);
-  const untrustedDomains = toArray(untrustedString);
-  const attachments = toArray(attachmentsString);
   return {
     target: {
       to,
       cc,
       bcc,
     },
-    config: {
-      trustedDomains,
-      untrustedDomains,
-      attachments,
-    },
+    config,
     mailId,
     originalRecipients,
   };
