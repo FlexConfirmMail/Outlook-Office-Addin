@@ -175,7 +175,8 @@ function onMessageFromParent(arg) {
 
   attachmentsConfirmation.init(data);
   appendMiscWarningCheckboxes(
-    attachmentsConfirmation.unsafeAttachments.map(
+    Array.from(
+      attachmentsConfirmation.unsafeAttachments,
       (attachment) => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`
     )
   );
