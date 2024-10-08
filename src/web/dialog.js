@@ -72,18 +72,28 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
   }
 }
 
-function appendAttachmentCheckboxes(target, attachments, unsafeFiles) {
-  if (unsafeFiles.length <= 0) return;
+function appendMiscCheckboxes(labels) {
+  const target = $("#attachment-and-others");
+  for (const label of labels) {
+    appendCheckbox(target, generateTempId(), label);
+  }
+}
 
-  const unsafeAttachmentMatcher = new RegExp(unsafeFiles.map((pattern) => wildcardToRegexp(pattern)).join("|"));
-  for (const attachment of attachments) {
-    if (!unsafeAttachmentMatcher.test(attachment.name)) continue;
-    appendCheckbox(target, generateTempId(), attachment.name);
+function appendMiscWarningCheckboxes(labels) {
+  const target = $("#attachment-and-others");
+  for (const label of labels) {
+    appendWarningCheckbox(target, generateTempId(), label);
   }
 }
 
 function appendCheckbox(target, id, value) {
   target.append(`<fluent-checkbox id="${id}" class="check-target" onchange="checkboxChanged(this)"></fluent-checkbox>`);
+  //In order to escape special chars, adding values with the text function.
+  $(`#${id}`).text(value);
+}
+
+function appendWarningCheckbox(target, id, value) {
+  target.append(`<fluent-checkbox id="${id}" class="check-target warning" onchange="checkboxChanged(this)"></fluent-checkbox>`);
   //In order to escape special chars, adding values with the text function.
   $(`#${id}`).text(value);
 }
@@ -155,5 +165,8 @@ function onMessageFromParent(arg) {
 
   const attachments = data.target.attachments || [];
   const unsafeFiles = data.config.unsafeFiles || [];
-  appendAttachmentCheckboxes($("#attachment-and-others"), attachments, unsafeFiles);
+  const unsafeAttachmentMatcher = new RegExp(unsafeFiles.map((pattern) => wildcardToRegexp(pattern)).join("|"));
+  const unsafeAttachments = attachments.filter(attachment => unsafeAttachmentMatcher.test(attachment.name));
+  appendMiscWarningCheckboxes(unsafeAttachments.map(attachment => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`));
+  appendMiscCheckboxes(attachments.map(attachment => `[添付ファイル]  ${attachment.name}`));
 }

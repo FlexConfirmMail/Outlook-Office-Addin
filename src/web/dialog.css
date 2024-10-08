@@ -29,7 +29,7 @@ fluent-card {
   color: red;
 }
 
-#attachment-and-others fluent-checkbox::part(label) {
+#attachment-and-others fluent-checkbox.warning::part(label) {
   color:red;
 }
 
