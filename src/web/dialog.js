@@ -110,7 +110,7 @@ function appendCheckbox({ container, id, label, warning }) {
 
 function classifyRecipients({ to, cc, bcc, trustedDomains }) {
   const classifier = new RecipientClassifier({
-    internalDomains: trustedDomains || [],
+    trustedDomains: trustedDomains || [],
   });
   const classifiedTo = classifier.classify(to);
   const classifiedCc = classifier.classify(cc);
@@ -118,15 +118,15 @@ function classifyRecipients({ to, cc, bcc, trustedDomains }) {
   console.log("classified results: ", { classifiedTo, classifiedCc, classifiedBcc });
 
   return {
-    internals: new Set([
-      ...classifiedTo.internals.map((recipient) => ({ ...recipient, type: "To" })),
-      ...classifiedCc.internals.map((recipient) => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.internals.map((recipient) => ({ ...recipient, type: "Bcc" })),
+    trusted: new Set([
+      ...classifiedTo.trusted.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.trusted.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.trusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
     ]),
-    externals: new Set([
-      ...classifiedTo.externals.map((recipient) => ({ ...recipient, type: "To" })),
-      ...classifiedCc.externals.map((recipient) => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.externals.map((recipient) => ({ ...recipient, type: "Bcc" })),
+    untrusted: new Set([
+      ...classifiedTo.untrusted.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
     ]),
   };
 }
@@ -165,10 +165,10 @@ function onMessageFromParent(arg) {
   const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains });
   console.log(classifiedRecipients);
 
-  const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, (item) => item.domain);
-  appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeInternals);
-  const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
-  appendRecipientCheckboxes($("#external-domains"), groupedByTypeExternals);
+  const groupedByTypeTrusteds = Object.groupBy(classifiedRecipients.trusted, (item) => item.domain);
+  appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
+  const groupedByTypeUntrusted = Object.groupBy(classifiedRecipients.untrusted, (item) => item.domain);
+  appendRecipientCheckboxes($("#untrusted-domains"), groupedByTypeUntrusted);
 
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);

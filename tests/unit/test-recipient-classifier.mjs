@@ -20,8 +20,8 @@ export function test_format() {
   const classified = classifier.classify(recipients);
   is(
     {
-      internals: [],
-      externals: [
+      trusted: [],
+      untrusted: [
         { recipient: 'without-nick@example.com',
           address:   'without-nick@example.com',
           domain:    'example.com' },
@@ -41,62 +41,62 @@ export function test_format() {
 }
 
 test_classifyAddresses.parameters = {
-  'all recipients must be classified as externals for blank list': {
+  'all recipients must be classified as untrusted for blank list': {
     recipients: [
       'aaa@example.com',
       'bbb@example.com'
     ],
-    internalDomains: [],
+    trustedDomains: [],
     expected: {
-      internals: [],
-      externals: [
+      trusted: [],
+      untrusted: [
         'aaa@example.com',
         'bbb@example.com'
       ],
     }
   },
-  'all recipients must be classified as internals based on the list': {
+  'all recipients must be classified as trusted based on the list': {
     recipients: [
       'aaa@clear-code.com',
       'bbb@clear-code.com'
     ],
-    internalDomains: ['clear-code.com'],
+    trustedDomains: ['clear-code.com'],
     expected: {
-      internals: [
+      trusted: [
         'aaa@clear-code.com',
         'bbb@clear-code.com'
       ],
-      externals: [],
+      untrusted: [],
     }
   },
-  'all recipients must be classified as externals based on the list': {
+  'all recipients must be classified as untrusted based on the list': {
     recipients: [
       'aaa@example.com',
       'bbb@example.com'
     ],
-    internalDomains: ['clear-code.com'],
+    trustedDomains: ['clear-code.com'],
     expected: {
-      internals: [],
-      externals: [
+      trusted: [],
+      untrusted: [
         'aaa@example.com',
         'bbb@example.com'
       ],
     }
   },
-  'mixed recipients must be classified to internals and externals': {
+  'mixed recipients must be classified to trusted and untrusted': {
     recipients: [
       'zzz@exmaple.com',
       'aaa@clear-code.com',
       'bbb@example.org',
       'ccc@clear-code.com'
     ],
-    internalDomains: ['clear-code.com'],
+    trustedDomains: ['clear-code.com'],
     expected: {
-      internals: [
+      trusted: [
         'aaa@clear-code.com',
         'ccc@clear-code.com'
       ],
-      externals: [
+      untrusted: [
         'zzz@exmaple.com',
         'bbb@example.org'
       ],
@@ -107,16 +107,16 @@ test_classifyAddresses.parameters = {
       'aaa@CLEAR-code.com',
       'bbb@clear-CODE.com'
     ],
-    internalDomains: ['clear-code.com'],
+    trustedDomains: ['clear-code.com'],
     expected: {
-      internals: [
+      trusted: [
         'aaa@CLEAR-code.com',
         'bbb@clear-CODE.com'
       ],
-      externals: [],
+      untrusted: [],
     }
   },
-  'mistakable recipients must be detected as externals': {
+  'mistakable recipients must be detected as untrusted': {
     recipients: [
       'aaa@clear-code.com',
       'bbb@unclear-code.com',
@@ -124,45 +124,45 @@ test_classifyAddresses.parameters = {
       'address-like-nick@clear-code.com <ccc@example.com>',
       'address-like-nick@example.com <ddd@clear-code.com>'
     ],
-    internalDomains: ['clear-code.com'],
+    trustedDomains: ['clear-code.com'],
     expected: {
-      internals: [
+      trusted: [
         'aaa@clear-code.com',
         'ddd@clear-code.com'
       ],
-      externals: [
+      untrusted: [
         'bbb@unclear-code.com',
         'clear-code.com@example.com',
         'ccc@example.com'
       ],
     }
   },
-  'sub domain must not detected as internal': {
+  'sub domain must not detected as trusted': {
     recipients: [
       'aaa@clear-code.com',
       'bbb@un.clear-code.com'
     ],
-    internalDomains: ['clear-code.com'],
+    trustedDomains: ['clear-code.com'],
     expected: {
-      internals: [
+      trusted: [
         'aaa@clear-code.com'
       ],
-      externals: [
+      untrusted: [
         'bbb@un.clear-code.com'
       ],
     }
   },
-  'upper domain must not detected as internal': {
+  'upper domain must not detected as trusted': {
     recipients: [
       'aaa@clear-code.com',
       'bbb@un.clear-code.com'
     ],
-    internalDomains: ['un.clear-code.com'],
+    trustedDomains: ['un.clear-code.com'],
     expected: {
-      internals: [
+      trusted: [
         'bbb@un.clear-code.com'
       ],
-      externals: [
+      untrusted: [
         'aaa@clear-code.com'
       ],
     }
@@ -172,12 +172,12 @@ test_classifyAddresses.parameters = {
       'aaa@clear-code.com',
       'bbb@example.com'
     ],
-    internalDomains: ['@clear-code.com'],
+    trustedDomains: ['@clear-code.com'],
     expected: {
-      internals: [
+      trusted: [
         'aaa@clear-code.com'
       ],
-      externals: [
+      untrusted: [
         'bbb@example.com'
       ],
     }
@@ -188,15 +188,15 @@ test_classifyAddresses.parameters = {
       'bbb@example.net',
       'ccc@#example.net',
     ],
-    internalDomains: [
+    trustedDomains: [
       'example.com',
       '#example.net',
     ],
     expected: {
-      internals: [
+      trusted: [
         'aaa@example.com',
       ],
-      externals: [
+      untrusted: [
         'bbb@example.net',
         'ccc@#example.net',
       ],
@@ -207,16 +207,16 @@ test_classifyAddresses.parameters = {
       'aaa@example.com',
       'bbb@example.net',
     ],
-    internalDomains: [
+    trustedDomains: [
       'example.com',
       '-@example.com',
       'example.net',
       '-example.net',
     ],
     expected: {
-      internals: [
+      trusted: [
       ],
-      externals: [
+      untrusted: [
         'aaa@example.com',
         'bbb@example.net',
       ],
@@ -231,18 +231,18 @@ test_classifyAddresses.parameters = {
       'bbb@X.example.net',
       'bbb@XX.example.net',
     ],
-    internalDomains: [
+    trustedDomains: [
       '*.example.com',
       '?.example.net',
     ],
     expected: {
-      internals: [
+      trusted: [
         'aaa@.example.com',
         'aaa@X.example.com',
         'aaa@XX.example.com',
         'bbb@X.example.net',
       ],
-      externals: [
+      untrusted: [
         'bbb@.example.net',
         'bbb@XX.example.net',
       ],
@@ -255,16 +255,16 @@ test_classifyAddresses.parameters = {
       'ccc.zz@example.com',
       'ddd@example.com',
     ],
-    internalDomains: [
+    trustedDomains: [
       '*.xx@example.com',
       '*.yy@example.com',
     ],
     expected: {
-      internals: [
+      trusted: [
         'aaa.xx@example.com',
         'bbb.yy@example.com',
       ],
-      externals: [
+      untrusted: [
         'ccc.zz@example.com',
         'ddd@example.com',
       ],
@@ -275,14 +275,14 @@ test_classifyAddresses.parameters = {
       'aaa.xx@example.com',
       'bbb.xx@example.com',
     ],
-    internalDomains: [
+    trustedDomains: [
       '*.xx@example.com',
       '-*.xx@example.com',
     ],
     expected: {
-      internals: [
+      trusted: [
       ],
-      externals: [
+      untrusted: [
         'aaa.xx@example.com',
         'bbb.xx@example.com',
       ],
@@ -294,28 +294,28 @@ test_classifyAddresses.parameters = {
       'bbb.xx@bar.example.com',
       'ccc.zz@bar.example.com',
     ],
-    internalDomains: [
+    trustedDomains: [
       '*.xx@*example.com',
     ],
     expected: {
-      internals: [
+      trusted: [
         'aaa.xx@foo.example.com',
         'bbb.xx@bar.example.com',
       ],
-      externals: [
+      untrusted: [
         'ccc.zz@bar.example.com',
       ],
     }
   },
 };
-export function test_classifyAddresses({ recipients, internalDomains, expected }) {
-  const classifier = new RecipientClassifier({ internalDomains });
+export function test_classifyAddresses({ recipients, trustedDomains, expected }) {
+  const classifier = new RecipientClassifier({ trustedDomains });
   const classified = classifier.classify(recipients);
   is(
     expected,
     {
-      internals: classified.internals.map(recipient => recipient.address),
-      externals: classified.externals.map(recipient => recipient.address),
+      trusted: classified.trusted.map(recipient => recipient.address),
+      untrusted: classified.untrusted.map(recipient => recipient.address),
     }
   );
 }

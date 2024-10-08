@@ -9,9 +9,14 @@ import * as RecipientParser from "./recipient-parser.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class RecipientClassifier {
-  constructor({ internalDomains } = {}) {
+  constructor({ trustedDomains } = {}) {
+    this.$trustedPatternsMatcher = this.generateMatcher(trustedDomains);
+    this.classify = this.classify.bind(this);
+  }
+
+  generateMatcher(patterns) {
     const uniquePatterns = new Set(
-      (internalDomains || [])
+      (patterns || [])
         .filter((pattern) => !pattern.startsWith("#")) // reject commented out items
         .map(
           (pattern) =>
@@ -28,29 +33,32 @@ export class RecipientClassifier {
       uniquePatterns.delete(negativeItem);
       uniquePatterns.delete(`-${negativeItem}`);
     }
-    this.$internalPatternsMatcher = new RegExp(
+    return new RegExp(
       `^(${[...uniquePatterns].map((pattern) => wildcardToRegexp(pattern)).join("|")})$`,
       "i"
     );
-    this.classify = this.classify.bind(this);
   }
 
   classify(recipients) {
-    const internals = new Set();
-    const externals = new Set();
+    const trusted = new Set();
+    const untrusted = new Set();
 
     for (const recipient of recipients) {
       const classifiedRecipient = {
         ...RecipientParser.parse(recipient),
       };
       const address = classifiedRecipient.address;
-      if (this.$internalPatternsMatcher.test(address)) internals.add(classifiedRecipient);
-      else externals.add(classifiedRecipient);
+      if (this.$trustedPatternsMatcher.test(address)) {
+        trusted.add(classifiedRecipient);
+      }
+      else {
+        untrusted.add(classifiedRecipient);
+      }
     }
 
     return {
-      internals: Array.from(internals),
-      externals: Array.from(externals),
+      trusted: Array.from(trusted),
+      untrusted: Array.from(untrusted),
     };
   }
 }
