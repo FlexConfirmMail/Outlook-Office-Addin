@@ -180,5 +180,7 @@ function onMessageFromParent(arg) {
       (attachment) => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`
     )
   );
-  appendMiscCheckboxes(attachmentsConfirmation.attachments.map((attachment) => `[添付ファイル]  ${attachment.name}`));
+  appendMiscCheckboxes(
+    Array.from(attachmentsConfirmation.attachments, (attachment) => `[添付ファイル]  ${attachment.name}`)
+  );
 }
