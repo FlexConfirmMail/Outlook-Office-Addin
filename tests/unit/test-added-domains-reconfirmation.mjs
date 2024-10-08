@@ -24,7 +24,7 @@ test_shouldReconfirm.parameters = {
       config: {
         trustedDomains : [],
         untrustedDomains : [],
-        attachments : [],
+        unsafeFiles : [],
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -45,7 +45,7 @@ test_shouldReconfirm.parameters = {
       config: {
         trustedDomains : [],
         untrustedDomains : [],
-        attachments : [],
+        unsafeFiles : [],
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -66,7 +66,7 @@ test_shouldReconfirm.parameters = {
       config: {
         trustedDomains : [],
         untrustedDomains : [],
-        attachments : [],
+        unsafeFiles : [],
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -87,7 +87,7 @@ test_shouldReconfirm.parameters = {
       config: {
         trustedDomains : [],
         untrustedDomains : [],
-        attachments : [],
+        unsafeFiles : [],
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -108,7 +108,7 @@ test_shouldReconfirm.parameters = {
       config: {
         trustedDomains : [],
         untrustedDomains : [],
-        attachments : [],
+        unsafeFiles : [],
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -129,7 +129,7 @@ test_shouldReconfirm.parameters = {
       config: {
         trustedDomains : [],
         untrustedDomains : [],
-        attachments : [],
+        unsafeFiles : [],
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -150,7 +150,7 @@ test_shouldReconfirm.parameters = {
       config: {
         trustedDomains : [],
         untrustedDomains : [],
-        attachments : [],
+        unsafeFiles : [],
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -180,7 +180,7 @@ test_shouldNotReconfirm.parameters = {
     config: {
       trustedDomains : [],
       untrustedDomains : [],
-      attachments : [],
+      unsafeFiles : [],
     },
     mailId: "FCM_OriginalRecipients_0123",
     originalRecipients: {
@@ -198,7 +198,7 @@ test_shouldNotReconfirm.parameters = {
     config: {
       trustedDomains : [],
       untrustedDomains : [],
-      attachments : [],
+      unsafeFiles : [],
     },
     mailId: "FCM_OriginalRecipients_0123",
     originalRecipients: {
@@ -216,7 +216,7 @@ test_shouldNotReconfirm.parameters = {
     config: {
       trustedDomains : [],
       untrustedDomains : [],
-      attachments : [],
+      unsafeFiles : [],
     },
     mailId: null,
     originalRecipients: null,
@@ -230,7 +230,7 @@ test_shouldNotReconfirm.parameters = {
     config: {
       trustedDomains : [],
       untrustedDomains : [],
-      attachments : [],
+      unsafeFiles : [],
     },
     mailId: "FCM_OriginalRecipients_0123",
     originalRecipients: {
