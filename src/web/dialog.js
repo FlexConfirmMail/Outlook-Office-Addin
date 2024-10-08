@@ -174,8 +174,14 @@ function onMessageFromParent(arg) {
 
   appendMiscWarningCheckboxes(
     Array.from(
+      new Set(Array.from(classifiedRecipients.unsafeWithDomain, (recipient) => recipient.domain.toLowerCase())),
+      (domain) => `[警告] 注意が必要なドメイン（${domain}）が宛先に含まれています。`
+    )
+  );
+  appendMiscWarningCheckboxes(
+    Array.from(
       classifiedRecipients.unsafe,
-      (recipient) => `[警告] 注意が必要な宛先（${recipient}）宛先に含まれています。`
+      (recipient) => `[警告] 注意が必要な宛先（${recipient.address}）が含まれています。`
     )
   );
 
