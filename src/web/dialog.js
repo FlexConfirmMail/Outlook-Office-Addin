@@ -1,7 +1,9 @@
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
+import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
+const attachmentsConfirmation = new AttachmentsConfirmation();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = (reason) => {};
@@ -52,7 +54,7 @@ window.checkboxChanged = (targetElement) => {
   $("#send-button").prop("disabled", hasUnchecked);
 };
 
-function appendCheckboxes(target, groupedRecipients) {
+function appendRecipientCheckboxes(target, groupedRecipients) {
   for (const [key, recipients] of Object.entries(groupedRecipients)) {
     const idForGroup = generateTempId();
     const idForGroupTitle = generateTempId();
@@ -63,18 +65,47 @@ function appendCheckboxes(target, groupedRecipients) {
       </div>`);
     //In order to escape special chars, adding values with the text function.
     $(`#${idForGroupTitle}`).text(key);
-    const targetElement = $(`#${idForGroup}`);
+    const container = $(`#${idForGroup}`);
     for (const recipient of recipients) {
-      const value = `${recipient.type}: ${recipient.address}`;
-      appendCheckbox(targetElement, generateTempId(), value);
+      const label = `${recipient.type}: ${recipient.address}`;
+      appendCheckbox({ container, label });
     }
   }
 }
 
-function appendCheckbox(target, id, value) {
-  target.append(`<fluent-checkbox id="${id}" class="check-target" onchange="checkboxChanged(this)"></fluent-checkbox>`);
+function appendMiscCheckboxes(labels) {
+  const container = $("#attachment-and-others");
+  for (const label of labels) {
+    appendCheckbox({ container, label });
+  }
+}
+
+function appendMiscWarningCheckboxes(labels) {
+  const container = $("#attachment-and-others");
+  for (const label of labels) {
+    appendCheckbox({
+      container,
+      label,
+      warning: true,
+    });
+  }
+}
+
+function appendCheckbox({ container, id, label, warning }) {
+  if (!id) {
+    id = generateTempId();
+  }
+  const extraClasses = new Set();
+  if (warning) {
+    extraClasses.add("warning");
+  }
+  container.append(
+    `<fluent-checkbox id="${id}" class="check-target ${[...extraClasses].join(
+      " "
+    )}" onchange="checkboxChanged(this)"></fluent-checkbox>`
+  );
   //In order to escape special chars, adding values with the text function.
-  $(`#${id}`).text(value);
+  $(`#${id}`).text(label);
 }
 
 function classifyRecipients({ to, cc, bcc, trustedDomains }) {
@@ -110,6 +141,7 @@ function onMessageFromParent(arg) {
   //     to : [{emailAddress:"mail@example.com"}, ...],
   //     cc : [...],
   //     bcc : [...],
+  //     attachments: [{name:"...",size:0,isInline:false}, ...],
   //   },
   //   config: {
   //     trustedDomains : ["example.com", ...],
@@ -134,10 +166,21 @@ function onMessageFromParent(arg) {
   console.log(classifiedRecipients);
 
   const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, (item) => item.domain);
-  appendCheckboxes($("#trusted-domains"), groupedByTypeInternals);
+  appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeInternals);
   const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
-  appendCheckboxes($("#external-domains"), groupedByTypeExternals);
+  appendRecipientCheckboxes($("#external-domains"), groupedByTypeExternals);
 
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);
+
+  attachmentsConfirmation.init(data);
+  appendMiscWarningCheckboxes(
+    Array.from(
+      attachmentsConfirmation.unsafeAttachments,
+      (attachment) => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`
+    )
+  );
+  appendMiscCheckboxes(
+    Array.from(attachmentsConfirmation.attachments, (attachment) => `[添付ファイル]  ${attachment.name}`)
+  );
 }

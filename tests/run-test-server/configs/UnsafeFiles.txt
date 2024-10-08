@@ -1,2 +1,4 @@
-attachment.com
-attachment2.com
+.exe
+.zip
+secret
+社外秘

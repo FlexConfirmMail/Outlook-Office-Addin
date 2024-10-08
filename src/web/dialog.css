@@ -5,6 +5,10 @@ fluent-card {
   padding-right: 10px;
 }
 
+fluent-divider {
+  margin: 1em 0;
+}
+
 .heading-container {
   display: flex;
   align-items: center;
@@ -29,7 +33,7 @@ fluent-card {
   color: red;
 }
 
-#attachment-and-others fluent-checkbox::part(label) {
+#attachment-and-others fluent-checkbox.warning::part(label) {
   color:red;
 }
 
