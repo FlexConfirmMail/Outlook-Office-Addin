@@ -79,10 +79,11 @@ function getAttachmentsAsync() {
 }
 
 async function getAllData() {
-  const [to, cc, bcc, mailId, config] = await Promise.all([
+  const [to, cc, bcc, attachments, mailId, config] = await Promise.all([
     getToAsync(),
     getCcAsync(),
     getBccAsync(),
+    getAttachmentsAsync(),
     getMailIdAsync(),
     ConfigLoader.load(),
   ]);
