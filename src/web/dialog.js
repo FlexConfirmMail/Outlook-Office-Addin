@@ -105,6 +105,7 @@ function onMessageFromParent(arg) {
 
   // The data scheme:
   // data = {
+  //         unsafeFiles : null,
   //   target: {
   //     to : [{emailAddress:"mail@example.com"}, ...],
   //     cc : [...],
@@ -112,8 +113,8 @@ function onMessageFromParent(arg) {
   //   },
   //   config: {
   //     trustedDomains : ["example.com", ...],
-  //     untrustedDomains : [...],
-  //     attachments : [...],
+  //     unsafeDomains : [...],
+  //     unsafeFiles : [...],
   //   },
   //   mailId: "FCM_OriginalRecipients_0123",
   //   originalRecipients: {
@@ -135,7 +136,7 @@ function onMessageFromParent(arg) {
   const groupedByTypeInternals = Object.groupBy(classifiedRecipients.internals, (item) => item.domain);
   appendCheckboxes($("#trusted-domains"), groupedByTypeInternals);
   const groupedByTypeExternals = Object.groupBy(classifiedRecipients.externals, (item) => item.domain);
-  appendCheckboxes($("#untrusted-domains"), groupedByTypeExternals);
+  appendCheckboxes($("#external-domains"), groupedByTypeExternals);
 
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);

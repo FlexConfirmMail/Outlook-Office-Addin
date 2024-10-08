@@ -96,20 +96,20 @@ export class ConfigLoader {
   }
 
   static async load() {
-    const [trustedString, untrustedString, attachmentsString, commonString] = await Promise.all([
-      this.loadFile("configs/trusted.txt"),
-      this.loadFile("configs/untrusted.txt"),
-      this.loadFile("configs/attachment.txt"),
-      this.loadFile("configs/common.txt"),
+    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
+      this.loadFile("configs/TrustedDomains.txt"),
+      this.loadFile("configs/UnsafeDomains.txt"),
+      this.loadFile("configs/UnsafeFiles.txt"),
+      this.loadFile("configs/Common.txt"),
     ]);
-    const trustedDomains = this.toArray(trustedString);
-    const untrustedDomains = this.toArray(untrustedString);
-    const attachments = this.toArray(attachmentsString);
+    const trustedDomains = this.toArray(trustedDomainsString);
+    const unsafeDomains = this.toArray(unsafeDomainsString);
+    const unsafeFiles = this.toArray(unsafeFilesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
       trustedDomains,
-      untrustedDomains,
-      attachments,
+      unsafeDomains: unsafeDomains,
+      attachments: unsafeFiles,
       common,
     };
   }
