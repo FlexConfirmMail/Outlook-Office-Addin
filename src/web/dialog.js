@@ -3,6 +3,7 @@ import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
+const attachmentsConfirmation = new AttachmentsConfirmation();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = (reason) => {};
@@ -165,11 +166,11 @@ function onMessageFromParent(arg) {
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);
 
-  AttachmentsConfirmation.init(data);
+  attachmentsConfirmation.init(data);
   appendMiscWarningCheckboxes(
-    AttachmentsConfirmation.unsafeAttachments.map(
+    attachmentsConfirmation.unsafeAttachments.map(
       (attachment) => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`
     )
   );
-  appendMiscCheckboxes(AttachmentsConfirmation.attachments.map((attachment) => `[添付ファイル]  ${attachment.name}`));
+  appendMiscCheckboxes(attachmentsConfirmation.attachments.map((attachment) => `[添付ファイル]  ${attachment.name}`));
 }
