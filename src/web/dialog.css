@@ -25,7 +25,7 @@ fluent-card {
   margin-bottom: 10px;
 }
 
-#untrusted-domains fluent-checkbox::part(label) {
+#external-domains fluent-checkbox::part(label) {
   color: red;
 }
 
