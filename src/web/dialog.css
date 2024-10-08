@@ -5,6 +5,10 @@ fluent-card {
   padding-right: 10px;
 }
 
+fluent-divider {
+  margin: 1em 0;
+}
+
 .heading-container {
   display: flex;
   align-items: center;
