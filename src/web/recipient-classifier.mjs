@@ -10,21 +10,17 @@ import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class RecipientClassifier {
   constructor({ trustedDomains, unsafeDomains } = {}) {
-    this.$trustedPatternsMatcher = this.generateMatcher(trustedDomains);
-    this.$unsafePatternsMatcher = this.generateMatcher(unsafeDomains);
+    this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
+    this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains);
     this.classify = this.classify.bind(this);
   }
 
-  generateMatcher(patterns) {
+  generateMatchers(patterns) {
     const uniquePatterns = new Set(
       (patterns || [])
         .filter((pattern) => !pattern.startsWith("#")) // reject commented out items
         .map(
-          (pattern) =>
-            pattern
-              .toLowerCase()
-              .replace(/^(-?)@/, "$1") // delete needless "@" from domain only patterns: "@example.com" => "example.com"
-              .replace(/^(-?)(?![^@]+@)/, "$1*@") // normalize to full address patterns: "foo@example.com" => "foo@example.com", "example.com" => "*@example.com"
+          (pattern) => pattern.toLowerCase().replace(/^(-?)@/, "$1") // delete needless "@" from domain only patterns: "@example.com" => "example.com"
         )
     );
     const negativeItems = new Set(
@@ -34,29 +30,45 @@ export class RecipientClassifier {
       uniquePatterns.delete(negativeItem);
       uniquePatterns.delete(`-${negativeItem}`);
     }
-    return new RegExp(
-      `^(${[...uniquePatterns].map((pattern) => wildcardToRegexp(pattern)).join("|")})$`,
-      "i"
-    );
+
+    const domainPatterns = new Set();
+    const fullPatterns = new Set();
+    for (const pattern of uniquePatterns) {
+      if (pattern.includes("@")) {
+        fullPatterns.add(pattern);
+      } else {
+        domainPatterns.add(pattern);
+      }
+    }
+    return {
+      domain: new RegExp(`^(${Array.from(domainPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`, "i"),
+      full: new RegExp(`^(${Array.from(fullPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`, "i"),
+    };
   }
 
   classify(recipients) {
     const trusted = new Set();
     const untrusted = new Set();
+    const unsafeDomains = new Set();
     const unsafe = new Set();
 
     for (const recipient of recipients) {
       const classifiedRecipient = {
         ...RecipientParser.parse(recipient),
       };
-      const address = classifiedRecipient.address;
-      if (this.$trustedPatternsMatcher.test(address)) {
+
+      if (
+        this.$trustedPatternsMatchers.domain.test(classifiedRecipient.domain) ||
+        this.$trustedPatternsMatchers.full.test(classifiedRecipient.address)
+      ) {
         trusted.add(classifiedRecipient);
-      }
-      else {
+      } else {
         untrusted.add(classifiedRecipient);
       }
-      if (this.$unsafePatternsMatcher.test(address)) {
+
+      if (this.$unsafePatternsMatchers.domain.test(classifiedRecipient.domain)) {
+        unsafeDomains.add(classifiedRecipient);
+      } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
         unsafe.add(classifiedRecipient);
       }
     }
@@ -64,6 +76,7 @@ export class RecipientClassifier {
     return {
       trusted: Array.from(trusted),
       untrusted: Array.from(untrusted),
+      unsafeDomains: Array.from(unsafeDomains),
       unsafe: Array.from(unsafe),
     };
   }
