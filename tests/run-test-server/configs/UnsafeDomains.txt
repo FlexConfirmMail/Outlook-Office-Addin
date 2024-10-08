@@ -1,2 +1,2 @@
-untrusted.com
-untrusted2.com
+untrusted.example.com
+*untrusted@example.com
