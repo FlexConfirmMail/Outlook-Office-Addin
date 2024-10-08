@@ -9,8 +9,7 @@ export class AttachmentsConfirmation {
     const unsafeFiles = data.config.unsafeFiles || [];
     const unsafeAttachmentMatcher = new RegExp(unsafeFiles.map((pattern) => wildcardToRegexp(pattern)).join("|"));
     for (const attachment of attachments) {
-      if (unsafeAttachmentMatcher.test(attachment.name))
-        this.unsafeAttachments.add(attachment);
+      if (unsafeAttachmentMatcher.test(attachment.name)) this.unsafeAttachments.add(attachment);
       this.attachments.add(attachment);
     }
   }
