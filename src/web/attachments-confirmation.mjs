@@ -20,7 +20,7 @@ export class AttachmentsConfirmation {
     }
     const unsafeAttachmentMatcher =
       unsafeFiles.length > 0
-        ? new RegExp(`^(${[...uniquePatterns].map((pattern) => wildcardToRegexp(pattern)).join("|")})$`, "i")
+        ? new RegExp(Array.from(uniquePatterns, (pattern) => wildcardToRegexp(pattern)).join("|"), "i")
         : null;
 
     for (const attachment of attachments) {
