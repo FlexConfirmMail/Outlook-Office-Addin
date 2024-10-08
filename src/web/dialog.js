@@ -129,6 +129,16 @@ function classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains }) {
       ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
       ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
     ]),
+    unsafeWithDomain: new Set([
+      ...classifiedTo.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
+    ]),
+    unsafe: new Set([
+      ...classifiedTo.unsafe.map((recipient) => ({ ...recipient, type: "To" })),
+      ...classifiedCc.unsafe.map((recipient) => ({ ...recipient, type: "Cc" })),
+      ...classifiedBcc.unsafe.map((recipient) => ({ ...recipient, type: "Bcc" })),
+    ]),
   };
 }
 
