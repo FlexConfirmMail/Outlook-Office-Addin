@@ -49,7 +49,7 @@ export class RecipientClassifier {
   classify(recipients) {
     const trusted = new Set();
     const untrusted = new Set();
-    const unsafeDomains = new Set();
+    const unsafeWithDomain = new Set();
     const unsafe = new Set();
 
     for (const recipient of recipients) {
@@ -67,7 +67,7 @@ export class RecipientClassifier {
       }
 
       if (this.$unsafePatternsMatchers.domain.test(classifiedRecipient.domain)) {
-        unsafeDomains.add(classifiedRecipient);
+        unsafeWithDomain.add(classifiedRecipient);
       } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
         unsafe.add(classifiedRecipient);
       }
@@ -76,7 +76,7 @@ export class RecipientClassifier {
     return {
       trusted: Array.from(trusted),
       untrusted: Array.from(untrusted),
-      unsafeDomains: Array.from(unsafeDomains),
+      unsafeWithDomain: Array.from(unsafeWithDomain),
       unsafe: Array.from(unsafe),
     };
   }

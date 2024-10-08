@@ -35,7 +35,7 @@ export function test_format() {
           address:   'domain-must-be-lower-cased@EXAMPLE.com',
           domain:    'example.com' }
       ],
-      unsafeDomains: [],
+      unsafeWithDomain: [],
       unsafe: [],
     },
     classified
@@ -101,8 +101,8 @@ test_classifyAddresses.parameters = {
         'aaa@unsafe.example.com',
         'bbb+unsafe@example.com',
       ],
-      unsafeDomains: [
-        'unsafe.example.com',
+      unsafeWithDomain: [
+        'aaa@unsafe.example.com',
       ],
       unsafe: [
         'bbb+unsafe@example.com',
@@ -150,8 +150,8 @@ test_classifyAddresses.parameters = {
         'zzz@example.com',
         'bbb@example.org'
       ],
-      unsafeDomains: [
-        'example.com',
+      unsafeWithDomain: [
+        'zzz@example.com',
       ],
       unsafe: [
         'ccc@clear-code.com'
@@ -174,8 +174,8 @@ test_classifyAddresses.parameters = {
       untrusted: [
         'ccc@ExAmPlE.com',
       ],
-      unsafeDomains: [
-        'example.com',
+      unsafeWithDomain: [
+        'ccc@ExAmPlE.com',
       ],
     }
   },
@@ -247,8 +247,8 @@ test_classifyAddresses.parameters = {
       untrusted: [
         'bbb@example.com'
       ],
-      unsafeDomains: [
-        'example.com'
+      unsafeWithDomain: [
+        'bbb@example.com'
       ],
     }
   },
@@ -348,11 +348,11 @@ test_classifyAddresses.parameters = {
         'ddd@X.example.jp',
         'ddd@XX.example.jp',
       ],
-      unsafeDomains: [
-        '.example.org',
-        'x.example.org',
-        'xx.example.org',
-        'x.example.jp',
+      unsafeWithDomain: [
+        'ccc@.example.org',
+        'ccc@X.example.org',
+        'ccc@XX.example.org',
+        'ddd@X.example.jp',
       ],
     }
   },
@@ -438,12 +438,12 @@ export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomai
   const classifier = new RecipientClassifier({ trustedDomains, unsafeDomains });
   const classified = classifier.classify(recipients);
   is(
-    Object.assign({ trusted: [], untrusted: [], unsafe: [], unsafeDomains: [] }, expected),
+    Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [] }, expected),
     {
       trusted: classified.trusted.map(recipient => recipient.address),
       untrusted: classified.untrusted.map(recipient => recipient.address),
+      unsafeWithDomain: classified.unsafeWithDomain.map(recipient => recipient.address),
       unsafe: classified.unsafe.map(recipient => recipient.address),
-      unsafeDomains: classified.unsafeDomains.map(recipient => recipient.domain),
     }
   );
 }
