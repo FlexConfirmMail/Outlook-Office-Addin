@@ -108,9 +108,10 @@ function appendCheckbox({ container, id, label, warning }) {
   $(`#${id}`).text(label);
 }
 
-function classifyRecipients({ to, cc, bcc, trustedDomains }) {
+function classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains }) {
   const classifier = new RecipientClassifier({
     trustedDomains: trustedDomains || [],
+    unsafeDomains: unsafeDomains || [],
   });
   const classifiedTo = classifier.classify(to);
   const classifiedCc = classifier.classify(cc);
@@ -161,14 +162,22 @@ function onMessageFromParent(arg) {
   const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
   const bcc = data.target.bcc ? data.target.bcc.map((_) => _.emailAddress) : [];
   const trustedDomains = data.config.trustedDomains;
+  const unsafeDomains = data.config.unsafeDomains;
 
-  const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains });
+  const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains });
   console.log(classifiedRecipients);
 
   const groupedByTypeTrusteds = Object.groupBy(classifiedRecipients.trusted, (item) => item.domain);
   appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
   const groupedByTypeUntrusted = Object.groupBy(classifiedRecipients.untrusted, (item) => item.domain);
   appendRecipientCheckboxes($("#untrusted-domains"), groupedByTypeUntrusted);
+
+  appendMiscWarningCheckboxes(
+    Array.from(
+      classifiedRecipients.unsafe,
+      (recipient) => `[警告] 注意が必要な宛先（${recipient}）宛先に含まれています。`
+    )
+  );
 
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);

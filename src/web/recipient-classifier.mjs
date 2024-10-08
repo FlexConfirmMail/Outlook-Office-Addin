@@ -9,8 +9,9 @@ import * as RecipientParser from "./recipient-parser.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class RecipientClassifier {
-  constructor({ trustedDomains } = {}) {
+  constructor({ trustedDomains, unsafeDomains } = {}) {
     this.$trustedPatternsMatcher = this.generateMatcher(trustedDomains);
+    this.$unsafePatternsMatcher = this.generateMatcher(unsafeDomains);
     this.classify = this.classify.bind(this);
   }
 
@@ -42,6 +43,7 @@ export class RecipientClassifier {
   classify(recipients) {
     const trusted = new Set();
     const untrusted = new Set();
+    const unsafe = new Set();
 
     for (const recipient of recipients) {
       const classifiedRecipient = {
@@ -54,11 +56,15 @@ export class RecipientClassifier {
       else {
         untrusted.add(classifiedRecipient);
       }
+      if (this.$unsafePatternsMatcher.test(address)) {
+        unsafe.add(classifiedRecipient);
+      }
     }
 
     return {
       trusted: Array.from(trusted),
       untrusted: Array.from(untrusted),
+      unsafe: Array.from(unsafe),
     };
   }
 }
