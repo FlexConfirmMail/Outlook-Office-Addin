@@ -28,7 +28,10 @@ export class RecipientClassifier {
       uniquePatterns.delete(negativeItem);
       uniquePatterns.delete(`-${negativeItem}`);
     }
-    this.$internalPatternsMatcher = new RegExp(`^(${[...uniquePatterns].map(pattern => wildcardToRegexp(pattern)).join("|")})$`, 'i');
+    this.$internalPatternsMatcher = new RegExp(
+      `^(${[...uniquePatterns].map((pattern) => wildcardToRegexp(pattern)).join("|")})$`,
+      "i"
+    );
     this.classify = this.classify.bind(this);
   }
 
