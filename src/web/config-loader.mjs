@@ -108,8 +108,8 @@ export class ConfigLoader {
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
       trustedDomains,
-      unsafeDomains: unsafeDomains,
-      attachments: unsafeFiles,
+      unsafeDomains,
+      unsafeFiles,
       common,
     };
   }
