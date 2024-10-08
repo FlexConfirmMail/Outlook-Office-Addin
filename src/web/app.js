@@ -2,7 +2,7 @@ import { ConfigLoader } from "./config-loader.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
 const CONFIRM_ATTACHMENT_TYPES = new Set([
-  // Office.MailboxEnums are not accessible before Office.onReady()
+  // Office.MailboxEnums are not accessible before initialized.
   "cloud", // Office.MailboxEnums.AttachmentType.Cloud,
   "file", // Office.MailboxEnums.AttachmentType.File,
 ]);
