@@ -80,6 +80,39 @@ test_classify.parameters = {
       toAttachment("Unsafe.txt"),
     ],
   },
+  WithMultipleUnsafeFiles: {
+    data: {
+      target: {
+        attachments: [
+          toAttachment("Safe.txt"),
+          toAttachment("Unsafe.txt"),
+          toAttachment("Zipped.ZIP"),
+          toAttachment("【機密】.txt"),
+          toAttachment("【機 密】.txt"),
+        ],
+      },
+      config: {
+        unsafeFiles : [
+          "unsafe",
+          ".zip",
+          "機*密",
+        ],
+      },
+    },
+    attachments: [
+      toAttachment("Safe.txt"),
+      toAttachment("Unsafe.txt"),
+      toAttachment("Zipped.ZIP"),
+      toAttachment("【機密】.txt"),
+      toAttachment("【機 密】.txt"),
+    ],
+    unsafeAttachments: [
+      toAttachment("Unsafe.txt"),
+      toAttachment("Zipped.ZIP"),
+      toAttachment("【機密】.txt"),
+      toAttachment("【機 密】.txt"),
+    ],
+  },
 };
 export function test_classify({ data, attachments, unsafeAttachments }) {
   const confirmation = new AttachmentsConfirmation();
