@@ -1,6 +1,6 @@
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
-import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
+import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
 
@@ -93,7 +93,9 @@ function appendCheckbox(target, id, value) {
 }
 
 function appendWarningCheckbox(target, id, value) {
-  target.append(`<fluent-checkbox id="${id}" class="check-target warning" onchange="checkboxChanged(this)"></fluent-checkbox>`);
+  target.append(
+    `<fluent-checkbox id="${id}" class="check-target warning" onchange="checkboxChanged(this)"></fluent-checkbox>`
+  );
   //In order to escape special chars, adding values with the text function.
   $(`#${id}`).text(value);
 }
@@ -163,10 +165,11 @@ function onMessageFromParent(arg) {
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);
 
-  const attachments = data.target.attachments || [];
-  const unsafeFiles = data.config.unsafeFiles || [];
-  const unsafeAttachmentMatcher = new RegExp(unsafeFiles.map((pattern) => wildcardToRegexp(pattern)).join("|"));
-  const unsafeAttachments = attachments.filter(attachment => unsafeAttachmentMatcher.test(attachment.name));
-  appendMiscWarningCheckboxes(unsafeAttachments.map(attachment => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`));
-  appendMiscCheckboxes(attachments.map(attachment => `[添付ファイル]  ${attachment.name}`));
+  AttachmentsConfirmation.init(data);
+  appendMiscWarningCheckboxes(
+    AttachmentsConfirmation.unsafeAttachments.map(
+      (attachment) => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`
+    )
+  );
+  appendMiscCheckboxes(AttachmentsConfirmation.attachments.map((attachment) => `[添付ファイル]  ${attachment.name}`));
 }
