@@ -65,40 +65,47 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
       </div>`);
     //In order to escape special chars, adding values with the text function.
     $(`#${idForGroupTitle}`).text(key);
-    const targetElement = $(`#${idForGroup}`);
+    const container = $(`#${idForGroup}`);
     for (const recipient of recipients) {
-      const value = `${recipient.type}: ${recipient.address}`;
-      appendCheckbox(targetElement, generateTempId(), value);
+      const label = `${recipient.type}: ${recipient.address}`;
+      appendCheckbox({ container, label });
     }
   }
 }
 
 function appendMiscCheckboxes(labels) {
-  const target = $("#attachment-and-others");
+  const container = $("#attachment-and-others");
   for (const label of labels) {
-    appendCheckbox(target, generateTempId(), label);
+    appendCheckbox({ container, label });
   }
 }
 
 function appendMiscWarningCheckboxes(labels) {
-  const target = $("#attachment-and-others");
+  const container = $("#attachment-and-others");
   for (const label of labels) {
-    appendWarningCheckbox(target, generateTempId(), label);
+    appendCheckbox({
+      container,
+      label,
+      warning: true,
+    });
   }
 }
 
-function appendCheckbox(target, id, value) {
-  target.append(`<fluent-checkbox id="${id}" class="check-target" onchange="checkboxChanged(this)"></fluent-checkbox>`);
-  //In order to escape special chars, adding values with the text function.
-  $(`#${id}`).text(value);
-}
-
-function appendWarningCheckbox(target, id, value) {
-  target.append(
-    `<fluent-checkbox id="${id}" class="check-target warning" onchange="checkboxChanged(this)"></fluent-checkbox>`
+function appendCheckbox({ container, id, label, warning }) {
+  if (!id) {
+    id = generateTempId();
+  }
+  const extraClasses = new Set();
+  if (warning) {
+    extraClasses.add("warning");
+  }
+  container.append(
+    `<fluent-checkbox id="${id}" class="check-target ${[...extraClasses].join(
+      " "
+    )}" onchange="checkboxChanged(this)"></fluent-checkbox>`
   );
   //In order to escape special chars, adding values with the text function.
-  $(`#${id}`).text(value);
+  $(`#${id}`).text(label);
 }
 
 function classifyRecipients({ to, cc, bcc, trustedDomains }) {
