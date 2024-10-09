@@ -181,11 +181,8 @@ async function openDialog({ url, data, asyncContext, ...params }) {
 }
 
 async function tryConfirm(data, asyncContext) {
-  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
-  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
-  const bcc = data.target.bcc ? data.target.bcc.map((_) => _.emailAddress) : [];
-  const trustedDomains = data.config.trustedDomains;
-  const unsafeDomains = data.config.unsafeDomains;
+  const { to, cc, bcc } = data.target;
+  const { trustedDomains, unsafeDomains } = data.config;
 
   data.classified = RecipientClassifier.classifyAll({ to, cc, bcc, trustedDomains, unsafeDomains });
   console.debug("classified: ", data.classified);
