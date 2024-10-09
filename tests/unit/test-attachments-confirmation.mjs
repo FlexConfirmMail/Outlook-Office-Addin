@@ -5,11 +5,11 @@
 */
 'use strict';
 
-import { AttachmentsConfirmation } from '../../src/web/attachments-confirmation.mjs';
-import { assert } from 'tiny-esm-test-runner';
+import { AttachmentsConfirmation } from "../../src/web/attachments-confirmation.mjs";
+import { assert } from "tiny-esm-test-runner";
 const { is } = assert;
 
-function toAttachment(name) {
+function attachment(name) {
   return { name };
 }
 
@@ -44,8 +44,8 @@ test_classify.parameters = {
     data: {
       target: {
         attachments: [
-          toAttachment("Safe.txt"),
-          toAttachment("Unsafe.txt"),
+          attachment("Safe.txt"),
+          attachment("Unsafe.txt"),
         ],
       },
       config: {
@@ -53,8 +53,8 @@ test_classify.parameters = {
       },
     },
     attachments: [
-      toAttachment("Safe.txt"),
-      toAttachment("Unsafe.txt"),
+      attachment("Safe.txt"),
+      attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [],
   },
@@ -62,8 +62,8 @@ test_classify.parameters = {
     data: {
       target: {
         attachments: [
-          toAttachment("Safe.txt"),
-          toAttachment("Unsafe.txt"),
+          attachment("Safe.txt"),
+          attachment("Unsafe.txt"),
         ],
       },
       config: {
@@ -75,22 +75,22 @@ test_classify.parameters = {
       },
     },
     attachments: [
-      toAttachment("Safe.txt"),
-      toAttachment("Unsafe.txt"),
+      attachment("Safe.txt"),
+      attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [
-      toAttachment("Unsafe.txt"),
+      attachment("Unsafe.txt"),
     ],
   },
   WithMultipleUnsafeFiles: {
     data: {
       target: {
         attachments: [
-          toAttachment("Safe.txt"),
-          toAttachment("Unsafe.txt"),
-          toAttachment("Zipped.ZIP"),
-          toAttachment("【機密】.txt"),
-          toAttachment("【機 密】.txt"),
+          attachment("Safe.txt"),
+          attachment("Unsafe.txt"),
+          attachment("Zipped.ZIP"),
+          attachment("【機密】.txt"),
+          attachment("【機 密】.txt"),
         ],
       },
       config: {
@@ -102,17 +102,17 @@ test_classify.parameters = {
       },
     },
     attachments: [
-      toAttachment("Safe.txt"),
-      toAttachment("Unsafe.txt"),
-      toAttachment("Zipped.ZIP"),
-      toAttachment("【機密】.txt"),
-      toAttachment("【機 密】.txt"),
+      attachment("Safe.txt"),
+      attachment("Unsafe.txt"),
+      attachment("Zipped.ZIP"),
+      attachment("【機密】.txt"),
+      attachment("【機 密】.txt"),
     ],
     unsafeAttachments: [
-      toAttachment("Unsafe.txt"),
-      toAttachment("Zipped.ZIP"),
-      toAttachment("【機密】.txt"),
-      toAttachment("【機 密】.txt"),
+      attachment("Unsafe.txt"),
+      attachment("Zipped.ZIP"),
+      attachment("【機密】.txt"),
+      attachment("【機 密】.txt"),
     ],
   },
 };
