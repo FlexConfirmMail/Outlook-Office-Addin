@@ -69,6 +69,8 @@ test_classify.parameters = {
       config: {
         unsafeFiles : [
           "unsafe",
+          "#safe",
+          "-safe",
         ],
       },
     },

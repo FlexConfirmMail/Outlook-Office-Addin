@@ -29,7 +29,7 @@ fluent-divider {
   margin-bottom: 10px;
 }
 
-#external-domains fluent-checkbox::part(label) {
+#untrusted-domains fluent-checkbox::part(label) {
   color: red;
 }
 

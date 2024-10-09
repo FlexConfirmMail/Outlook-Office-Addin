@@ -9,16 +9,18 @@ import * as RecipientParser from "./recipient-parser.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class RecipientClassifier {
-  constructor({ internalDomains } = {}) {
+  constructor({ trustedDomains, unsafeDomains } = {}) {
+    this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
+    this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains);
+    this.classify = this.classify.bind(this);
+  }
+
+  generateMatchers(patterns) {
     const uniquePatterns = new Set(
-      (internalDomains || [])
+      (patterns || [])
         .filter((pattern) => !pattern.startsWith("#")) // reject commented out items
         .map(
-          (pattern) =>
-            pattern
-              .toLowerCase()
-              .replace(/^(-?)@/, "$1") // delete needless "@" from domain only patterns: "@example.com" => "example.com"
-              .replace(/^(-?)(?![^@]+@)/, "$1*@") // normalize to full address patterns: "foo@example.com" => "foo@example.com", "example.com" => "*@example.com"
+          (pattern) => pattern.toLowerCase().replace(/^(-?)@/, "$1") // delete needless "@" from domain only patterns: "@example.com" => "example.com"
         )
     );
     const negativeItems = new Set(
@@ -28,29 +30,54 @@ export class RecipientClassifier {
       uniquePatterns.delete(negativeItem);
       uniquePatterns.delete(`-${negativeItem}`);
     }
-    this.$internalPatternsMatcher = new RegExp(
-      `^(${[...uniquePatterns].map((pattern) => wildcardToRegexp(pattern)).join("|")})$`,
-      "i"
-    );
-    this.classify = this.classify.bind(this);
+
+    const domainPatterns = new Set();
+    const fullPatterns = new Set();
+    for (const pattern of uniquePatterns) {
+      if (pattern.includes("@")) {
+        fullPatterns.add(pattern);
+      } else {
+        domainPatterns.add(pattern);
+      }
+    }
+    return {
+      domain: new RegExp(`^(${Array.from(domainPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`, "i"),
+      full: new RegExp(`^(${Array.from(fullPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`, "i"),
+    };
   }
 
   classify(recipients) {
-    const internals = new Set();
-    const externals = new Set();
+    const trusted = new Set();
+    const untrusted = new Set();
+    const unsafeWithDomain = new Set();
+    const unsafe = new Set();
 
     for (const recipient of recipients) {
       const classifiedRecipient = {
         ...RecipientParser.parse(recipient),
       };
-      const address = classifiedRecipient.address;
-      if (this.$internalPatternsMatcher.test(address)) internals.add(classifiedRecipient);
-      else externals.add(classifiedRecipient);
+
+      if (
+        this.$trustedPatternsMatchers.domain.test(classifiedRecipient.domain) ||
+        this.$trustedPatternsMatchers.full.test(classifiedRecipient.address)
+      ) {
+        trusted.add(classifiedRecipient);
+      } else {
+        untrusted.add(classifiedRecipient);
+      }
+
+      if (this.$unsafePatternsMatchers.domain.test(classifiedRecipient.domain)) {
+        unsafeWithDomain.add(classifiedRecipient);
+      } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
+        unsafe.add(classifiedRecipient);
+      }
     }
 
     return {
-      internals: Array.from(internals),
-      externals: Array.from(externals),
+      trusted: Array.from(trusted),
+      untrusted: Array.from(untrusted),
+      unsafeWithDomain: Array.from(unsafeWithDomain),
+      unsafe: Array.from(unsafe),
     };
   }
 }
