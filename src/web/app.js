@@ -109,48 +109,6 @@ async function getAllData() {
   };
 }
 
-function classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains }) {
-  const classifier = new RecipientClassifier({
-    trustedDomains: trustedDomains || [],
-    unsafeDomains: unsafeDomains || [],
-  });
-  const classifiedTo = classifier.classify(to);
-  const classifiedCc = classifier.classify(cc);
-  const classifiedBcc = classifier.classify(bcc);
-  console.log("classified results: ", { classifiedTo, classifiedCc, classifiedBcc });
-
-  return {
-    trusted: [
-      ...new Set([
-        ...classifiedTo.trusted.map((recipient) => ({ ...recipient, type: "To" })),
-        ...classifiedCc.trusted.map((recipient) => ({ ...recipient, type: "Cc" })),
-        ...classifiedBcc.trusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
-      ]),
-    ],
-    untrusted: [
-      ...new Set([
-        ...classifiedTo.untrusted.map((recipient) => ({ ...recipient, type: "To" })),
-        ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
-        ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
-      ]),
-    ],
-    unsafeWithDomain: [
-      ...new Set([
-        ...classifiedTo.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
-        ...classifiedCc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
-        ...classifiedBcc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
-      ]),
-    ],
-    unsafe: [
-      ...new Set([
-        ...classifiedTo.unsafe.map((recipient) => ({ ...recipient, type: "To" })),
-        ...classifiedCc.unsafe.map((recipient) => ({ ...recipient, type: "Cc" })),
-        ...classifiedBcc.unsafe.map((recipient) => ({ ...recipient, type: "Bcc" })),
-      ]),
-    ],
-  };
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onItemSend(event) {
   console.debug("onItemSend ", event);
@@ -163,7 +121,7 @@ async function onItemSend(event) {
   const trustedDomains = data.config.trustedDomains;
   const unsafeDomains = data.config.unsafeDomains;
 
-  data.classified = classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains });
+  data.classified = RecipientClassifier.classifyAll({ to, cc, bcc, trustedDomains, unsafeDomains });
   console.debug("classified: ", data.classified);
 
   if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
