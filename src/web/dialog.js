@@ -1,6 +1,8 @@
+import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
+const safeBccConfirmation = new SafeBccConfirmation();
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
 const attachmentsConfirmation = new AttachmentsConfirmation();
 
@@ -144,6 +146,9 @@ function onMessageFromParent(arg) {
   const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
   appendRecipientCheckboxes($("#untrusted-domains"), groupedByTypeUntrusted);
 
+  safeBccConfirmation.init(data);
+  appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
+
   appendMiscWarningCheckboxes(
     Array.from(
       new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
@@ -158,13 +163,6 @@ function onMessageFromParent(arg) {
   addedDomainsReconfirmation.initUI(sendStatusToParent);
 
   attachmentsConfirmation.init(data);
-  appendMiscWarningCheckboxes(
-    Array.from(
-      attachmentsConfirmation.unsafeAttachments,
-      (attachment) => `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`
-    )
-  );
-  appendMiscCheckboxes(
-    Array.from(attachmentsConfirmation.attachments, (attachment) => `[添付ファイル]  ${attachment.name}`)
-  );
+  appendMiscWarningCheckboxes(attachmentsConfirmation.warningConfirmationItems);
+  appendMiscCheckboxes(attachmentsConfirmation.confirmationItems);
 }

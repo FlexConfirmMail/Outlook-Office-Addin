@@ -30,4 +30,16 @@ export class AttachmentsConfirmation {
       this.attachments.add(attachment);
     }
   }
+
+  get warningConfirmationItems() {
+    return Array.from(this.unsafeAttachments, (attachment) => ({
+      label: `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`,
+    }));
+  }
+
+  get confirmationItems() {
+    return Array.from(this.attachments, (attachment) => ({
+      label: `[添付ファイル]  ${attachment.name}`,
+    }));
+  }
 }
