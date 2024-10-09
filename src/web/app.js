@@ -125,6 +125,23 @@ async function getAllData() {
 async function openDialog({ url, data, asyncContext, ...params }) {
   // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
   const promptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
+
+  const autoAcceptStartedAt = Date.now();
+  const autoAcceptTimeoutMsec = 5000;
+  const autoAcceptTimer = promptBeforeOpen
+    ? setInterval(() => {
+        const allowButton = document.querySelector("#newWindowNotificaiton input[value='許可']");
+        if (!allowButton) {
+          if (Date.now() > autoAcceptStartedAt + autoAcceptTimeoutMsec) {
+            clearInterval(autoAcceptTimer);
+          }
+          return;
+        }
+        allowButton.click();
+        clearInterval(autoAcceptTimer);
+      }, 250)
+    : null;
+
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
@@ -136,6 +153,10 @@ async function openDialog({ url, data, asyncContext, ...params }) {
       resolve
     );
   });
+
+  if (autoAcceptTimer) {
+    clearInterval(autoAcceptTimer);
+  }
 
   asyncContext = asyncResult.asyncContext;
   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
