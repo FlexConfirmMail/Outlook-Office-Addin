@@ -104,7 +104,7 @@ test_shouldConfirm.parameters = {
         },
       },
     },
-    expectedWarningConfirmations: [
+    warnings: [
       "[警告] To・Ccに1件以上のドメインが含まれています。"
     ],
   },
@@ -122,17 +122,17 @@ test_shouldConfirm.parameters = {
         },
       },
     },
-    expectedWarningConfirmations: [
+    warnings: [
       "[警告] To・Ccに2件以上のドメインが含まれています。"
     ],
   },
 };
-export function test_shouldConfirm({ data, expectedWarningConfirmations }) {
+export function test_shouldConfirm({ data, warnings }) {
   const confirmation = new SafeBccConfirmation();
   confirmation.init(data);
   ok(confirmation.shouldConfirm);
   is(
-    expectedWarningConfirmations.map((label) => ({label})),
+    warnings.map((label) => ({label})),
     confirmation.warningConfirmationItems
   );
 }

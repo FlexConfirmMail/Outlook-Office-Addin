@@ -25,6 +25,8 @@ test_classify.parameters = {
     },
     attachments: [],
     unsafeAttachments: [],
+    warnings: [],
+    confirmations: [],
   },
   BlankInputWithUnsafeFiles: {
     data: {
@@ -39,6 +41,8 @@ test_classify.parameters = {
     },
     attachments: [],
     unsafeAttachments: [],
+    warnings: [],
+    confirmations: [],
   },
   WithNoUnsafeFiles: {
     data: {
@@ -57,6 +61,11 @@ test_classify.parameters = {
       attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [],
+    warnings: [],
+    confirmations: [
+      "[添付ファイル]  Safe.txt",
+      "[添付ファイル]  Unsafe.txt",
+    ],
   },
   WithUnsafeFiles: {
     data: {
@@ -80,6 +89,13 @@ test_classify.parameters = {
     ],
     unsafeAttachments: [
       attachment("Unsafe.txt"),
+    ],
+    warnings: [
+      "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
+    ],
+    confirmations: [
+      "[添付ファイル]  Safe.txt",
+      "[添付ファイル]  Unsafe.txt",
     ],
   },
   WithMultipleUnsafeFiles: {
@@ -114,11 +130,32 @@ test_classify.parameters = {
       attachment("【機密】.txt"),
       attachment("【機 密】.txt"),
     ],
+    warnings: [
+      "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
+      "[警告] 注意が必要なファイル名（Zipped.ZIP）が含まれています。",
+      "[警告] 注意が必要なファイル名（【機密】.txt）が含まれています。",
+      "[警告] 注意が必要なファイル名（【機 密】.txt）が含まれています。",
+    ],
+    confirmations: [
+      "[添付ファイル]  Safe.txt",
+      "[添付ファイル]  Unsafe.txt",
+      "[添付ファイル]  Zipped.ZIP",
+      "[添付ファイル]  【機密】.txt",
+      "[添付ファイル]  【機 密】.txt",
+    ],
   },
 };
-export function test_classify({ data, attachments, unsafeAttachments }) {
+export function test_classify({ data, attachments, unsafeAttachments, warnings, confirmations }) {
   const confirmation = new AttachmentsConfirmation();
   confirmation.init(data);
   is(attachments, [...confirmation.attachments]);
   is(unsafeAttachments, [...confirmation.unsafeAttachments]);
+  is(
+    warnings.map((label) => ({label})),
+    confirmation.warningConfirmationItems
+  );
+  is(
+    confirmations.map((label) => ({label})),
+    confirmation.confirmationItems
+  );
 }
