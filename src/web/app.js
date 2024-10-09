@@ -136,6 +136,10 @@ async function openDialog({ url, data, asyncContext, ...params }) {
       resolve
     );
   });
+  if (asyncResult.status === Office.AsyncResultStatus.Failed && asyncResult.error.code === 12007) {
+    // could not open dialog before the previous dialog is not closed completely, so we need to retry it manually.
+    return openDialog({ url, data, asyncContext, ...params });
+  }
 
   asyncContext = asyncResult.asyncContext;
   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
