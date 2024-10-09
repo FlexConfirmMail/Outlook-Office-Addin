@@ -81,12 +81,12 @@ function appendMiscCheckboxes(labels) {
   }
 }
 
-function appendMiscWarningCheckboxes(labels) {
+function appendMiscWarningCheckboxes(items) {
   const container = $("#attachment-and-others");
-  for (const label of labels) {
+  for (const item of items) {
     appendCheckbox({
       container,
-      label,
+      label: item.label || item,
       warning: true,
     });
   }
