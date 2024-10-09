@@ -168,6 +168,7 @@ async function onItemSend(event) {
 
   if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
     console.log("Skip confirmation: no untrusted recipient");
+    event.completed({ allowEvent: true });
     return;
   }
 
@@ -202,7 +203,7 @@ async function onItemSend(event) {
           if (allowEvent && data.mailId) {
             sessionStorage.removeItem(data.mailId);
           }
-          asyncResult.asyncContext.completed({ allowEvent: allowEvent });
+          asyncResult.asyncContext.completed({ allowEvent });
         }
       });
       dialog.addEventHandler(Office.EventType.DialogEventReceived, (arg) => {
