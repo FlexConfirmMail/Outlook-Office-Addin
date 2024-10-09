@@ -1,4 +1,5 @@
 import { ConfigLoader } from "./config-loader.mjs";
+import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
 const CONFIRM_ATTACHMENT_TYPES = new Set([
@@ -113,6 +114,25 @@ async function onItemSend(event) {
   console.debug("onItemSend ", event);
   const data = await getAllData();
   console.debug(data);
+
+  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
+  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
+  const bcc = data.target.bcc ? data.target.bcc.map((_) => _.emailAddress) : [];
+  const trustedDomains = data.config.trustedDomains;
+  const unsafeDomains = data.config.unsafeDomains;
+
+  data.classified = RecipientClassifier.classifyAll({ to, cc, bcc, trustedDomains, unsafeDomains });
+  console.debug("classified: ", data.classified);
+
+  if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
+    console.log("Skip confirmation: no untrusted recipient");
+    event.completed({ allowEvent: true });
+    if (data.mailId) {
+      sessionStorage.removeItem(data.mailId);
+    }
+    return;
+  }
+
   // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
   const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
   Office.context.ui.displayDialogAsync(
@@ -144,7 +164,7 @@ async function onItemSend(event) {
           if (allowEvent && data.mailId) {
             sessionStorage.removeItem(data.mailId);
           }
-          asyncResult.asyncContext.completed({ allowEvent: allowEvent });
+          asyncResult.asyncContext.completed({ allowEvent });
         }
       });
       dialog.addEventHandler(Office.EventType.DialogEventReceived, (arg) => {

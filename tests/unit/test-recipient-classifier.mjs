@@ -447,3 +447,49 @@ export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomai
     }
   );
 }
+
+test_classifyAll.parameters = {
+  'multiple slots': {
+    params: {
+      to: [
+        'aaa@example.com',
+      ],
+      cc: [
+        'bbb@example.org',
+      ],
+      bcc: [
+        'ccc@example.net',
+      ],
+      trustedDomains: ['example.com'],
+      unsafeDomains: ['example.net'],
+    },
+    expected: {
+      trusted: [
+        { recipient: 'aaa@example.com',
+          address: 'aaa@example.com',
+          domain: 'example.com',
+          type: 'To' },
+      ],
+      untrusted: [
+        { recipient: 'bbb@example.org',
+          address: 'bbb@example.org',
+          domain: 'example.org',
+          type: 'Cc' },
+        { recipient: 'ccc@example.net',
+          address: 'ccc@example.net',
+          domain: 'example.net',
+          type: 'Bcc' },
+      ],
+      unsafeWithDomain: [
+        { recipient: 'ccc@example.net',
+          address: 'ccc@example.net',
+          domain: 'example.net',
+          type: 'Bcc' },
+      ],
+      unsafe: [],
+    }
+  },
+}
+export function test_classifyAll({ params, expected }) {
+  is(expected, RecipientClassifier.classifyAll(params));
+}

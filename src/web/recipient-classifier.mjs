@@ -80,4 +80,45 @@ export class RecipientClassifier {
       unsafe: Array.from(unsafe),
     };
   }
+
+  static classifyAll({ to, cc, bcc, trustedDomains, unsafeDomains }) {
+    const classifier = new RecipientClassifier({
+      trustedDomains: trustedDomains || [],
+      unsafeDomains: unsafeDomains || [],
+    });
+    const classifiedTo = classifier.classify(to);
+    const classifiedCc = classifier.classify(cc);
+    const classifiedBcc = classifier.classify(bcc);
+
+    return {
+      trusted: [
+        ...new Set([
+          ...classifiedTo.trusted.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.trusted.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.trusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
+        ]),
+      ],
+      untrusted: [
+        ...new Set([
+          ...classifiedTo.untrusted.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
+        ]),
+      ],
+      unsafeWithDomain: [
+        ...new Set([
+          ...classifiedTo.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
+        ]),
+      ],
+      unsafe: [
+        ...new Set([
+          ...classifiedTo.unsafe.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.unsafe.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.unsafe.map((recipient) => ({ ...recipient, type: "Bcc" })),
+        ]),
+      ],
+    };
+  }
 }
