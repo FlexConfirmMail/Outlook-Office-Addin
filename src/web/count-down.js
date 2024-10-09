@@ -30,6 +30,9 @@ function onMessageFromParent(arg) {
     $("#send-button").hide();
   }
 
+  $("#count").text(data.config.common.CountSeconds);
+  $("#message").show();
+
   const start = Date.now();
   const timer = window.setInterval(() => {
     const rest = Math.ceil(data.config.common.CountSeconds - (Date.now() - start) / 1000);
