@@ -166,6 +166,11 @@ async function onItemSend(event) {
   data.classified = classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains });
   console.debug("classified: ", data.classified);
 
+  if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
+    console.log("Skip confirmation: no untrusted recipient");
+    return;
+  }
+
   // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
   const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
   Office.context.ui.displayDialogAsync(
