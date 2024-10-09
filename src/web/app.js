@@ -17,7 +17,11 @@ function getBccAsync() {
   return new Promise((resolve, reject) => {
     try {
       Office.context.mailbox.item.bcc.getAsync((asyncResult) => {
-        resolve(RecipientParser.parse(asyncResult.value));
+        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
+          ...officeAddonRecipient,
+          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
+        }));
+        resolve(recipients);
       });
     } catch (error) {
       console.log(`Error while getting Bcc: ${error}`);
@@ -30,7 +34,11 @@ function getCcAsync() {
   return new Promise((resolve, reject) => {
     try {
       Office.context.mailbox.item.cc.getAsync((asyncResult) => {
-        resolve(RecipientParser.parse(asyncResult.value));
+        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
+          ...officeAddonRecipient,
+          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
+        }));
+        resolve(recipients);
       });
     } catch (error) {
       console.log(`Error while getting Cc: ${error}`);
@@ -43,7 +51,11 @@ function getToAsync() {
   return new Promise((resolve, reject) => {
     try {
       Office.context.mailbox.item.to.getAsync((asyncResult) => {
-        resolve(RecipientParser.parse(asyncResult.value));
+        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
+          ...officeAddonRecipient,
+          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
+        }));
+        resolve(recipients);
       });
     } catch (error) {
       console.log(`Error while getting To: ${error}`);
@@ -116,11 +128,8 @@ async function onItemSend(event) {
   const data = await getAllData();
   console.debug(data);
 
-  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
-  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
-  const bcc = data.target.bcc ? data.target.bcc.map((_) => _.emailAddress) : [];
-  const trustedDomains = data.config.trustedDomains;
-  const unsafeDomains = data.config.unsafeDomains;
+  const { to, cc, bcc } = data.target;
+  const { trustedDomains, unsafeDomains } = data.config;
 
   data.classified = RecipientClassifier.classifyAll({ to, cc, bcc, trustedDomains, unsafeDomains });
   console.debug("classified: ", data.classified);
