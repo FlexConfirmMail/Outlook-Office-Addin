@@ -1,4 +1,5 @@
 import { ConfigLoader } from "./config-loader.mjs";
+import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
@@ -16,7 +17,7 @@ function getBccAsync() {
   return new Promise((resolve, reject) => {
     try {
       Office.context.mailbox.item.bcc.getAsync((asyncResult) => {
-        resolve(asyncResult.value);
+        resolve(RecipientParser.parse(asyncResult.value));
       });
     } catch (error) {
       console.log(`Error while getting Bcc: ${error}`);
@@ -29,7 +30,7 @@ function getCcAsync() {
   return new Promise((resolve, reject) => {
     try {
       Office.context.mailbox.item.cc.getAsync((asyncResult) => {
-        resolve(asyncResult.value);
+        resolve(RecipientParser.parse(asyncResult.value));
       });
     } catch (error) {
       console.log(`Error while getting Cc: ${error}`);
@@ -42,7 +43,7 @@ function getToAsync() {
   return new Promise((resolve, reject) => {
     try {
       Office.context.mailbox.item.to.getAsync((asyncResult) => {
-        resolve(asyncResult.value);
+        resolve(RecipientParser.parse(asyncResult.value));
       });
     } catch (error) {
       console.log(`Error while getting To: ${error}`);
