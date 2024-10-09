@@ -1,4 +1,5 @@
 import { ConfigLoader } from "./config-loader.mjs";
+import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
 const CONFIRM_ATTACHMENT_TYPES = new Set([
@@ -108,11 +109,63 @@ async function getAllData() {
   };
 }
 
+function classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains }) {
+  const classifier = new RecipientClassifier({
+    trustedDomains: trustedDomains || [],
+    unsafeDomains: unsafeDomains || [],
+  });
+  const classifiedTo = classifier.classify(to);
+  const classifiedCc = classifier.classify(cc);
+  const classifiedBcc = classifier.classify(bcc);
+  console.log("classified results: ", { classifiedTo, classifiedCc, classifiedBcc });
+
+  return {
+    trusted: [
+      ...new Set([
+        ...classifiedTo.trusted.map((recipient) => ({ ...recipient, type: "To" })),
+        ...classifiedCc.trusted.map((recipient) => ({ ...recipient, type: "Cc" })),
+        ...classifiedBcc.trusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
+      ]),
+    ],
+    untrusted: [
+      ...new Set([
+        ...classifiedTo.untrusted.map((recipient) => ({ ...recipient, type: "To" })),
+        ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
+        ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
+      ]),
+    ],
+    unsafeWithDomain: [
+      ...new Set([
+        ...classifiedTo.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
+        ...classifiedCc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
+        ...classifiedBcc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
+      ]),
+    ],
+    unsafe: [
+      ...new Set([
+        ...classifiedTo.unsafe.map((recipient) => ({ ...recipient, type: "To" })),
+        ...classifiedCc.unsafe.map((recipient) => ({ ...recipient, type: "Cc" })),
+        ...classifiedBcc.unsafe.map((recipient) => ({ ...recipient, type: "Bcc" })),
+      ]),
+    ],
+  };
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onItemSend(event) {
   console.debug("onItemSend ", event);
   const data = await getAllData();
   console.debug(data);
+
+  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
+  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
+  const bcc = data.target.bcc ? data.target.bcc.map((_) => _.emailAddress) : [];
+  const trustedDomains = data.config.trustedDomains;
+  const unsafeDomains = data.config.unsafeDomains;
+
+  data.classified = classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains });
+  console.debug("classified: ", data.classified);
+
   // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
   const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
   Office.context.ui.displayDialogAsync(

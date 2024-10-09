@@ -1,4 +1,3 @@
-import { RecipientClassifier } from "./recipient-classifier.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
@@ -108,46 +107,11 @@ function appendCheckbox({ container, id, label, warning }) {
   $(`#${id}`).text(label);
 }
 
-function classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains }) {
-  const classifier = new RecipientClassifier({
-    trustedDomains: trustedDomains || [],
-    unsafeDomains: unsafeDomains || [],
-  });
-  const classifiedTo = classifier.classify(to);
-  const classifiedCc = classifier.classify(cc);
-  const classifiedBcc = classifier.classify(bcc);
-  console.log("classified results: ", { classifiedTo, classifiedCc, classifiedBcc });
-
-  return {
-    trusted: new Set([
-      ...classifiedTo.trusted.map((recipient) => ({ ...recipient, type: "To" })),
-      ...classifiedCc.trusted.map((recipient) => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.trusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
-    ]),
-    untrusted: new Set([
-      ...classifiedTo.untrusted.map((recipient) => ({ ...recipient, type: "To" })),
-      ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
-    ]),
-    unsafeWithDomain: new Set([
-      ...classifiedTo.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
-      ...classifiedCc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
-    ]),
-    unsafe: new Set([
-      ...classifiedTo.unsafe.map((recipient) => ({ ...recipient, type: "To" })),
-      ...classifiedCc.unsafe.map((recipient) => ({ ...recipient, type: "Cc" })),
-      ...classifiedBcc.unsafe.map((recipient) => ({ ...recipient, type: "Bcc" })),
-    ]),
-  };
-}
-
 function onMessageFromParent(arg) {
   const data = JSON.parse(arg.message);
 
   // The data scheme:
   // data = {
-  //         unsafeFiles : null,
   //   target: {
   //     to : [{emailAddress:"mail@example.com"}, ...],
   //     cc : [...],
@@ -165,34 +129,29 @@ function onMessageFromParent(arg) {
   //     cc : [...],
   //     bcc : [...],
   //   },
+  //   classified: {
+  //     trusted: [...],
+  //     untrusted: [...],
+  //     unsafeWithDomain: [...],
+  //     unsafe: [...],
+  //   },
   // }
 
   console.log(data);
-  const to = data.target.to ? data.target.to.map((_) => _.emailAddress) : [];
-  const cc = data.target.cc ? data.target.cc.map((_) => _.emailAddress) : [];
-  const bcc = data.target.bcc ? data.target.bcc.map((_) => _.emailAddress) : [];
-  const trustedDomains = data.config.trustedDomains;
-  const unsafeDomains = data.config.unsafeDomains;
 
-  const classifiedRecipients = classifyRecipients({ to, cc, bcc, trustedDomains, unsafeDomains });
-  console.log(classifiedRecipients);
-
-  const groupedByTypeTrusteds = Object.groupBy(classifiedRecipients.trusted, (item) => item.domain);
+  const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
   appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
-  const groupedByTypeUntrusted = Object.groupBy(classifiedRecipients.untrusted, (item) => item.domain);
+  const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
   appendRecipientCheckboxes($("#untrusted-domains"), groupedByTypeUntrusted);
 
   appendMiscWarningCheckboxes(
     Array.from(
-      new Set(Array.from(classifiedRecipients.unsafeWithDomain, (recipient) => recipient.domain.toLowerCase())),
+      new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
       (domain) => `[警告] 注意が必要なドメイン（${domain}）が宛先に含まれています。`
     )
   );
   appendMiscWarningCheckboxes(
-    Array.from(
-      classifiedRecipients.unsafe,
-      (recipient) => `[警告] 注意が必要な宛先（${recipient.address}）が含まれています。`
-    )
+    data.classified.unsafe.map((recipient) => `[警告] 注意が必要な宛先（${recipient.address}）が含まれています。`)
   );
 
   addedDomainsReconfirmation.init(data);
