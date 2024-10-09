@@ -127,6 +127,9 @@ async function onItemSend(event) {
   if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
     console.log("Skip confirmation: no untrusted recipient");
     event.completed({ allowEvent: true });
+    if(data.mailId) {
+       sessionStorage.removeItem(data.mailId);
+     }
     return;
   }
 
