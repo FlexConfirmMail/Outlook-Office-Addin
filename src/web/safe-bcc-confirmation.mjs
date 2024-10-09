@@ -12,7 +12,7 @@ export class SafeBccConfirmation {
       return;
     }
 
-    const recipients = [...data.target.to, ...data.target.cc, ...data.target.bcc];
+    const recipients = [...data.target.to, ...data.target.cc];
     const domains = new Set(recipients.map((recipient) => recipient.domain));
     this.shouldConfirm = domains.size >= this.threshold;
   }
