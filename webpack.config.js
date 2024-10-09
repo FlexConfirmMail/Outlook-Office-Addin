@@ -20,6 +20,7 @@ module.exports = async (env, options) => {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       app: ["./src/web/app.js"],
       dialog: ["./src/web/dialog.js"],
+      "count-down": ["./src/web/count-down.js"],
     },
     output: {
       clean: true,
@@ -81,6 +82,11 @@ module.exports = async (env, options) => {
         filename: "dialog.html",
         template: "./src/web/dialog.html",
         chunks: ["polyfill", "dialog"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "count-down.html",
+        template: "./src/web/count-down.html",
+        chunks: ["polyfill", "count-down"],
       }),
     ],
     devServer: {
