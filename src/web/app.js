@@ -122,12 +122,7 @@ async function getAllData() {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function onItemSend(event) {
-  console.debug("onItemSend ", event);
-  const data = await getAllData();
-  console.debug(data);
-
+async function tryConfirm(data, event) {
   const { to, cc, bcc } = data.target;
   const { trustedDomains, unsafeDomains } = data.config;
 
@@ -136,57 +131,80 @@ async function onItemSend(event) {
 
   if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
     console.log("Skip confirmation: no untrusted recipient");
-    event.completed({ allowEvent: true });
     if (data.mailId) {
       sessionStorage.removeItem(data.mailId);
     }
-    return;
+    return {
+      allowed: true,
+      context: event,
+    };
   }
 
   // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
   const needToPromptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
-  Office.context.ui.displayDialogAsync(
-    window.location.origin + "/dialog.html",
-    {
-      asyncContext: event,
-      height: 60,
-      width: 60,
-      promptBeforeOpen: needToPromptBeforeOpen,
-    },
-    (asyncResult) => {
-      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-        console.log(`Failed to open dialog: ${asyncResult.error.code}`);
-        asyncResult.asyncContext.completed({
-          allowEvent: false,
-        });
-        return;
+  const asyncResult = await new Promise((resolve) => {
+    Office.context.ui.displayDialogAsync(
+      window.location.origin + "/dialog.html",
+      {
+        asyncContext: event,
+        height: 60,
+        width: 60,
+        promptBeforeOpen: needToPromptBeforeOpen,
+      },
+      resolve
+    );
+  });
+
+  const context = asyncResult.asyncContext;
+  if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+    console.log(`Failed to open dialog: ${asyncResult.error.code}`);
+    return {
+      allowed: false,
+      context,
+    };
+  }
+
+  const dialog = asyncResult.value;
+  const allowed = await new Promise((resolve) => {
+    dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
+      const messageFromDialog = JSON.parse(arg.message);
+      console.debug(messageFromDialog);
+      if (messageFromDialog.status == "ready") {
+        const messageToDialog = JSON.stringify(data);
+        dialog.messageChild(messageToDialog);
+      } else {
+        dialog.close();
+        const allowEvent = messageFromDialog.status === "ok";
+        if (allowEvent && data.mailId) {
+          sessionStorage.removeItem(data.mailId);
+        }
+        resolve(allowEvent);
       }
-      const dialog = asyncResult.value;
-      dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
-        const messageFromDialog = JSON.parse(arg.message);
-        console.debug(messageFromDialog);
-        if (messageFromDialog.status == "ready") {
-          const messageToDialog = JSON.stringify(data);
-          dialog.messageChild(messageToDialog);
-        } else {
-          dialog.close();
-          const allowEvent = messageFromDialog.status === "ok";
-          if (allowEvent && data.mailId) {
-            sessionStorage.removeItem(data.mailId);
-          }
-          asyncResult.asyncContext.completed({ allowEvent });
-        }
-      });
-      dialog.addEventHandler(Office.EventType.DialogEventReceived, (arg) => {
-        if (arg.error === 12006) {
-          // Closed with the up-right "X" button.
-          asyncResult.asyncContext.completed({
-            allowEvent: false,
-          });
-        }
-      });
-    }
-  );
+    });
+    dialog.addEventHandler(Office.EventType.DialogEventReceived, (arg) => {
+      if (arg.error === 12006) {
+        // Closed with the up-right "X" button.
+        resolve(false);
+      }
+    });
+  });
+
+  return { allowed, context };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function onItemSend(event) {
+  console.debug("onItemSend ", event);
+  const data = await getAllData();
+  console.debug(data);
+
+  const { allowed, context } = await tryConfirm(data, event);
+  if (!allowed) {
+    context.completed({ allowEvent: false });
+    return;
+  }
+
+  context.completed({ allowEvent: true });
 }
 window.onItemSend = onItemSend;
 
