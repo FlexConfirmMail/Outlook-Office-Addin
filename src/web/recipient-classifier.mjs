@@ -89,7 +89,6 @@ export class RecipientClassifier {
     const classifiedTo = classifier.classify(to);
     const classifiedCc = classifier.classify(cc);
     const classifiedBcc = classifier.classify(bcc);
-    console.log("classified results: ", { classifiedTo, classifiedCc, classifiedBcc });
 
     return {
       trusted: [
