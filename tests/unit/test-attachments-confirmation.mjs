@@ -5,11 +5,11 @@
 */
 'use strict';
 
-import { AttachmentsConfirmation } from '../../src/web/attachments-confirmation.mjs';
-import { assert } from 'tiny-esm-test-runner';
+import { AttachmentsConfirmation } from "../../src/web/attachments-confirmation.mjs";
+import { assert } from "tiny-esm-test-runner";
 const { is } = assert;
 
-function toAttachment(name) {
+function attachment(name) {
   return { name };
 }
 
@@ -25,6 +25,8 @@ test_classify.parameters = {
     },
     attachments: [],
     unsafeAttachments: [],
+    warnings: [],
+    confirmations: [],
   },
   BlankInputWithUnsafeFiles: {
     data: {
@@ -39,13 +41,15 @@ test_classify.parameters = {
     },
     attachments: [],
     unsafeAttachments: [],
+    warnings: [],
+    confirmations: [],
   },
   WithNoUnsafeFiles: {
     data: {
       target: {
         attachments: [
-          toAttachment("Safe.txt"),
-          toAttachment("Unsafe.txt"),
+          attachment("Safe.txt"),
+          attachment("Unsafe.txt"),
         ],
       },
       config: {
@@ -53,17 +57,22 @@ test_classify.parameters = {
       },
     },
     attachments: [
-      toAttachment("Safe.txt"),
-      toAttachment("Unsafe.txt"),
+      attachment("Safe.txt"),
+      attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [],
+    warnings: [],
+    confirmations: [
+      "[添付ファイル]  Safe.txt",
+      "[添付ファイル]  Unsafe.txt",
+    ],
   },
   WithUnsafeFiles: {
     data: {
       target: {
         attachments: [
-          toAttachment("Safe.txt"),
-          toAttachment("Unsafe.txt"),
+          attachment("Safe.txt"),
+          attachment("Unsafe.txt"),
         ],
       },
       config: {
@@ -75,22 +84,29 @@ test_classify.parameters = {
       },
     },
     attachments: [
-      toAttachment("Safe.txt"),
-      toAttachment("Unsafe.txt"),
+      attachment("Safe.txt"),
+      attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [
-      toAttachment("Unsafe.txt"),
+      attachment("Unsafe.txt"),
+    ],
+    warnings: [
+      "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
+    ],
+    confirmations: [
+      "[添付ファイル]  Safe.txt",
+      "[添付ファイル]  Unsafe.txt",
     ],
   },
   WithMultipleUnsafeFiles: {
     data: {
       target: {
         attachments: [
-          toAttachment("Safe.txt"),
-          toAttachment("Unsafe.txt"),
-          toAttachment("Zipped.ZIP"),
-          toAttachment("【機密】.txt"),
-          toAttachment("【機 密】.txt"),
+          attachment("Safe.txt"),
+          attachment("Unsafe.txt"),
+          attachment("Zipped.ZIP"),
+          attachment("【機密】.txt"),
+          attachment("【機 密】.txt"),
         ],
       },
       config: {
@@ -102,23 +118,44 @@ test_classify.parameters = {
       },
     },
     attachments: [
-      toAttachment("Safe.txt"),
-      toAttachment("Unsafe.txt"),
-      toAttachment("Zipped.ZIP"),
-      toAttachment("【機密】.txt"),
-      toAttachment("【機 密】.txt"),
+      attachment("Safe.txt"),
+      attachment("Unsafe.txt"),
+      attachment("Zipped.ZIP"),
+      attachment("【機密】.txt"),
+      attachment("【機 密】.txt"),
     ],
     unsafeAttachments: [
-      toAttachment("Unsafe.txt"),
-      toAttachment("Zipped.ZIP"),
-      toAttachment("【機密】.txt"),
-      toAttachment("【機 密】.txt"),
+      attachment("Unsafe.txt"),
+      attachment("Zipped.ZIP"),
+      attachment("【機密】.txt"),
+      attachment("【機 密】.txt"),
+    ],
+    warnings: [
+      "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
+      "[警告] 注意が必要なファイル名（Zipped.ZIP）が含まれています。",
+      "[警告] 注意が必要なファイル名（【機密】.txt）が含まれています。",
+      "[警告] 注意が必要なファイル名（【機 密】.txt）が含まれています。",
+    ],
+    confirmations: [
+      "[添付ファイル]  Safe.txt",
+      "[添付ファイル]  Unsafe.txt",
+      "[添付ファイル]  Zipped.ZIP",
+      "[添付ファイル]  【機密】.txt",
+      "[添付ファイル]  【機 密】.txt",
     ],
   },
 };
-export function test_classify({ data, attachments, unsafeAttachments }) {
+export function test_classify({ data, attachments, unsafeAttachments, warnings, confirmations }) {
   const confirmation = new AttachmentsConfirmation();
   confirmation.init(data);
   is(attachments, [...confirmation.attachments]);
   is(unsafeAttachments, [...confirmation.unsafeAttachments]);
+  is(
+    warnings.map((label) => ({label})),
+    confirmation.warningConfirmationItems
+  );
+  is(
+    confirmations.map((label) => ({label})),
+    confirmation.confirmationItems
+  );
 }

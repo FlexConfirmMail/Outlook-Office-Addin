@@ -6,6 +6,11 @@
 "use strict";
 
 export function parse(recipient) {
+  if (recipient && typeof recipient == "object") {
+    // already parsed
+    return recipient;
+  }
+
   const address = /<([^@]+@[^>]+)>\s*$/.test(recipient) ? RegExp.$1 : recipient;
   const domain = address.split("@")[1].toLowerCase();
   return {
