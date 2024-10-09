@@ -74,10 +74,13 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
   }
 }
 
-function appendMiscCheckboxes(labels) {
+function appendMiscCheckboxes(items) {
   const container = $("#attachment-and-others");
-  for (const label of labels) {
-    appendCheckbox({ container, label });
+  for (const item of items) {
+    appendCheckbox({
+      container,
+      label: item.label || item,
+    });
   }
 }
 
