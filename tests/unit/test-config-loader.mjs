@@ -227,6 +227,10 @@ test_toDictionaryCommon.parameters = {
     str: "SafeBccThreshold=5",
     expected: { "SafeBccThreshold": 5 },
   },
+  "Extra spaces": {
+    str: " SafeBccThreshold = 5 ",
+    expected: { "SafeBccThreshold": 5 },
+  },
   "multiple params": {
     str: "CountAllowSkip=True\nSafeBccThreshold=5",
     expected: { 
