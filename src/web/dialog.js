@@ -35,7 +35,7 @@ window.onCheckAllTrusted = () => {
 };
 
 window.onSend = () => {
-  if (addedDomainsReconfirmation.hasNewDomainAddress) {
+  if (addedDomainsReconfirmation.needToConfirm) {
     addedDomainsReconfirmation.show();
   } else {
     sendStatusToParent("ok");

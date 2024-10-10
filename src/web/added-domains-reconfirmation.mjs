@@ -1,7 +1,7 @@
 import * as RecipientParser from "./recipient-parser.mjs";
 
 export class AddedDomainsReconfirmation {
-  hasNewDomainAddress = false;
+  needToConfirm = false;
   newDomainAddresses = new Set();
   initialized = false;
 
@@ -26,6 +26,9 @@ export class AddedDomainsReconfirmation {
       return;
     }
     this.initialized = true;
+    if (!data.config.common.SafeNewDomainsEnabled) {
+      return;
+    }
     if (!data.originalRecipients) {
       return;
     }
@@ -46,8 +49,8 @@ export class AddedDomainsReconfirmation {
       }
       this.newDomainAddresses.add(recipient.address);
     }
-    this.hasNewDomainAddress = this.newDomainAddresses.size > 0;
-    if (!this.hasNewDomainAddress) {
+    this.needToConfirm = this.newDomainAddresses.size > 0;
+    if (!this.needToConfirm) {
       return;
     }
   }
