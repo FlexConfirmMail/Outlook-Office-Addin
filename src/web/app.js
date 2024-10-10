@@ -123,14 +123,12 @@ async function getAllData() {
 }
 
 async function openDialog({ url, data, asyncContext, ...params }) {
-  // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
-  const promptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
       {
         asyncContext,
-        promptBeforeOpen,
+        promptBeforeOpen: false,
         ...params,
       },
       resolve
