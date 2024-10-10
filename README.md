@@ -77,7 +77,16 @@ npm run watch:run-test-server
 上記のコマンドを実行すると、10秒ごとに`src`の変更を監視し、変更があればリビルドして`tests\run-test-server\web`に出力する。
 上記コマンド実行時、証明書のインポートを求められた場合はインポートすること。
 
-### Outlookでのテストを行う。
+### ポップアップブロックの例外登録
+
+本アドインが開くダイアログはポップアップウィンドウの形を取るため、Web UIを利用する場合はブラウザーのポップアップブロック機能によってダイアログがブロックされる恐れがある。
+ダイアログが確実に開かれるようにするため、事前にポップアップブロック機能の例外を登録しておく。
+
+* Edgeの場合： `edge://settings/content/popups` で `https://outlook.office.com:443` を許可リストに登録する。
+* Chromeの場合： `chrome://settings/content/popups` で `https://outlook.office.com:443` を許可リストに登録する。
+* Firefoxの場合： `about:preferences#privacy` の「許可設定」→「ポップアップウィンドウをブロックする」→「許可サイト」で `https://outlook.office.com:443` を許可リストに登録する。
+
+### Outlookでのテストを行う
 
 * 以下のいずれかの方法でアドイン追加ページを呼び出す
   * デスクトップアプリ
