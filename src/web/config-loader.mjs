@@ -9,28 +9,28 @@ export class ConfigLoader {
     SafeBccThreshold: "number",
   };
 
-  static assign(targetConfig, paramDefs, key, valStr) {
+  static parseValue(paramDefs, key, valueStr) {
     if (!(key in paramDefs)) {
-      return false;
+      return null;
     }
     const keyType = paramDefs[key];
     switch (keyType) {
-      case "boolean":
-        const boolResult = this.parseBool(valStr);
+      case "boolean": {
+        const boolResult = this.parseBool(valueStr);
         if (boolResult !== null) {
-          targetConfig[key] = boolResult;
-          return true;
+          return boolResult;
         }
         break;
-      case "number":
-        const numResult = parseInt(valStr, 10);
+      }
+      case "number": {
+        const numResult = parseInt(valueStr, 10);
         if (!isNaN(numResult)) {
-          targetConfig[key] = numResult;
-          return true;
+          return numResult;
         }
         break;
+      }
     }
-    return false;
+    return null;
   }
 
   static parseBool(str) {
@@ -66,23 +66,27 @@ export class ConfigLoader {
     if (!str) {
       return null;
     }
-    const resultDictionary = {};
+    const dictionary = {};
     str = str.trim();
     for (let item of str.split("\n")) {
       item = item.trim();
       if (item.length <= 0 || item[0] === "#") {
         continue;
       }
-      const regex = /^([^=]+)\s*=\s*(.*)$/;
+      const regex = /^([^=]+)=(.*)$/;
       const match = item.match(regex);
       if (!match) {
         continue;
       }
       const key = match[1].trim();
-      const value = match[2].trim();
-      this.assign(resultDictionary, paramDefs, key, value);
+      const valueStr = match[2].trim();
+      const value = this.parseValue(paramDefs, key, valueStr);
+      if (value === null) {
+        continue;
+      }
+      dictionary[key] = value;
     }
-    return resultDictionary;
+    return dictionary;
   }
 
   static async loadFile(url) {
