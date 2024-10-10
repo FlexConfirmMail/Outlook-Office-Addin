@@ -26,7 +26,7 @@ export class AddedDomainsReconfirmation {
       return;
     }
     this.initialized = true;
-    if(!data.config.common.SafeNewDomainsEnabled) {
+    if (!data.config.common.SafeNewDomainsEnabled) {
       return;
     }
     if (!data.originalRecipients) {
