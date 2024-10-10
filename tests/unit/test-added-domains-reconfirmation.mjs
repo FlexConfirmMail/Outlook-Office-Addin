@@ -25,6 +25,9 @@ test_shouldReconfirm.parameters = {
         trustedDomains : [],
         untrustedDomains : [],
         unsafeFiles : [],
+        common: {
+          SafeNewDomainsEnabled: true,
+        },
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -46,6 +49,9 @@ test_shouldReconfirm.parameters = {
         trustedDomains : [],
         untrustedDomains : [],
         unsafeFiles : [],
+        common: {
+          SafeNewDomainsEnabled: true,
+        },
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -67,6 +73,9 @@ test_shouldReconfirm.parameters = {
         trustedDomains : [],
         untrustedDomains : [],
         unsafeFiles : [],
+        common: {
+          SafeNewDomainsEnabled: true,
+        },
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -88,6 +97,9 @@ test_shouldReconfirm.parameters = {
         trustedDomains : [],
         untrustedDomains : [],
         unsafeFiles : [],
+        common: {
+          SafeNewDomainsEnabled: true,
+        },
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -109,6 +121,9 @@ test_shouldReconfirm.parameters = {
         trustedDomains : [],
         untrustedDomains : [],
         unsafeFiles : [],
+        common: {
+          SafeNewDomainsEnabled: true,
+        },
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -130,6 +145,9 @@ test_shouldReconfirm.parameters = {
         trustedDomains : [],
         untrustedDomains : [],
         unsafeFiles : [],
+        common: {
+          SafeNewDomainsEnabled: true,
+        },
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -151,6 +169,9 @@ test_shouldReconfirm.parameters = {
         trustedDomains : [],
         untrustedDomains : [],
         unsafeFiles : [],
+        common: {
+          SafeNewDomainsEnabled: true,
+        },
       },
       mailId: "FCM_OriginalRecipients_0123",
       originalRecipients: {
@@ -166,7 +187,7 @@ export function test_shouldReconfirm({ data, domains }) {
   const reconfirmation = new AddedDomainsReconfirmation();
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
-  ok(reconfirmation.hasNewDomainAddress);
+  ok(reconfirmation.needToConfirm);
   is(new Set(domains), reconfirmation.newDomainAddresses);
 }
 
@@ -181,6 +202,9 @@ test_shouldNotReconfirm.parameters = {
       trustedDomains : [],
       untrustedDomains : [],
       unsafeFiles : [],
+      common: {
+        SafeNewDomainsEnabled: true,
+      },
     },
     mailId: "FCM_OriginalRecipients_0123",
     originalRecipients: {
@@ -199,6 +223,9 @@ test_shouldNotReconfirm.parameters = {
       trustedDomains : [],
       untrustedDomains : [],
       unsafeFiles : [],
+      common: {
+        SafeNewDomainsEnabled: true,
+      },
     },
     mailId: "FCM_OriginalRecipients_0123",
     originalRecipients: {
@@ -217,6 +244,9 @@ test_shouldNotReconfirm.parameters = {
       trustedDomains : [],
       untrustedDomains : [],
       unsafeFiles : [],
+      common: {
+        SafeNewDomainsEnabled: true,
+      },
     },
     mailId: null,
     originalRecipients: null,
@@ -231,10 +261,53 @@ test_shouldNotReconfirm.parameters = {
       trustedDomains : [],
       untrustedDomains : [],
       unsafeFiles : [],
+      common: {
+        SafeNewDomainsEnabled: true,
+      },
     },
     mailId: "FCM_OriginalRecipients_0123",
     originalRecipients: {
       to : [],
+      cc : [],
+      bcc : [],
+    },
+  },
+  SafeNewDomainsEnabledIsFalse: {
+    target: {
+      to : [toTarget("to@example.com"), toTarget("added@example.net")],
+      cc : [],
+      bcc : [],
+    },
+    config: {
+      trustedDomains : [],
+      untrustedDomains : [],
+      unsafeFiles : [],
+      common: {
+        SafeNewDomainsEnabled: false,
+      },
+    },
+    mailId: "FCM_OriginalRecipients_0123",
+    originalRecipients: {
+      to : [toTarget("to@example.com")],
+      cc : [],
+      bcc : [],
+    },
+  },
+  SafeNewDomainsEnabledIsNotSpecified: {
+    target: {
+      to : [toTarget("to@example.com"), toTarget("added@example.net")],
+      cc : [],
+      bcc : [],
+    },
+    config: {
+      trustedDomains : [],
+      untrustedDomains : [],
+      unsafeFiles : [],
+      common: {},
+    },
+    mailId: "FCM_OriginalRecipients_0123",
+    originalRecipients: {
+      to : [toTarget("to@example.com")],
       cc : [],
       bcc : [],
     },
@@ -244,6 +317,6 @@ export function test_shouldNotReconfirm(data) {
   const reconfirmation = new AddedDomainsReconfirmation();
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
-  ng(reconfirmation.hasNewDomainAddress);
+  ng(reconfirmation.needToConfirm);
   is(new Set(), reconfirmation.newDomainAddresses);
 }
