@@ -6,11 +6,15 @@
 'use strict';
 
 import { AddedDomainsReconfirmation } from "../../src/web/added-domains-reconfirmation.mjs";
+import * as RecipientParser from "../../src/web/recipient-parser.mjs";
 import { assert } from 'tiny-esm-test-runner';
 const { ok, ng, is } = assert;
 
 function toTarget(address) {
-  return { emailAddress: address };
+  return { 
+    emailAddress: address,
+    ...RecipientParser.parse(address),
+   };
 }
 
 test_shouldReconfirm.parameters = {
