@@ -122,15 +122,13 @@ async function getAllData() {
   };
 }
 
-async function openDialog({ url, data, asyncContext, ...params }) {
-  // If the platform is web, to bypass pop-up blockers, we need to ask the users if they want to open a dialog.
-  const promptBeforeOpen = Office.context.mailbox.diagnostics.hostName === "OutlookWebApp";
+async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params }) {
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
       {
         asyncContext,
-        promptBeforeOpen,
+        promptBeforeOpen: promptBeforeOpen || false,
         ...params,
       },
       resolve
@@ -140,11 +138,29 @@ async function openDialog({ url, data, asyncContext, ...params }) {
   asyncContext = asyncResult.asyncContext;
   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
     console.log(`Failed to open dialog: ${asyncResult.error.code}`);
-    if (asyncResult.error.code === 12007) {
-      console.log(
-        "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
-      );
-      return openDialog({ url, data, asyncContext, ...params });
+    switch (asyncResult.error.code) {
+      case 12007:
+        console.log(
+          "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
+        );
+        return openDialog({ url, data, asyncContext, ...params });
+
+      case 12011:
+        console.log("failed due to the browser's popup blocker.");
+        if (promptBeforeOpen) {
+          break;
+        }
+        console.log("retrying with prompt.");
+        return openDialog({
+          url,
+          data,
+          asyncContext,
+          ...params,
+          promptBeforeOpen: true,
+        });
+
+      default:
+        break;
     }
     return {
       status: null,
