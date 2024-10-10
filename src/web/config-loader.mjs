@@ -14,18 +14,21 @@ export class ConfigLoader {
       return false;
     }
     const keyType = paramDefs[key];
-    if (keyType === "boolean") {
-      const perseResult = this.parseBool(valStr);
-      if (perseResult != null) {
-        targetConfig[key] = perseResult;
-        return true;
-      }
-    } else if (keyType === "number") {
-      const perseResult = parseInt(valStr, 10);
-      if (!isNaN(perseResult)) {
-        targetConfig[key] = perseResult;
-        return true;
-      }
+    switch (keyType) {
+      case "boolean":
+        const boolResult = this.parseBool(valStr);
+        if (boolResult !== null) {
+          targetConfig[key] = boolResult;
+          return true;
+        }
+        break;
+      case "number":
+        const numResult = parseInt(valStr, 10);
+        if (!isNaN(numResult)) {
+          targetConfig[key] = numResult;
+          return true;
+        }
+        break;
     }
     return false;
   }
