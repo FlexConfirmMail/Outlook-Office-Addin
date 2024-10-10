@@ -148,7 +148,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
       case 12011:
         console.log("failed due to the browser's popup blocker.");
         if (promptBeforeOpen) {
-          breakl
+          break;
         }
         console.log("retrying with prompt.");
         return openDialog({
