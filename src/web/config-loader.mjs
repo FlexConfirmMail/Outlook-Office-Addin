@@ -34,11 +34,10 @@ export class ConfigLoader {
     if (!str) {
       return null;
     }
-    const lowerStr = str.toLowerCase();
-    if (lowerStr === "yes" || lowerStr === "true" || lowerStr === "on" || lowerStr === "1") {
+    if (/^(yes|true|on|1)$/i.test(str)) {
       return true;
     }
-    if (lowerStr === "no" || lowerStr === "false" || lowerStr === "off" || lowerStr === "0") {
+    if (/^(no|false|off|0)$/i.test(str)) {
       return false;
     }
     return null;
@@ -71,12 +70,13 @@ export class ConfigLoader {
       if (item.length <= 0 || item[0] === "#") {
         continue;
       }
-      const separaterIndex = item.indexOf("=");
-      if (separaterIndex === -1) {
+      const regex = /^([^=]+)\s*=\s*(.*)$/;
+      const match = item.match(regex);
+      if (!match) {
         continue;
       }
-      const key = item.slice(0, separaterIndex).trim();
-      const value = item.slice(separaterIndex + 1).trim();
+      const key = match[1].trim();
+      const value = match[2].trim();
       this.assign(resultDictionary, paramDefs, key, value);
     }
     return resultDictionary;
