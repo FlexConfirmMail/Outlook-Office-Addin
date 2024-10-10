@@ -9,6 +9,8 @@ export class ConfigLoader {
     SafeBccThreshold: "number",
   };
 
+  static DICTONARY_LINE_SPLITTER = /^([^=]+)=(.*)$/;
+
   static parseValue(paramDefs, key, valueStr) {
     if (!(key in paramDefs)) {
       return null;
@@ -73,8 +75,7 @@ export class ConfigLoader {
       if (item.length <= 0 || item[0] === "#") {
         continue;
       }
-      const regex = /^([^=]+)=(.*)$/;
-      const match = item.match(regex);
+      const match = item.match(this.DICTONARY_LINE_SPLITTER);
       if (!match) {
         continue;
       }
