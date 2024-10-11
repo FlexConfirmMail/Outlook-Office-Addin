@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-Office.initialize = (reason) => {};
+Office.initialize = (_reason) => {};
 
 Office.onReady(() => {
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);

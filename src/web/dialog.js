@@ -9,7 +9,7 @@ let attachmentsConfirmation;
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-Office.initialize = (reason) => {};
+Office.initialize = (_reason) => {};
 
 Office.onReady(() => {
   const language = Office.context.displayLanguage;
