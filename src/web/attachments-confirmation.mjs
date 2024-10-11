@@ -1,8 +1,14 @@
+import { L10n } from "./l10n.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class AttachmentsConfirmation {
   unsafeAttachments = new Set();
   attachments = new Set();
+  locale = null;
+
+  constructor(language) {
+    this.locale = L10n.get(language);
+  }
 
   init(data) {
     const attachments = data.target.attachments || [];
@@ -33,13 +39,13 @@ export class AttachmentsConfirmation {
 
   get warningConfirmationItems() {
     return Array.from(this.unsafeAttachments, (attachment) => ({
-      label: `[警告] 注意が必要なファイル名（${attachment.name}）が含まれています。`,
+      label: this.locale.get("confirmation_unsafeAttachmentCheckboxLabel", { name: attachment.name }),
     }));
   }
 
   get confirmationItems() {
     return Array.from(this.attachments, (attachment) => ({
-      label: `[添付ファイル]  ${attachment.name}`,
+      label: this.locale.get("confirmation_attachmentCheckboxLabel", { name: attachment.name }),
     }));
   }
 }

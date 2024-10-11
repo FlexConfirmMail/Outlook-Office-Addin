@@ -1,15 +1,22 @@
+import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
-const safeBccConfirmation = new SafeBccConfirmation();
+let l10n;
+let safeBccConfirmation;
+let attachmentsConfirmation;
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
-const attachmentsConfirmation = new AttachmentsConfirmation();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = (reason) => {};
 
 Office.onReady(() => {
+  const language = Office.context.displayLanguage;
+  l10n = L10n.get(language);
+  safeBccConfirmation = new SafeBccConfirmation(language);
+  attachmentsConfirmation = new AttachmentsConfirmation(language);
+
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
   sendStatusToParent("ready");
 });
@@ -153,13 +160,14 @@ function onMessageFromParent(arg) {
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
 
   appendMiscWarningCheckboxes(
-    Array.from(
-      new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
-      (domain) => `[警告] 注意が必要なドメイン（${domain}）が宛先に含まれています。`
+    Array.from(new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())), (domain) =>
+      l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
     )
   );
   appendMiscWarningCheckboxes(
-    data.classified.unsafe.map((recipient) => `[警告] 注意が必要な宛先（${recipient.address}）が含まれています。`)
+    data.classified.unsafe.map((recipient) =>
+      l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
+    )
   );
 
   addedDomainsReconfirmation.init(data);
