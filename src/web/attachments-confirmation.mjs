@@ -2,15 +2,21 @@ import { L10n } from "./l10n.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class AttachmentsConfirmation {
-  unsafeAttachments = new Set();
-  attachments = new Set();
   locale = null;
 
   constructor(language) {
     this.locale = L10n.get(language);
+    this.ready = this.locale.ready;
+    this.clear();
+  }
+
+  clear() {
+    this.unsafeAttachments = new Set();
+    this.attachments = new Set();
   }
 
   init(data) {
+    this.clear();
     const attachments = data.target.attachments || [];
     const unsafeFiles = data.config.unsafeFiles || [];
 

@@ -9,22 +9,34 @@ export class L10n {
   static cache = {};
   static requests = {};
   static instances = {};
+  static baseUrl = ".";
+  static JSONFetcher = async (url) => {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        return response.json();
+      }
+    } catch (_error) {
+      // missing file
+    }
+    return null;
+  };
 
   static get(language) {
     return this.instances[language] || (this.instances[language] = new L10n(language));
   }
 
   constructor(language) {
-    this.language = (language || "en-US").toLowerCase();
-    this.loaded = this.load().then(() => true);
+    this.language = language || "en-US";
+    this.ready = this.load().then(() => true);
   }
 
   async load() {
     try {
       const [locale, fallbackLocale, defaultLocale] = await Promise.all([
-        this.loadLocale(this.language),
-        this.loadLocale(this.locale.split("-")[0]),
-        this.loadLocale("en-US"),
+        L10n.loadLocale(this.language),
+        L10n.loadLocale(this.language.split("-")[0]),
+        L10n.loadLocale("en-US"),
       ]);
       this.locale = locale;
       this.fallbackLocale = fallbackLocale;
@@ -36,24 +48,33 @@ export class L10n {
     }
   }
 
-  async loadLocale(language) {
-    if (L10n.cache[language]) return L10n.cache[language];
-
-    return (L10n.requests[language] = L10n.requests[language] || this.loadLocaleInternal(language));
-  }
-  async loadLocaleInternal(language) {
-    if (L10n.cache[language]) return L10n.cache[language];
-    const url = `locales/${language}.json`;
-    const response = await fetch(url);
-    if (response.ok) {
-      const locale = await response.json();
-      return (L10n.cache[language] = locale || {});
+  static async loadLocale(language) {
+    if (this.cache[language]) {
+      return this.cache[language];
     }
-    return null;
+    return (this.requests[language] = this.requests[language] || this.loadLocaleInternal(language));
+  }
+  static async loadLocaleInternal(language) {
+    if (this.cache[language]) {
+      return this.cache[language];
+    }
+    const baseUrl = this.baseUrl.split("?")[0].replace(/\/([^/]+)?$/, "");
+    const url = `${baseUrl}/locales/${language}.json`;
+    //console.debug("loading locale from ", url);
+    const locale = await this.JSONFetcher(url);
+    if (locale) {
+      //console.debug("locale successfully loaded from ", url, locale);
+      return (this.cache[language] = locale || {});
+    }
+    //console.debug("failed to load locale from ", url);
+    return (this.cache[language] = {});
   }
 
   get(key, params = {}) {
     let message = this.locale[key] || this.fallbackLocale[key] || this.defaultLocale[key];
+    if (!message) {
+      return key;
+    }
     if (params) {
       for (const [placeholder, value] of Object.entries(params)) {
         message = message.replace("${" + placeholder + "}", value || "");

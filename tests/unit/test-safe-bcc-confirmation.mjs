@@ -5,9 +5,16 @@
 */
 'use strict';
 
+import "./l10n.mjs";
 import { SafeBccConfirmation } from "../../src/web/safe-bcc-confirmation.mjs";
 import { assert } from "tiny-esm-test-runner";
 const { ok, ng, is } = assert;
+
+const confirmation = new SafeBccConfirmation("ja");
+
+export async function setUp() {
+  await confirmation.ready;
+}
 
 function recipient(address) {
   return {
@@ -83,7 +90,6 @@ test_shouldNotConfirm.parameters = {
   },
 };
 export function test_shouldNotConfirm({ data }) {
-  const confirmation = new SafeBccConfirmation();
   confirmation.init(data);
   ng(confirmation.shouldConfirm);
   is([], confirmation.warningConfirmationItems);
@@ -128,7 +134,6 @@ test_shouldConfirm.parameters = {
   },
 };
 export function test_shouldConfirm({ data, warnings }) {
-  const confirmation = new SafeBccConfirmation();
   confirmation.init(data);
   ok(confirmation.shouldConfirm);
   is(

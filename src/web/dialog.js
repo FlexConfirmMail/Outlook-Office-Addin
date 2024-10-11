@@ -119,7 +119,7 @@ function appendCheckbox({ container, id, label, warning }) {
   $(`#${id}`).text(label);
 }
 
-function onMessageFromParent(arg) {
+async function onMessageFromParent(arg) {
   const data = JSON.parse(arg.message);
 
   // The data scheme:
@@ -150,6 +150,7 @@ function onMessageFromParent(arg) {
   // }
 
   console.log(data);
+  await Promise.all([safeBccConfirmation.loaded, attachmentsConfirmation.loaded]);
 
   const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
   appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
