@@ -26,4 +26,4 @@ L10n.JSONFetcher = async (url) => {
   return null;
 };
 
-L10n.baseUrl = (new URL(`${import.meta.url}/../../../src/web/`)).toString();
+L10n.baseUrl = (new URL(`${import.meta.url}/../../../`)).toString();
