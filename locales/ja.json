@@ -16,7 +16,7 @@
   "newlyAddedDomainReconfirmation_messageBefore": "返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。",
   "newlyAddedDomainReconfirmation_messageAfter": "送信してよろしいですか？",
   "newlyAddedDomainReconfirmation_sendButtonLabel": "送信",
-  "newlyAddedDomainReconfirmation_cancelButtonLabel": "キャンセル"
+  "newlyAddedDomainReconfirmation_cancelButtonLabel": "キャンセル",
 
   "countDown_messageBefore": "",
   "countDown_messageAfter": "秒後に送信します",
