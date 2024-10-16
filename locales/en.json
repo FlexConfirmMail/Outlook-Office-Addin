@@ -1,0 +1,25 @@
+{
+  "confirmation_trustedCaption": "Internal Recipients",
+  "confirmation_trustedCheckAllButtonLabel": "Check all",
+  "confirmation_untrustedCaption": "External Recipients",
+  "confirmation_miscCaption": "Attachments / Warnings",
+  "confirmation_sendButtonLabel": "Send",
+  "confirmation_cancelButtonLabel": "Cancel",
+
+  "confirmation_safeBccThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains",
+  "confirmation_unsafeDomainRecipientCheckboxLabel": "[Warn] An unsafe domain \"${domain}\" found in the recipient list",
+  "confirmation_unsafeRecipientCheckboxLabel": "[Warn] An unsafe address \"${address}\" found in the recipient list",
+  "confirmation_unsafeAttachmentCheckboxLabel": "[Warn] An unsafe keyword (${name}) found in the attachment list",
+  "confirmation_attachmentCheckboxLabel": "[Attachment] ${name}",
+
+  "newlyAddedDomainReconfirmation_caption": "CAUTION!",
+  "newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",
+  "newlyAddedDomainReconfirmation_messageAfter": "Do you really want to send this message?",
+  "newlyAddedDomainReconfirmation_sendButtonLabel": "Send",
+  "newlyAddedDomainReconfirmation_cancelButtonLabel": "Cancel",
+
+  "countDown_messageBefore": "",
+  "countDown_messageAfter": "seconds to send",
+  "countDown_sendButtonLabel": "Send Now",
+  "countDown_cancelButtonLabel": "Cancel"
+}
