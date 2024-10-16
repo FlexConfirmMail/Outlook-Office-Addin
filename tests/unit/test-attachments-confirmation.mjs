@@ -71,8 +71,8 @@ test_classify.parameters = {
     unsafeAttachments: [],
     warnings: [],
     confirmations: [
-      "[添付ファイル]  Safe.txt",
-      "[添付ファイル]  Unsafe.txt",
+      "[添付ファイル] Safe.txt",
+      "[添付ファイル] Unsafe.txt",
     ],
   },
   WithUnsafeFiles: {
@@ -102,8 +102,8 @@ test_classify.parameters = {
       "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
     ],
     confirmations: [
-      "[添付ファイル]  Safe.txt",
-      "[添付ファイル]  Unsafe.txt",
+      "[添付ファイル] Safe.txt",
+      "[添付ファイル] Unsafe.txt",
     ],
   },
   WithMultipleUnsafeFiles: {
@@ -145,11 +145,11 @@ test_classify.parameters = {
       "[警告] 注意が必要なファイル名（【機 密】.txt）が含まれています。",
     ],
     confirmations: [
-      "[添付ファイル]  Safe.txt",
-      "[添付ファイル]  Unsafe.txt",
-      "[添付ファイル]  Zipped.ZIP",
-      "[添付ファイル]  【機密】.txt",
-      "[添付ファイル]  【機 密】.txt",
+      "[添付ファイル] Safe.txt",
+      "[添付ファイル] Unsafe.txt",
+      "[添付ファイル] Zipped.ZIP",
+      "[添付ファイル] 【機密】.txt",
+      "[添付ファイル] 【機 密】.txt",
     ],
   },
 };
