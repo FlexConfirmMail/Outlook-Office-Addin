@@ -1,7 +1,13 @@
+import { L10n } from "./l10n.mjs";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 Office.initialize = (_reason) => {};
 
 Office.onReady(() => {
+  const language = Office.context.displayLanguage;
+  const l10n = L10n.get(language);
+  l10n.translateAll();
+
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
   sendStatusToParent("ready");
 });

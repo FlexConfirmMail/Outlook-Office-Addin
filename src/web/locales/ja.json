@@ -17,4 +17,9 @@
   "newlyAddedDomainReconfirmation_messageAfter": "送信してよろしいですか？",
   "newlyAddedDomainReconfirmation_sendButtonLabel": "送信",
   "newlyAddedDomainReconfirmation_cancelButtonLabel": "キャンセル"
+
+  "countDown_messageBefore": "",
+  "countDown_messageAfter": "秒後に送信します",
+  "countDown_sendButtonLabel": "今すぐ送信",
+  "countDown_cancelButtonLabel": "キャンセル",
 }

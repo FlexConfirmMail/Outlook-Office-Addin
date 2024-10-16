@@ -82,4 +82,10 @@ export class L10n {
     }
     return message;
   }
+
+  translateAll() {
+    for (const element of document.querySelectorAll("[data-l10n-text-content]")) {
+      element.textContent = this.get(element.data.l10nTextContent);
+    }
+  }
 }

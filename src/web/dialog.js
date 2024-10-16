@@ -14,6 +14,7 @@ Office.initialize = (_reason) => {};
 Office.onReady(() => {
   const language = Office.context.displayLanguage;
   l10n = L10n.get(language);
+  l10n.translateAll();
   safeBccConfirmation = new SafeBccConfirmation(language);
   attachmentsConfirmation = new AttachmentsConfirmation(language);
 
