@@ -18,6 +18,8 @@ Office.onReady(() => {
   safeBccConfirmation = new SafeBccConfirmation(language);
   attachmentsConfirmation = new AttachmentsConfirmation(language);
 
+  document.documentElement.setAttribute("lang", language);
+
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
   sendStatusToParent("ready");
 });

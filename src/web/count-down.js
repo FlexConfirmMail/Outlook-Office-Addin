@@ -10,6 +10,8 @@ Office.onReady(() => {
   l10n = L10n.get(language);
   l10n.ready.then(() => l10n.translateAll());
 
+  document.documentElement.setAttribute("lang", language);
+
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
   sendStatusToParent("ready");
 });
