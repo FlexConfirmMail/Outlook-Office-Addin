@@ -13,6 +13,11 @@ Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
 };
 
+Office.onReady(() => {
+  const language = Office.context.displayLanguage;
+  document.documentElement.setAttribute("lang", language);
+});
+
 function getBccAsync() {
   return new Promise((resolve, reject) => {
     try {

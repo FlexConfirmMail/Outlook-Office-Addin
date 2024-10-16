@@ -1,15 +1,25 @@
+import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
-const safeBccConfirmation = new SafeBccConfirmation();
+let l10n;
+let safeBccConfirmation;
+let attachmentsConfirmation;
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
-const attachmentsConfirmation = new AttachmentsConfirmation();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-Office.initialize = (reason) => {};
+Office.initialize = (_reason) => {};
 
 Office.onReady(() => {
+  const language = Office.context.displayLanguage;
+  l10n = L10n.get(language);
+  l10n.ready.then(() => l10n.translateAll());
+  safeBccConfirmation = new SafeBccConfirmation(language);
+  attachmentsConfirmation = new AttachmentsConfirmation(language);
+
+  document.documentElement.setAttribute("lang", language);
+
   Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
   sendStatusToParent("ready");
 });
@@ -112,7 +122,7 @@ function appendCheckbox({ container, id, label, warning }) {
   $(`#${id}`).text(label);
 }
 
-function onMessageFromParent(arg) {
+async function onMessageFromParent(arg) {
   const data = JSON.parse(arg.message);
 
   // The data scheme:
@@ -143,6 +153,7 @@ function onMessageFromParent(arg) {
   // }
 
   console.log(data);
+  await Promise.all([l10n.ready, safeBccConfirmation.loaded, attachmentsConfirmation.loaded]);
 
   const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
   appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
@@ -153,13 +164,14 @@ function onMessageFromParent(arg) {
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
 
   appendMiscWarningCheckboxes(
-    Array.from(
-      new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
-      (domain) => `[警告] 注意が必要なドメイン（${domain}）が宛先に含まれています。`
+    Array.from(new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())), (domain) =>
+      l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
     )
   );
   appendMiscWarningCheckboxes(
-    data.classified.unsafe.map((recipient) => `[警告] 注意が必要な宛先（${recipient.address}）が含まれています。`)
+    data.classified.unsafe.map((recipient) =>
+      l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
+    )
   );
 
   addedDomainsReconfirmation.init(data);

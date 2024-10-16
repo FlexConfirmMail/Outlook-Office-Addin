@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
     <title>Confirmation</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -12,39 +12,44 @@
     <div class="card-container">
         <fluent-card>
             <div class="heading-container">
-                <h3>登録済みドメインのメールアドレス</h3><fluent-button onclick="onCheckAllTrusted()">一括チェック</fluent-button>
+                <h3 data-l10n-text-content="confirmation_trustedCaption"></h3>
+                <fluent-button onclick="onCheckAllTrusted()"
+                               data-l10n-text-content="confirmation_trustedCheckAllButtonLabel"></fluent-button>
             </div>
             <fluent-divider></fluent-divider>
             <div id="trusted-domains">
             </div>
         </fluent-card>
         <fluent-card>
-            <h3>外部ドメインのメールアドレス</h3>
+            <h3 data-l10n-text-content="confirmation_untrustedCaption"></h3>
             <fluent-divider></fluent-divider>
             <div id="untrusted-domains"></div>
         </fluent-card>
         <fluent-card>
-            <h3>添付ファイル/その他の警告</h3>
+            <h3 data-l10n-text-content="confirmation_miscCaption"></h3>
             <fluent-divider></fluent-divider>
             <div id="attachment-and-others"></div>
         </fluent-card>
         <div class="button-container">
-            <fluent-button id="send-button" onclick="onSend()" disabled>送信</fluent-button>
-            <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+            <fluent-button id="send-button" onclick="onSend()" disabled
+                           data-l10n-text-content="confirmation_sendButtonLabel"></fluent-button>
+            <fluent-button id="cancel-button" onclick="onCancel()"
+                           data-l10n-text-content="confirmation_cancelButtonLabel"></fluent-button>
         </div>
     </div>
     <fluent-dialog id="newly-added-domain-address-dialog" hidden trap-focus modal>
-        <h2>CAUTION!</h2>
+        <h2 data-l10n-text-content="newlyAddedDomainReconfirmation_caption"></h2>
         <div class="newly-added-domain-container">
             <fluent-card id="newly-added-domains-card" class="newly-added-domain-content">
-                返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。<br/><br/>
-                <div id="newly-added-domain-address-list">
-                </div>
-                <br/>送信してよろしいですか？
+                <p data-l10n-text-content="newlyAddedDomainReconfirmation_messageBefore"></p>
+                <ul id="newly-added-domain-address-list"></ul>
+                <p data-l10n-text-content="newlyAddedDomainReconfirmation_messageAfter"></p>
             </fluent-card>
             <div class="new-domain-button-container">
-                <fluent-button id="send-new-domain-button" onclick="onSendNewDomain()">送信</fluent-button>
-                <fluent-button id="cancel-new-domain-button" onclick="onCancelNewDomain()">キャンセル</fluent-button>
+                <fluent-button id="send-new-domain-button" onclick="onSendNewDomain()"
+                               data-l10n-text-content="newlyAddedDomainReconfirmation_sendButtonLabel"></fluent-button>
+                <fluent-button id="cancel-new-domain-button" onclick="onCancelNewDomain()"
+                               data-l10n-text-content="newlyAddedDomainReconfirmation_cancelButtonLabel"></fluent-button>
             </div>
         </div>
     </fluent-dialog>

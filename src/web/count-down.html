@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
     <title>Confirmation</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -11,11 +11,16 @@
 <body>
     <div class="card-container">
         <fluent-card>
-            <p id="message" hidden><span id="count"></span>秒後に送信します</p>
+            <p id="message" hidden>
+              <span data-l10n-text-content="countDown_messageBefore"></span>
+              <span id="count"></span>
+              <span data-l10n-text-content="countDown_messageAfter"></span></p>
         </fluent-card>
         <div class="button-container">
-            <fluent-button id="send-button" onclick="onSend()">今すぐ送信</fluent-button>
-            <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+            <fluent-button id="send-button" onclick="onSend()"
+                           data-l10n-text-content="countDown_sendButtonLabel"></fluent-button>
+            <fluent-button id="cancel-button" onclick="onCancel()"
+                           data-l10n-text-content="countDown_cancelButtonLabel"></fluent-button>
         </div>
     </div>
 </body>

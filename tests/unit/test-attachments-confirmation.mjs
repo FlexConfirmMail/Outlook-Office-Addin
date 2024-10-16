@@ -5,9 +5,17 @@
 */
 'use strict';
 
+import "./l10n.mjs";
+import { L10n } from "../../src/web/l10n.mjs";
 import { AttachmentsConfirmation } from "../../src/web/attachments-confirmation.mjs";
 import { assert } from "tiny-esm-test-runner";
 const { is } = assert;
+
+const confirmation = new AttachmentsConfirmation("ja");
+
+export async function setUp() {
+  await confirmation.ready;
+}
 
 function attachment(name) {
   return { name };
@@ -146,7 +154,6 @@ test_classify.parameters = {
   },
 };
 export function test_classify({ data, attachments, unsafeAttachments, warnings, confirmations }) {
-  const confirmation = new AttachmentsConfirmation();
   confirmation.init(data);
   is(attachments, [...confirmation.attachments]);
   is(unsafeAttachments, [...confirmation.unsafeAttachments]);

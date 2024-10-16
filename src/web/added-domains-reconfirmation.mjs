@@ -37,8 +37,8 @@ export class AddedDomainsReconfirmation {
   initUI(sendStatusToParent) {
     const targetElement = $("#newly-added-domain-address-list");
     for (const address of this.newDomainAddresses) {
-      const divElement = $(`<div></div>`).appendTo(targetElement);
-      const strongElement = $(`<strong></strong>`).appendTo(divElement);
+      const itemElement = $(`<li></li>`).appendTo(targetElement);
+      const strongElement = $(`<strong></strong>`).appendTo(itemElement);
       strongElement.text(address);
     }
     window.onSendNewDomain = () => {

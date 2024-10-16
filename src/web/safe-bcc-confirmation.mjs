@@ -1,8 +1,21 @@
+import { L10n } from "./l10n.mjs";
+
 export class SafeBccConfirmation {
-  shouldConfirm = false;
-  threshold = 0;
+  locale = null;
+
+  constructor(language) {
+    this.locale = L10n.get(language);
+    this.ready = this.locale.ready;
+    this.clear();
+  }
+
+  clear() {
+    this.shouldConfirm = false;
+    this.threshold = 0;
+  }
 
   init(data) {
+    this.clear();
     if (!data.config.common.SafeBccEnabled) {
       return;
     }
@@ -22,6 +35,6 @@ export class SafeBccConfirmation {
       return [];
     }
 
-    return [{ label: `[警告] To・Ccに${this.threshold}件以上のドメインが含まれています。` }];
+    return [{ label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", { threshold: this.threshold }) }];
   }
 }
