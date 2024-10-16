@@ -81,6 +81,10 @@ fluent-dialog .newly-added-domain-content strong {
   font-weight: bold;
 }
 
+#newly-added-domain-address-list {
+  margin: 1em 0;
+}
+
 #cancel-new-domain-button {
   margin-left: 10px;
 }
