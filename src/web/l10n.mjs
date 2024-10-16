@@ -71,8 +71,15 @@ export class L10n {
   }
 
   get(key, params = {}) {
-    let message = this.locale[key] || this.fallbackLocale[key] || this.defaultLocale[key];
-    if (!message) {
+    let message =
+      key in this.locale
+        ? this.locale[key]
+        : key in this.fallbackLocale
+        ? this.fallbackLocale[key]
+        : key in this.defaultLocale
+        ? this.defaultLocale[key]
+        : null;
+    if (message === null) {
       return key;
     }
     if (params) {
