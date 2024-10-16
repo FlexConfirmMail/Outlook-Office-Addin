@@ -14,7 +14,7 @@ Office.initialize = (_reason) => {};
 Office.onReady(() => {
   const language = Office.context.displayLanguage;
   l10n = L10n.get(language);
-  l10n.translateAll();
+  l10n.ready.then(() => l10n.translateAll());
   safeBccConfirmation = new SafeBccConfirmation(language);
   attachmentsConfirmation = new AttachmentsConfirmation(language);
 
@@ -151,7 +151,7 @@ async function onMessageFromParent(arg) {
   // }
 
   console.log(data);
-  await Promise.all([safeBccConfirmation.loaded, attachmentsConfirmation.loaded]);
+  await Promise.all([l10n.ready, safeBccConfirmation.loaded, attachmentsConfirmation.loaded]);
 
   const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
   appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
