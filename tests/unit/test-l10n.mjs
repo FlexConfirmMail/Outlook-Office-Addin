@@ -10,25 +10,27 @@ import { L10n } from "../../src/web/l10n.mjs";
 import { assert } from "tiny-esm-test-runner";
 const { is } = assert;
 
-let l10n;
-
-export async function setUp() {
+async function prepare(language) {
   L10n.clearCache();
   L10n.baseUrl = (new URL(`${import.meta.url}/../../fixtures/`)).toString();
-  l10n = new L10n("ja-JP");
+  const l10n = new L10n(language);
   await l10n.ready;
+  return l10n;
 }
 
 test_get.parameters = {
   effective: {
+    language: "ja-JP",
     key: "effectiveMessage",
     expected: "JP：意味ある内容を含むメッセージ",
   },
   blank: {
+    language: "ja-JP",
     key: "blankMessage",
     expected: "",
   },
   withPlaceholders: {
+    language: "ja-JP",
     key: "messageWithPlaceholders",
     params: {
       one: "One",
@@ -37,14 +39,27 @@ test_get.parameters = {
     expected: "JP：プレースホルダーを含むメッセージ：One, Two, ${three}",
   },
   fallbackToGeneralLocale: {
+    language: "ja-JP",
     key: "missingFallbackMessage",
     expected: "フォールバック先で定義されているメッセージ",
   },
   fallbackToDefaultLocale: {
+    language: "ja-JP",
     key: "missingMessage",
     expected: "Message not defined in non-default locales",
   },
+  differentLocale: {
+    language: "en",
+    key: "effectiveMessage",
+    expected: "Message with effective content",
+  },
+  undefinedMessage: {
+    language: "en",
+    key: "undefinedMessage",
+    expected: "undefinedMessage",
+  }
 };
-export function test_get({ key, params, expected }) {
+export async function test_get({ language, key, params, expected }) {
+  const l10n = await prepare(language);
   is(expected, l10n.get(key, params || null));
 }
