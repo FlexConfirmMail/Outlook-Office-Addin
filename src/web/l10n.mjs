@@ -33,7 +33,7 @@ export class L10n {
   }
 
   constructor(language) {
-    this.language = language || "en-US";
+    this.language = language || "en";
     this.ready = this.load().then(() => true);
   }
 
@@ -42,7 +42,7 @@ export class L10n {
       const [locale, fallbackLocale, defaultLocale] = await Promise.all([
         L10n.loadLocale(this.language),
         L10n.loadLocale(this.language.split("-")[0]),
-        L10n.loadLocale("en-US"),
+        L10n.loadLocale("en"),
       ]);
       this.locale = locale;
       this.fallbackLocale = fallbackLocale;
