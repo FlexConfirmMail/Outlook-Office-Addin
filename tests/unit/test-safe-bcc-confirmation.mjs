@@ -5,14 +5,16 @@
 */
 'use strict';
 
-import "./l10n.mjs";
+import * as L10nUtils from "./l10n.mjs";
 import { SafeBccConfirmation } from "../../src/web/safe-bcc-confirmation.mjs";
 import { assert } from "tiny-esm-test-runner";
 const { ok, ng, is } = assert;
 
-const confirmation = new SafeBccConfirmation("ja");
+let confirmation;
 
 export async function setUp() {
+  L10nUtils.clear();
+  confirmation = new SafeBccConfirmation("ja");
   await confirmation.ready;
 }
 

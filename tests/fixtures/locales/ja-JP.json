@@ -1,0 +1,7 @@
+{
+  "effectiveMessage": "JP：意味ある内容を含むメッセージ",
+  "blankMessage": "",
+  "messageWithPlaceholders": "JP：プレースホルダーを含むメッセージ：${one}, ${two}, ${three}",
+  "_missingFallbackMessage": "JP：フォールバック先で定義されているメッセージ",
+  "_missingMessage": "JP：未定義のメッセージ"
+}

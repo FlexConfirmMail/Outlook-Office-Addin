@@ -1,0 +1,25 @@
+{
+  "confirmation_trustedCaption": "信任域，地址",
+  "confirmation_trustedCheckAllButtonLabel": "勾选所有",
+  "confirmation_untrustedCaption": "外部目的地",
+  "confirmation_miscCaption": "附件 / 警告",
+  "confirmation_sendButtonLabel": "发送",
+  "confirmation_cancelButtonLabel": "取消",
+
+  "confirmation_safeBccThresholdCheckboxLabel": "[警告] To/Cc 包含${threshold}个以上的域",
+  "confirmation_unsafeDomainRecipientCheckboxLabel": "[警告] 包含不安全的域 (${domain})",
+  "confirmation_unsafeRecipientCheckboxLabel": "[警告] 包含不安全地址 (${address})",
+  "confirmation_unsafeAttachmentCheckboxLabel": "[警告] 包含不安全的文件名 (${name})",
+  "confirmation_attachmentCheckboxLabel": "[附件] ${name}",
+
+  "newlyAddedDomainReconfirmation_caption": "警告！",
+  "_newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",
+  "_newlyAddedDomainReconfirmation_messageAfter": "Do you really want to send this message?",
+  "newlyAddedDomainReconfirmation_sendButtonLabel": "发送",
+  "newlyAddedDomainReconfirmation_cancelButtonLabel": "取消",
+
+  "countDown_messageBefore": "",
+  "countDown_messageAfter": "秒后发送",
+  "countDown_sendButtonLabel": "现在发送",
+  "countDown_cancelButtonLabel": "取消"
+}
