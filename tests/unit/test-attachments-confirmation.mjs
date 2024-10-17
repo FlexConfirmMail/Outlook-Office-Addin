@@ -5,15 +5,17 @@
 */
 'use strict';
 
-import "./l10n.mjs";
+import * as L10nUtils from "./l10n.mjs";
 import { L10n } from "../../src/web/l10n.mjs";
 import { AttachmentsConfirmation } from "../../src/web/attachments-confirmation.mjs";
 import { assert } from "tiny-esm-test-runner";
 const { is } = assert;
 
-const confirmation = new AttachmentsConfirmation("ja");
+let confirmation;
 
 export async function setUp() {
+  L10nUtils.clear();
+  confirmation = new AttachmentsConfirmation("ja");
   await confirmation.ready;
 }
 

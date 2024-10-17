@@ -26,4 +26,7 @@ L10n.JSONFetcher = async (url) => {
   return null;
 };
 
-L10n.baseUrl = (new URL(`${import.meta.url}/../../../`)).toString();
+export function clear() {
+  L10n.clearCache();
+  L10n.baseUrl = (new URL(`${import.meta.url}/../../../`)).toString();
+}

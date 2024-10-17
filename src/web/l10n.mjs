@@ -26,6 +26,12 @@ export class L10n {
     return this.instances[language] || (this.instances[language] = new L10n(language));
   }
 
+  static clearCache() {
+    this.cache = {};
+    this.requests = {};
+    this.instances = {};
+  }
+
   constructor(language) {
     this.language = language || "en-US";
     this.ready = this.load().then(() => true);
