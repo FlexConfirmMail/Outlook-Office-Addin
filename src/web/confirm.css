@@ -1,0 +1,69 @@
+.heading-container {
+  display: flex;
+  align-items: center;
+}
+
+.heading-container fluent-button {
+  margin-left: 10px;
+}
+
+.check-target {
+  margin-left: 20px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+#untrusted-domains fluent-checkbox::part(label) {
+  color: red;
+}
+
+#attachment-and-others fluent-checkbox.warning::part(label) {
+  color:red;
+}
+
+/* fluent-dialog {
+  --dialog-background-color: red;
+  background: red !important;
+  padding: 1.5em;
+  color: white !important;
+  font-size: x-large !important;
+  font-weight: bold !important;
+  text-align: center;
+} */
+
+fluent-dialog::part(control) {
+  color: white;
+  background-color: red;
+  padding: 0 1.5em 1.5em 1.5em;
+  text-align: center;
+  --dialog-width: fit-content;
+  --dialog-height: fit-content;
+}
+
+fluent-dialog::part(control) .newly-added-domain-content {
+  background-color: white;
+  background: var(--bg-color) !important;
+}
+
+fluent-dialog .newly-added-domain-content {
+  color: black;
+  padding: 2em;
+  text-align: left;
+}
+
+fluent-dialog .newly-added-domain-content strong {
+  font-size: large;
+  font-weight: bold;
+}
+
+#newly-added-domain-address-list {
+  margin: 1em 0;
+}
+
+#cancel-new-domain-button {
+  margin-left: 10px;
+}
+
+.new-domain-button-container {
+  margin-top: 20px;
+}
