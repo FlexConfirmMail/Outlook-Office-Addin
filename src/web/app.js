@@ -225,7 +225,7 @@ async function tryConfirm(data, asyncContext) {
   }
 
   const { status, asyncContext: updatedAsyncContext } = await openDialog({
-    url: window.location.origin + "/dialog.html",
+    url: window.location.origin + "/confirm.html",
     data,
     asyncContext,
     height: Math.min(60, charsToPercentage(50, screen.availHeight)),
