@@ -203,7 +203,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
 
 function charsToPercentage(chars, maxSize) {
   const bodyFontSize = parseInt(window.getComputedStyle(document.body).fontSize);
-  return Math.floor(bodyFontSize * chars / maxSize * 100);
+  return Math.floor(((bodyFontSize * chars) / maxSize) * 100);
 }
 
 async function tryConfirm(data, asyncContext) {

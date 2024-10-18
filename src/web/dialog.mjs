@@ -7,7 +7,7 @@
 
 export function resizeToContent() {
   const range = document.createRange();
-  range.selectNodeContents(document.querySelector('.card-container'));
+  range.selectNodeContents(document.querySelector(".card-container"));
   const contentsRect = range.getBoundingClientRect();
 
   const widthDelta = contentsRect.width - window.innerWidth;
