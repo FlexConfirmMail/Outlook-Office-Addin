@@ -2,7 +2,7 @@ import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
-import * as DialogUtils from "./dialog-utils.mjs";
+import * as Dialog from "./dialog.mjs";
 
 let l10n;
 let safeBccConfirmation;
@@ -175,7 +175,7 @@ async function onMessageFromParent(arg) {
     )
   );
 
-  DialogUtils.resizeToContent();
+  Dialog.resizeToContent();
 
   addedDomainsReconfirmation.init(data);
   addedDomainsReconfirmation.initUI(sendStatusToParent);
