@@ -1,0 +1,23 @@
+.card-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.cards {
+  align-items: stretch;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  overflow: auto;
+}
+
+.cards,
+.button-container {
+  padding-left: 20px; 
+  padding-right: 20px;
+}

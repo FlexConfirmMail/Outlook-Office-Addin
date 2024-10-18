@@ -6,8 +6,11 @@
 "use strict";
 
 export function resizeToContent() {
-  const root = $(document.documentElement);
-  const widthDelta = root.width() - window.innerWidth;
-  const heightDelta = root.height() - window.innerHeight;
+  const range = document.createRange();
+  range.selectNodeContents(document.querySelector('.card-container'));
+  const contentsRect = range.getBoundingClientRect();
+
+  const widthDelta = contentsRect.width - window.innerWidth;
+  const heightDelta = contentsRect.height - window.innerHeight;
   window.resizeBy(Math.min(0, widthDelta), Math.min(0, heightDelta));
 }
