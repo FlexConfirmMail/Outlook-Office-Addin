@@ -1,4 +1,5 @@
 import { L10n } from "./l10n.mjs";
+import * as DialogUtils from "./dialog-utils.mjs";
 
 let l10n;
 
@@ -43,6 +44,8 @@ async function onMessageFromParent(arg) {
 
   $("#count").text(data.config.common.CountSeconds);
   $("#message").show();
+
+  DialogUtils.resizeToContent();
 
   const start = Date.now();
   const timer = window.setInterval(() => {
