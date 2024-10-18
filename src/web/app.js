@@ -201,6 +201,11 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
   });
 }
 
+function charsToPercentage(chars, maxSize) {
+  const bodyFontSize = parseInt(window.getComputedStyle(document.body).fontSize);
+  return Math.floor(bodyFontSize * chars / maxSize * 100);
+}
+
 async function tryConfirm(data, asyncContext) {
   const { to, cc, bcc } = data.target;
   const { trustedDomains, unsafeDomains } = data.config;
@@ -223,8 +228,8 @@ async function tryConfirm(data, asyncContext) {
     url: window.location.origin + "/dialog.html",
     data,
     asyncContext,
-    height: 60,
-    width: 60,
+    height: Math.min(60, charsToPercentage(50, screen.availHeight)),
+    width: Math.min(80, charsToPercentage(45, screen.availWidth)),
   });
   console.debug("status: ", status);
 
@@ -263,8 +268,8 @@ async function tryCountDown(data, asyncContext) {
     url: window.location.origin + "/count-down.html",
     data,
     asyncContext,
-    height: 60,
-    width: 60,
+    height: Math.min(20, charsToPercentage(15, screen.availHeight)),
+    width: Math.min(20, charsToPercentage(25, screen.availWidth)),
   });
   console.debug("status: ", status);
 
