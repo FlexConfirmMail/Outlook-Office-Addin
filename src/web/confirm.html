@@ -7,29 +7,32 @@
     <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"  crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <link href="dialog.css" rel="stylesheet">
+    <link href="confirm.css" rel="stylesheet">
 </head>
 <body>
     <div class="card-container">
-        <fluent-card>
-            <div class="heading-container">
-                <h3 data-l10n-text-content="confirmation_trustedCaption"></h3>
-                <fluent-button onclick="onCheckAllTrusted()"
-                               data-l10n-text-content="confirmation_trustedCheckAllButtonLabel"></fluent-button>
-            </div>
-            <fluent-divider></fluent-divider>
-            <div id="trusted-domains">
-            </div>
-        </fluent-card>
-        <fluent-card>
-            <h3 data-l10n-text-content="confirmation_untrustedCaption"></h3>
-            <fluent-divider></fluent-divider>
-            <div id="untrusted-domains"></div>
-        </fluent-card>
-        <fluent-card>
-            <h3 data-l10n-text-content="confirmation_miscCaption"></h3>
-            <fluent-divider></fluent-divider>
-            <div id="attachment-and-others"></div>
-        </fluent-card>
+        <div class="cards">
+            <fluent-card>
+                <div class="heading-container">
+                    <h3 data-l10n-text-content="confirmation_trustedCaption"></h3>
+                    <fluent-button onclick="onCheckAllTrusted()"
+                                   data-l10n-text-content="confirmation_trustedCheckAllButtonLabel"></fluent-button>
+                </div>
+                <fluent-divider></fluent-divider>
+                <div id="trusted-domains">
+                </div>
+            </fluent-card>
+            <fluent-card>
+                <h3 data-l10n-text-content="confirmation_untrustedCaption"></h3>
+                <fluent-divider></fluent-divider>
+                <div id="untrusted-domains"></div>
+            </fluent-card>
+            <fluent-card>
+                <h3 data-l10n-text-content="confirmation_miscCaption"></h3>
+                <fluent-divider></fluent-divider>
+                <div id="attachment-and-others"></div>
+            </fluent-card>
+        </div>
         <div class="button-container">
             <fluent-button id="send-button" onclick="onSend()" disabled
                            data-l10n-text-content="confirmation_sendButtonLabel"></fluent-button>
