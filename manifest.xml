@@ -62,15 +62,51 @@
               </LaunchEvents>
               <SourceLocation resid="residUILessFunctionFileUrl"/>
             </ExtensionPoint>
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="msgComposeCmdGroup">
+                  <Label resid="CommandsGroup.Label"/>
+                  <Control xsi:type="Button" id="msgComposeInsertGist">
+                    <Label resid="SettingButton.Label"/>
+                    <Supertip>
+                      <Title resid="SettingButton.SupertipTitle"/>
+                      <Description resid="SettingButton.SupertipText"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16x16"/>
+                      <bt:Image size="32" resid="Icon.32x32"/>
+                      <bt:Image size="80" resid="Icon.80x80"/>
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="Setting.Url"/>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
           </DesktopFormFactor>
         </Host>
       </Hosts>
       <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://127.0.0.1:10041/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://127.0.0.1:10041/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://127.0.0.1:10041/assets/icon-80.png"/>
+      </bt:Images>
         <bt:Urls>
            <!-- The JavaScript code is hosted on a secure and trusted web server. -->
           <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://127.0.0.1:10041/app.html" ></bt:Url>
           <bt:Url id="residUILessFunctionJsFileUrl" DefaultValue="https://127.0.0.1:10041/app.js" ></bt:Url>
+          <bt:Url id="Setting.Url" DefaultValue="https://127.0.0.1:10041/setting.html"/>
         </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="CommandsGroup.Label" DefaultValue="FlexConfirmMail"/>
+          <bt:String id="SettingButton.Label" DefaultValue="FlexConfirmMail Setting"/>
+          <bt:String id="SettingButton.SupertipTitle" DefaultValue="FlexConfirmMail Setting"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="SettingButton.SupertipText" DefaultValue="Open FlexConfirmMail Setting"/>
+        </bt:LongStrings>
       </Resources>
     </VersionOverrides>
   </VersionOverrides>
