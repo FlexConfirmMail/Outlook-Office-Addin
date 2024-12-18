@@ -2,14 +2,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Office JavaScript API -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script src="https://unpkg.com/@fluentui/web-components" type="module"></script>
 </head>
 <body>
-    <p>This add-in will insert the text 'Hello world!' in a new message.</p>
-    <button id="helloButton">Say hello</button>
-
-    <!-- The following image URL tracks diagnostic data for this sample add-in. Please remove the image tag if you reuse this sample in your own code project. -->
-    <img src="https://pnptelemetry.azurewebsites.net/pnp-officeaddins/samples/outlook-add-in-hello-world-run" />
+    <fluent-tabs activeid="entrees">
+        <fluent-tab id="generalSetting">一般設定</fluent-tab>
+        <fluent-tab id="trustedDomains">社内ドメイン</fluent-tab>
+        <fluent-tab id="unsafeDomains">注意が必要なドメイン</fluent-tab>
+        <fluent-tab id="unsafeFiles">注意が必要なファイル名</fluent-tab>
+        <fluent-tab id="about">このアドオンについて</fluent-tab>
+        <fluent-tab-panel id="generalSettingPanel">
+            <fluent-checkbox>メール送信前のカウントダウンを有効化する</fluent-checkbox><br />
+            <fluent-checkbox>カウントダイアログの「いますぐ送信ボタン」を有効化する</fluent-checkbox><br />
+            送信までのカウントダウン秒数: <fluent-text-field></fluent-text-field> 秒 <br />
+            <fluent-checkbox>To/Ccに一定数以上のドメインが含まれている場合に警告する</fluent-checkbox><br />
+            警告対象となるドメインの数: <fluent-text-field></fluent-text-field> 件以上 <br />
+            <fluent-checkbox>宛先が社内ドメインのみの場合は確認をスキップする</fluent-checkbox>
+        </fluent-tab-panel>
+        <fluent-tab-panel id="trustedDomainsPanel">
+            <fluent-text-area></fluent-text-area>
+        </fluent-tab-panel>
+        <fluent-tab-panel id="unsafeDomainsPanel">
+            <fluent-text-area></fluent-text-area>
+        </fluent-tab-panel>
+        <fluent-tab-panel id="unsafeFilesPanel">
+            <fluent-text-area></fluent-text-area>
+        </fluent-tab-panel>
+        <fluent-tab-panel id="aboutPanel">
+            FlexConfirmMail
+            2025 ClearCode Inc. All rights reserved.
+        </fluent-tab-panel>
+    </fluent-tabs>
+    <fluent-button id="send-button" onclick="onSend()">保存して終了</fluent-button>
+    <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
 </body>
 </html>
