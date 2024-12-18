@@ -92,6 +92,11 @@ module.exports = async (env, options) => {
         template: "./src/web/count-down.html",
         chunks: ["polyfill", "count-down"],
       }),
+      new HtmlWebpackPlugin({
+        filename: "setting.html",
+        template: "./src/web/setting.html",
+        chunks: ["polyfill", "setting"],
+      }),
     ],
     devServer: {
       headers: {
