@@ -21,6 +21,7 @@ module.exports = async (env, options) => {
       app: ["./src/web/app.js"],
       confirm: ["./src/web/confirm.js"],
       "count-down": ["./src/web/count-down.js"],
+      setting: ["./src/web/setting.js"],
     },
     output: {
       clean: true,
@@ -91,6 +92,11 @@ module.exports = async (env, options) => {
         filename: "count-down.html",
         template: "./src/web/count-down.html",
         chunks: ["polyfill", "count-down"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "setting.html",
+        template: "./src/web/setting.html",
+        chunks: ["polyfill", "setting"],
       }),
     ],
     devServer: {
