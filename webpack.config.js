@@ -17,7 +17,6 @@ module.exports = async (env, options) => {
   const config = {
     devtool: "source-map",
     entry: {
-      polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       app: ["./src/web/app.js"],
       confirm: ["./src/web/confirm.js"],
       "count-down": ["./src/web/count-down.js"],
@@ -53,7 +52,7 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "app.html",
         template: "./src/web/app.html",
-        chunks: ["polyfill", "app"],
+        chunks: ["app"],
       }),
       new CopyWebpackPlugin({
         patterns: [
@@ -85,12 +84,12 @@ module.exports = async (env, options) => {
       new HtmlWebpackPlugin({
         filename: "confirm.html",
         template: "./src/web/confirm.html",
-        chunks: ["polyfill", "confirm"],
+        chunks: ["confirm"],
       }),
       new HtmlWebpackPlugin({
         filename: "count-down.html",
         template: "./src/web/count-down.html",
-        chunks: ["polyfill", "count-down"],
+        chunks: ["count-down"],
       }),
     ],
     devServer: {
