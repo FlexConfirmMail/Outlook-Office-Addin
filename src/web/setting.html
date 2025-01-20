@@ -2,8 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script src="https://unpkg.com/@fluentui/web-components" type="module"></script>
+    <script src="lib/fluentui/web-components/web-components.min.js" type="module"></script>
+    <script src="lib/office-js/office.js" type="text/javascript"></script>
+    <link href="dialog.css" rel="stylesheet">
+    <link href="setting.css" rel="stylesheet">
 </head>
 <body>
     <fluent-tabs activeid="entrees">
@@ -34,7 +36,9 @@
             2025 ClearCode Inc. All rights reserved.
         </fluent-tab-panel>
     </fluent-tabs>
-    <fluent-button id="send-button" onclick="onSend()">保存して終了</fluent-button>
-    <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+    <div class="button-container">
+        <fluent-button id="send-button" onclick="onSend()">保存して終了</fluent-button>
+        <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+    </div>
 </body>
 </html>

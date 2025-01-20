@@ -337,3 +337,16 @@ async function onNewMessageComposeCreated(event) {
   event.completed();
 }
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function onOpenSettingDialog() {
+  const { status, asyncContext } = await openDialog({
+    url: window.location.origin + "/setting.html",
+    data: {},
+    asyncContext: {},
+    height: Math.min(60, charsToPercentage(50, screen.availHeight)),
+    width: Math.min(80, charsToPercentage(45, screen.availWidth)),
+  });
+  console.debug("status: ", status);
+}
+window.onOpenSettingDialog = onOpenSettingDialog;

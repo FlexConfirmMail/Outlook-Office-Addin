@@ -77,8 +77,8 @@
                       <bt:Image size="32" resid="Icon.32x32"/>
                       <bt:Image size="80" resid="Icon.80x80"/>
                     </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="Setting.Url"/>
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>onOpenSettingDialog</FunctionName>
                     </Action>
                   </Control>
                 </Group>
@@ -97,7 +97,6 @@
            <!-- The JavaScript code is hosted on a secure and trusted web server. -->
           <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://127.0.0.1:10041/app.html" ></bt:Url>
           <bt:Url id="residUILessFunctionJsFileUrl" DefaultValue="https://127.0.0.1:10041/app.js" ></bt:Url>
-          <bt:Url id="Setting.Url" DefaultValue="https://127.0.0.1:10041/setting.html"/>
         </bt:Urls>
         <bt:ShortStrings>
           <bt:String id="CommandsGroup.Label" DefaultValue="FlexConfirmMail"/>
