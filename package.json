@@ -28,6 +28,7 @@
     "watch:run-test-server": "webpack --mode production --watch --output-path tests/run-test-server/web --watch-options-poll=10000"
   },
   "dependencies": {
+    "@fluentui/web-components": "^2.6.1",
     "@microsoft/office-js": "^1.1.101",
     "bootstrap": "^5.3.2",
     "core-js": "^3.9.1",
