@@ -7,38 +7,42 @@
     <link href="dialog.css" rel="stylesheet">
     <link href="setting.css" rel="stylesheet">
 </head>
-<body>
-    <fluent-tabs activeid="entrees">
-        <fluent-tab id="generalSetting">一般設定</fluent-tab>
-        <fluent-tab id="trustedDomains">社内ドメイン</fluent-tab>
-        <fluent-tab id="unsafeDomains">注意が必要なドメイン</fluent-tab>
-        <fluent-tab id="unsafeFiles">注意が必要なファイル名</fluent-tab>
-        <fluent-tab id="about">このアドオンについて</fluent-tab>
-        <fluent-tab-panel id="generalSettingPanel">
-            <fluent-checkbox>メール送信前のカウントダウンを有効化する</fluent-checkbox><br />
-            <fluent-checkbox>カウントダイアログの「いますぐ送信ボタン」を有効化する</fluent-checkbox><br />
-            送信までのカウントダウン秒数: <fluent-text-field></fluent-text-field> 秒 <br />
-            <fluent-checkbox>To/Ccに一定数以上のドメインが含まれている場合に警告する</fluent-checkbox><br />
-            警告対象となるドメインの数: <fluent-text-field></fluent-text-field> 件以上 <br />
-            <fluent-checkbox>宛先が社内ドメインのみの場合は確認をスキップする</fluent-checkbox>
-        </fluent-tab-panel>
-        <fluent-tab-panel id="trustedDomainsPanel">
-            <fluent-text-area></fluent-text-area>
-        </fluent-tab-panel>
-        <fluent-tab-panel id="unsafeDomainsPanel">
-            <fluent-text-area></fluent-text-area>
-        </fluent-tab-panel>
-        <fluent-tab-panel id="unsafeFilesPanel">
-            <fluent-text-area></fluent-text-area>
-        </fluent-tab-panel>
-        <fluent-tab-panel id="aboutPanel">
-            FlexConfirmMail
-            2025 ClearCode Inc. All rights reserved.
-        </fluent-tab-panel>
-    </fluent-tabs>
-    <div class="button-container">
-        <fluent-button id="send-button" onclick="onSend()">保存して終了</fluent-button>
-        <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+<body class="dialog-body">
+    <div class="dialog-content">
+        <fluent-tabs activeid="entrees">
+            <fluent-tab id="generalSetting">一般設定</fluent-tab>
+            <fluent-tab id="trustedDomains">社内ドメイン</fluent-tab>
+            <fluent-tab id="unsafeDomains">注意が必要なドメイン</fluent-tab>
+            <fluent-tab id="unsafeFiles">注意が必要なファイル名</fluent-tab>
+            <fluent-tab id="about">このアドオンについて</fluent-tab>
+            <fluent-tab-panel id="generalSettingPanel">
+                <fluent-checkbox>メール送信前のカウントダウンを有効化する</fluent-checkbox><br />
+                <fluent-checkbox>カウントダイアログの「いますぐ送信ボタン」を有効化する</fluent-checkbox><br />
+                送信までのカウントダウン秒数: <fluent-text-field></fluent-text-field> 秒 <br />
+                <fluent-checkbox>To/Ccに一定数以上のドメインが含まれている場合に警告する</fluent-checkbox><br />
+                警告対象となるドメインの数: <fluent-text-field></fluent-text-field> 件以上 <br />
+                <fluent-checkbox>宛先が社内ドメインのみの場合は確認をスキップする</fluent-checkbox>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="trustedDomainsPanel">
+                <fluent-text-area></fluent-text-area>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="unsafeDomainsPanel">
+                <fluent-text-area></fluent-text-area>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="unsafeFilesPanel">
+                <fluent-text-area></fluent-text-area>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="aboutPanel">
+                FlexConfirmMail
+                2025 ClearCode Inc. All rights reserved.
+            </fluent-tab-panel>
+        </fluent-tabs>
+    </div>
+    <div class="dialog-footer">
+        <div class="button-container">
+            <fluent-button id="send-button" onclick="onSend()">保存して終了</fluent-button>
+            <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+        </div>
     </div>
 </body>
 </html>

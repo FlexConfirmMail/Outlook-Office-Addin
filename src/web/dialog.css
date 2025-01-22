@@ -42,3 +42,25 @@ fluent-divider {
 #cancel-button {
   margin-left: 10px;
 }
+
+.dialog-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  height: 100%;
+}
+
+.dialog-footer {
+  position: sticky;
+  bottom: 0;
+  padding: 10px;
+  text-align: center;
+}
+
+.dialog-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+}

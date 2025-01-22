@@ -1,0 +1,42 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+
+fluent-tab-panel {
+  padding-top: 20px;
+  height:100%;
+}
+
+.tab-container {
+  flex-direction: column;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+fluent-tabs {
+  align-items: stretch;
+  flex-flow: column;
+  justify-content: flex-start;
+  overflow: auto;
+  height: 100%;
+}
+
+#cancel-button {
+  margin-left: 10px;
+}
+
+fluent-text-area {
+  height: 100%;
+  width: 100%;
+}
+
+fluent-text-area::part(control){
+  height:100%;
+}
