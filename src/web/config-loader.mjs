@@ -121,4 +121,63 @@ export class ConfigLoader {
       common,
     };
   }
+
+  static async loadAsString() {
+    const [trustedDomains, unsafeDomains, unsafeFiles, common] = await Promise.all([
+      this.loadFile("configs/TrustedDomains.txt"),
+      this.loadFile("configs/UnsafeDomains.txt"),
+      this.loadFile("configs/UnsafeFiles.txt"),
+      this.loadFile("configs/Common.txt"),
+    ]);
+    return {
+      trustedDomains,
+      unsafeDomains,
+      unsafeFiles,
+      common,
+    };
+  }
+
+  /**
+   * Load user config from roamingSettings.
+   * Note tha this function does not work in the dialog context
+   * because Office.context.roamingSettings does not work in the
+   * dialog context as its specification.
+   * @returns user data hash
+   */
+  static async loadUserConfig() {
+    const trustedDomainsString = Office.context.roamingSettings.get("trustedDomains") ?? "";
+    const unsafeDomainsString = Office.context.roamingSettings.get("unsafeDomains") ?? "";
+    const unsafeFilesString = Office.context.roamingSettings.get("unsafeFiles") ?? "";
+    const commonString = Office.context.roamingSettings.get("common") ?? "";
+    const trustedDomains = this.toArray(trustedDomainsString);
+    const unsafeDomains = this.toArray(unsafeDomainsString);
+    const unsafeFiles = this.toArray(unsafeFilesString);
+    const common = this.toDictionary(commonString, this.commonParamDefs);
+    return {
+      common,
+      trustedDomains,
+      unsafeDomains,
+      unsafeFiles
+    }
+  }
+
+    /**
+   * Load user config from roamingSettings.
+   * Note tha this function does not work in the dialog context
+   * because Office.context.roamingSettings does not work in the
+   * dialog context as its specification.
+   * @returns user data hash
+   */
+    static async loadUserConfigAsString() {
+      const trustedDomains = Office.context.roamingSettings.get("trustedDomains") ?? "";
+      const unsafeDomains = Office.context.roamingSettings.get("unsafeDomains") ?? "";
+      const unsafeFiles = Office.context.roamingSettings.get("unsafeFiles") ?? "";
+      const common = Office.context.roamingSettings.get("common") ?? "";
+      return {
+        common,
+        trustedDomains,
+        unsafeDomains,
+        unsafeFiles
+      }
+    }
 }

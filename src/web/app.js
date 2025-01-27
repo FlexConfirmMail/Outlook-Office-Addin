@@ -181,6 +181,22 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
       if (messageFromDialog.status == "ready") {
         const messageToDialog = JSON.stringify(data);
         dialog.messageChild(messageToDialog);
+      } else if (messageFromDialog.status == "saveUserConfig") {
+        // We can't execute Office.context.roamingSettings.saveAsync in the dialog context
+        // as Office API specification. In order to save the config to roamingSettings, we
+        // should get the current config from the dialog message and save it in this function.
+        const config = messageFromDialog.config ?? {};
+        console.debug("user config: ", config);
+        Office.context.roamingSettings.set("common", config.common ?? "");
+        Office.context.roamingSettings.set("trustedDomains", config.trustedDomains ?? "");
+        Office.context.roamingSettings.set("unsafeDomains", config.unsafeDomains ?? "");
+        Office.context.roamingSettings.set("unsafeFiles", config.unsafeFiles ?? "");
+        Office.context.roamingSettings.saveAsync();
+        dialog.close();
+        resolve({
+          status: messageFromDialog.status,
+          asyncContext,
+        });
       } else {
         dialog.close();
         resolve({
@@ -340,13 +356,15 @@ window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onOpenSettingDialog() {
+  const config = await ConfigLoader.loadAsString();
   const { status, asyncContext } = await openDialog({
     url: window.location.origin + "/setting.html",
-    data: {},
+    data: config,
     asyncContext: {},
     height: Math.min(60, charsToPercentage(50, screen.availHeight)),
     width: Math.min(80, charsToPercentage(45, screen.availWidth)),
   });
   console.debug("status: ", status);
+  console.log(Office.context.roamingSettings.get("Common"));
 }
 window.onOpenSettingDialog = onOpenSettingDialog;

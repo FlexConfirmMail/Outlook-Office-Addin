@@ -16,21 +16,22 @@
             <fluent-tab id="unsafeFiles">注意が必要なファイル名</fluent-tab>
             <fluent-tab id="about">このアドオンについて</fluent-tab>
             <fluent-tab-panel id="generalSettingPanel">
-                <fluent-checkbox>メール送信前のカウントダウンを有効化する</fluent-checkbox><br />
-                <fluent-checkbox>カウントダイアログの「いますぐ送信ボタン」を有効化する</fluent-checkbox><br />
-                送信までのカウントダウン秒数: <fluent-text-field></fluent-text-field> 秒 <br />
-                <fluent-checkbox>To/Ccに一定数以上のドメインが含まれている場合に警告する</fluent-checkbox><br />
-                警告対象となるドメインの数: <fluent-text-field></fluent-text-field> 件以上 <br />
-                <fluent-checkbox>宛先が社内ドメインのみの場合は確認をスキップする</fluent-checkbox>
+                <fluent-checkbox id="countEnabled">メール送信前のカウントダウンを有効化する</fluent-checkbox><br />
+                <fluent-checkbox id="countAllowSkip">カウントダイアログの「いますぐ送信ボタン」を有効化する</fluent-checkbox><br />
+                送信までのカウントダウン秒数: <fluent-text-field id="countSeconds"></fluent-text-field> 秒 <br />
+                <fluent-checkbox id="safeBccEnabled">To/Ccに一定数以上のドメインが含まれている場合に警告する</fluent-checkbox><br />
+                警告対象となるドメインの数: <fluent-text-field id="safeBccThreshold"></fluent-text-field> 件以上 <br />
+                <fluent-checkbox id="safeNewDomainsEnabled">返信の宛先に今まで含まれていなかったドメインのアドレスが追加された場合に警告する</fluent-checkbox><br />
+                <fluent-checkbox id="mainSkipIfNoExt">宛先が社内ドメインのみの場合は確認をスキップする</fluent-checkbox>
             </fluent-tab-panel>
             <fluent-tab-panel id="trustedDomainsPanel">
-                <fluent-text-area></fluent-text-area>
+                <fluent-text-area id="trustedDomainsTextArea"></fluent-text-area>
             </fluent-tab-panel>
             <fluent-tab-panel id="unsafeDomainsPanel">
-                <fluent-text-area></fluent-text-area>
+                <fluent-text-area id="unsafeDomainsTextArea"></fluent-text-area>
             </fluent-tab-panel>
             <fluent-tab-panel id="unsafeFilesPanel">
-                <fluent-text-area></fluent-text-area>
+                <fluent-text-area id="unsafeFilesTextArea"></fluent-text-area>
             </fluent-tab-panel>
             <fluent-tab-panel id="aboutPanel">
                 FlexConfirmMail
@@ -40,7 +41,7 @@
     </div>
     <div class="dialog-footer">
         <div class="button-container">
-            <fluent-button id="send-button" onclick="onSend()">保存して終了</fluent-button>
+            <fluent-button id="save-button" onclick="onSave()">保存して終了</fluent-button>
             <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
         </div>
     </div>
