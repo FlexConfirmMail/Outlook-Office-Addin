@@ -40,3 +40,13 @@ fluent-text-area {
 fluent-text-area::part(control){
   height:100%;
 }
+
+#safeBccThreshold {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#countSeconds {
+  margin-left: 10px;
+  margin-right: 10px;
+}
