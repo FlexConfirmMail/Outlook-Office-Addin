@@ -30,7 +30,7 @@
   "setting_unsafeDomains" : "Unsafe Domains and Addresses",
   "setting_unsafeDomainsExample" : "example.com\n-example.org",
   "setting_unsafeDomainsPolicy" : "# Unsafe Domains and Addresses ###\n# The following domains and addresses are considered unsafe by Group Policy.\n#\n# ${policy}\n#\n# To add more domains or addresses, input entries (one per line) below.\n# You can also exclude domains or addresses by adding \"-\" at the beginning.\n# And wildcards (* and ?) are also available.\n# When an entry contains @, the entry is regarded as address.\n# When an entry does not contains @, the entry is regarded as domain.\n##################################\n\n${user}",
-  "setting_unsafeDomainsTemplate" : "# Unsafe Domains and Addresses ###\n#\n# (1) Set the list of domains and addresses to show an "unsafe recipient" warning.\n# (2) Enter one entry per line as follows.\n# (3) Lines starting with # are ignored.\n# (4) Wildcards (* and ?) are available.\n# (5) When an entry contains @, the entry is regarded as address.\n# (6) When an entry does not contains @, the entry is regarded as domain.\n#\n##################################\n\nexample.com\nexample.org",
+  "setting_unsafeDomainsTemplate" : "# Unsafe Domains and Addresses ###\n#\n# (1) Set the list of domains and addresses to show an \"unsafe recipient\" warning.\n# (2) Enter one entry per line as follows.\n# (3) Lines starting with # are ignored.\n# (4) Wildcards (* and ?) are available.\n# (5) When an entry contains @, the entry is regarded as address.\n# (6) When an entry does not contains @, the entry is regarded as domain.\n#\n##################################\n\nexample.com\nexample.org",
   "setting_unsafeFiles" : "Unsafe Files",
   "setting_unsafeFilesExample" : "Confidential\n-ExcludedItem",
   "setting_unsafeFilesPolicy" : "# Unsafe Files ###\n# The following keywords are considered unsafe by Group Policy.\n#\n# ${policy}\n#\n# To add more keywords, input entries (one per line) below.\n# You can also exclude keywords by adding \"-\" at the beginning.\n# And wildcards (* and ?) are also available.\n##################################\n\n${user}",
@@ -51,5 +51,6 @@
   "setting_configWarning": "To/Cc",
   "setting_configWindowTitle": "FlexConfirmMail Options",
   "setting_aboutAddon": "Version",
-  "setting_saveAndQuit": "Save and Exit"
+  "setting_saveAndQuit": "Save and Exit",
+  "setting_cancel": "Cancel"
 }
