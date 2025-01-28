@@ -1,7 +1,14 @@
 // import { DesignToken } from '@microsoft/fast-foundation';
 import { ConfigLoader } from "./config-loader.mjs";
+import { L10n } from "./l10n.mjs";
+
+let l10n;
 
 Office.onReady((info) => {
+      const language = Office.context.displayLanguage;
+      l10n = L10n.get(language);
+      l10n.ready.then(() => l10n.translateAll());
+      document.documentElement.setAttribute("lang", language);
     Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
     sendStatusToParent("ready");
 });

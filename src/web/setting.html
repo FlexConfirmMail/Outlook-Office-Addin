@@ -12,31 +12,31 @@
 <body class="dialog-body">
     <div class="dialog-content">
         <fluent-tabs activeid="entrees">
-            <fluent-tab id="generalSetting">一般設定</fluent-tab>
-            <fluent-tab id="trustedDomains">社内ドメイン</fluent-tab>
-            <fluent-tab id="unsafeDomains">注意が必要なドメイン</fluent-tab>
-            <fluent-tab id="unsafeFiles">注意が必要なファイル名</fluent-tab>
-            <fluent-tab id="about">このアドオンについて</fluent-tab>
+            <fluent-tab id="generalSetting" data-l10n-text-content="setting_configGeneral"></fluent-tab>
+            <fluent-tab id="trustedDomains" data-l10n-text-content="setting_configTrustedDomains"></fluent-tab>
+            <fluent-tab id="unsafeDomains" data-l10n-text-content="setting_configUnsafeDomains"></fluent-tab>
+            <fluent-tab id="unsafeFiles" data-l10n-text-content="setting_configUnsafeFiles"></fluent-tab>
+            <fluent-tab id="about" data-l10n-text-content="setting_aboutAddon"></fluent-tab>
             <fluent-tab-panel id="generalSettingPanel">
                 <fluent-card class="top-card">
-                    <strong>送信カウントダウン設定</strong>
+                    <strong data-l10n-text-content="setting_configCount"></strong>
                     <fluent-divider></fluent-divider>
-                    <fluent-checkbox id="countEnabled">メール送信前のカウントダウンを有効化する</fluent-checkbox><br />
-                    <fluent-checkbox id="countAllowSkip">カウントダイアログの「いますぐ送信ボタン」を有効化する</fluent-checkbox><br />
-                    <fluent-number-field id="countSeconds">送信までのカウントダウン秒数: </fluent-number-field>
+                    <fluent-checkbox id="countEnabled" data-l10n-text-content="setting_configCountEnabled"></fluent-checkbox><br />
+                    <fluent-checkbox id="countAllowSkip" data-l10n-text-content="setting_configCountAllowSkip"></fluent-checkbox><br />
+                    <fluent-number-field id="countSeconds" data-l10n-text-content="setting_configCountSeconds"></fluent-number-field>
                 </fluent-card>
                 <fluent-card>
-                    <strong>警告設定</strong>
+                    <strong data-l10n-text-content="setting_configWarning"></strong>
                     <fluent-divider></fluent-divider>
-                    <fluent-checkbox id="safeBccEnabled">To/Ccに一定数以上のドメインが含まれている場合に警告する</fluent-checkbox><br />
-                    <fluent-number-field id="safeBccThreshold">警告対象となるドメインの数:</fluent-number-field><br />
+                    <fluent-checkbox id="safeBccEnabled" data-l10n-text-content="setting_configSafeBccEnabled"></fluent-checkbox><br />
+                    <fluent-number-field id="safeBccThreshold" data-l10n-text-content="setting_configSafeBccThreshold"></fluent-number-field><br />
                     <fluent-checkbox
-                        id="safeNewDomainsEnabled">返信の宛先に今まで含まれていなかったドメインのアドレスが追加された場合に警告する</fluent-checkbox><br />
+                        id="safeNewDomainsEnabled" data-l10n-text-content="setting_configSafeNewDomainsEnabled"></fluent-checkbox><br />
                 </fluent-card>
                 <fluent-card>
-                    <strong>その他の設定</strong>
+                    <strong data-l10n-text-content="setting_configMisc"></strong>
                     <fluent-divider></fluent-divider>
-                    <fluent-checkbox id="mainSkipIfNoExt">宛先が社内ドメインのみの場合は確認をスキップする</fluent-checkbox>
+                    <fluent-checkbox id="mainSkipIfNoExt" data-l10n-text-content="setting_configMainSkipIfNoExt"></fluent-checkbox>
                 </fluent-card>
             </fluent-tab-panel>
             <fluent-tab-panel id="trustedDomainsPanel">
@@ -50,14 +50,14 @@
             </fluent-tab-panel>
             <fluent-tab-panel id="aboutPanel">
                 <h3>FlexConfirmMail</h3>
-                2025 ClearCode Inc. All rights reserved.
+                <p>2025 ClearCode Inc. All rights reserved.</p>
             </fluent-tab-panel>
         </fluent-tabs>
     </div>
     <div class="dialog-footer">
         <div class="button-container">
-            <fluent-button id="save-button" onclick="onSave()">保存して終了</fluent-button>
-            <fluent-button id="cancel-button" onclick="onCancel()">キャンセル</fluent-button>
+            <fluent-button id="save-button" onclick="onSave()" data-l10n-text-content="setting_saveAndQuit"></fluent-button>
+            <fluent-button id="cancel-button" onclick="onCancel()" data-l10n-text-content="setting_cancel"></fluent-button>
         </div>
     </div>
 </body>
