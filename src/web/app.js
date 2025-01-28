@@ -355,16 +355,16 @@ async function onNewMessageComposeCreated(event) {
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function onOpenSettingDialog() {
-  const config = await ConfigLoader.loadAsString();
-  const { status, asyncContext } = await openDialog({
+async function onOpenSettingDialog(event) {
+  const data = await ConfigLoader.loadAsString();
+  let asyncContext = event;
+  const { status, asyncContext: updatedAsyncContext } = await openDialog({
     url: window.location.origin + "/setting.html",
-    data: config,
-    asyncContext: {},
+    data,
+    asyncContext,
     height: Math.min(60, charsToPercentage(50, screen.availHeight)),
     width: Math.min(80, charsToPercentage(45, screen.availWidth)),
   });
-  console.debug("status: ", status);
-  console.log(Office.context.roamingSettings.get("Common"));
+  updatedAsyncContext.completed({ allowEvent: true });
 }
 window.onOpenSettingDialog = onOpenSettingDialog;

@@ -5,6 +5,15 @@ html, body {
   overflow: hidden;
 }
 
+fluent-card {
+  height: auto;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+fluent-card .top-card {
+  margin-top: 0;
+}
 
 fluent-tab-panel {
   padding-top: 20px;
