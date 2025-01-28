@@ -14,9 +14,9 @@ export class AddedDomainsReconfirmation {
     if (!data.originalRecipients) {
       return;
     }
-    const originalToDomains = data.originalRecipients.to.map((_) => _.domain);
-    const originalCcDomains = data.originalRecipients.cc.map((_) => _.domain);
-    const originalBccDomains = data.originalRecipients.bcc.map((_) => _.domain);
+    const originalToDomains = data.originalRecipients.to?.map((_) => _.domain) ?? [];
+    const originalCcDomains = data.originalRecipients.cc?.map((_) => _.domain) ?? [];
+    const originalBccDomains = data.originalRecipients.bcc?.map((_) => _.domain) ?? [];
     const originalDomains = new Set([...originalToDomains, ...originalCcDomains, ...originalBccDomains]);
     if (originalDomains.size === 0) {
       return;
