@@ -161,23 +161,57 @@ export class ConfigLoader {
     }
   }
 
-    /**
+  /**
    * Load user config from roamingSettings.
    * Note tha this function does not work in the dialog context
    * because Office.context.roamingSettings does not work in the
    * dialog context as its specification.
    * @returns user data hash
    */
-    static async loadUserConfigAsString() {
-      const trustedDomains = Office.context.roamingSettings.get("trustedDomains") ?? "";
-      const unsafeDomains = Office.context.roamingSettings.get("unsafeDomains") ?? "";
-      const unsafeFiles = Office.context.roamingSettings.get("unsafeFiles") ?? "";
-      const common = Office.context.roamingSettings.get("common") ?? "";
-      return {
-        common,
-        trustedDomains,
-        unsafeDomains,
-        unsafeFiles
-      }
+  static async loadUserConfigAsString() {
+    const trustedDomains = Office.context.roamingSettings.get("trustedDomains") ?? "";
+    const unsafeDomains = Office.context.roamingSettings.get("unsafeDomains") ?? "";
+    const unsafeFiles = Office.context.roamingSettings.get("unsafeFiles") ?? "";
+    const common = Office.context.roamingSettings.get("common") ?? "";
+    return {
+      common,
+      trustedDomains,
+      unsafeDomains,
+      unsafeFiles
     }
+  }
+
+  static merge(left, right) {
+    if (!left) {
+      return right;
+    }
+    if (!right) {
+      return left;
+    }
+    if (right.common.countEnabled != null) {
+      left.common.countEnabled = right.common.countEnabled;
+    }
+    if (right.common.countAllowSkip != null) {
+      left.common.countAllowSkip = right.common.countAllowSkip;
+    }
+    if (right.common.SafeBccEnabled != null) {
+      left.common.safeBccEnabled = right.common.safeBccEnabled;
+    }
+    if (right.common.MainSkipIfNoExt != null) {
+      left.common.mainSkipIfNoExt = right.common.mainSkipIfNoExt;
+    }
+    if (right.common.SafeNewDomainsEnabled != null) {
+      left.common.safeNewDomainsEnabled = right.common.safeNewDomainsEnabled;
+    }
+    if (right.common.CountSeconds != null) {
+      left.common.countSeconds = right.common.countSeconds;
+    }
+    if (right.common.SafeBccThreshold != null) {
+      left.common.safeBccThreshold = right.common.safeBccThreshold;
+    }
+    left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
+    left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
+    left.unsafeFiles = left.unsafeFiles.concat(right.unsafeFiles);
+    return left;
+  }
 }
