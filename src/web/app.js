@@ -363,7 +363,7 @@ async function onOpenSettingDialog(event) {
     data,
     asyncContext,
     height: Math.min(60, charsToPercentage(50, screen.availHeight)),
-    width: Math.min(80, charsToPercentage(45, screen.availWidth)),
+    width: Math.min(80, charsToPercentage(70, screen.availWidth)),
   });
   updatedAsyncContext.completed({ allowEvent: true });
 }
