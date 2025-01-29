@@ -51,6 +51,7 @@
   "setting_configWarning": "To/Cc",
   "setting_configWindowTitle": "FlexConfirmMail Options",
   "setting_aboutAddon": "Version",
+  "setting_resetSetting": "Reset setting",
   "setting_saveAndQuit": "Save and Exit",
   "setting_cancel": "Cancel"
 }

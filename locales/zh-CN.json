@@ -50,6 +50,7 @@
   "setting_configWarning": "To/Cc",
   "setting_configWindowTitle": "设置FlexConfirmMail",
   "setting_aboutAddon": "版本",
+  "setting_resetSetting": "Reset setting",
   "setting_saveAndQuit": "保存并退出",
   "setting_cancel": "取消"
 }

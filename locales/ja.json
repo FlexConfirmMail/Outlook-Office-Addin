@@ -51,6 +51,7 @@
   "setting_configWarning": "警告設定",
   "setting_configWindowTitle": "FlexConfirmMail設定",
   "setting_aboutAddon": "このアドオンについて",
+  "setting_resetSetting": "設定をリセットする",
   "setting_saveAndQuit": "保存して閉じる",
   "setting_cancel": "キャンセル"
 }
