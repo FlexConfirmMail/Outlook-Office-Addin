@@ -104,7 +104,7 @@ async function getAllData() {
     getBccAsync(),
     getAttachmentsAsync(),
     getMailIdAsync(),
-    ConfigLoader.load(),
+    ConfigLoader.loadEffectiveConfig(),
   ]);
   let originalRecipients = {};
   if (mailId) {
@@ -191,11 +191,43 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         Office.context.roamingSettings.set("trustedDomains", config.trustedDomains ?? "");
         Office.context.roamingSettings.set("unsafeDomains", config.unsafeDomains ?? "");
         Office.context.roamingSettings.set("unsafeFiles", config.unsafeFiles ?? "");
-        Office.context.roamingSettings.saveAsync();
-        dialog.close();
-        resolve({
-          status: messageFromDialog.status,
-          asyncContext,
+        Office.context.roamingSettings.saveAsync((saveResult) => {
+          // This function should return (resolve) after finishing saveAsync.
+          // If returing before finishing saveAsync, roamingSettings is not 
+          // updated until refresh the page.
+          if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
+            console.debug("Settings saved successfully");
+            dialog.close();
+            resolve({
+              status: messageFromDialog.status,
+              asyncContext,
+            });
+          } else {
+            console.error("Error saving settings:", saveResult.error.message);
+            resolve({
+              status: Office.AsyncResultStatus.Failed,
+              asyncContext,
+            });
+          }
+        });
+      } else if (messageFromDialog.status == "resetUserConfig") {
+        console.debug("reset user config");
+        Office.context.roamingSettings.remove("common");
+        Office.context.roamingSettings.remove("trustedDomains");
+        Office.context.roamingSettings.remove("unsafeDomains");
+        Office.context.roamingSettings.remove("unsafeFiles");
+        Office.context.roamingSettings.saveAsync((saveResult) => {
+          if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
+            console.debug("Settings saved successfully");
+            const newData = {
+              policy : data.policy,
+              user : ConfigLoader.createEmptyConfig(),
+            }
+            const messageToDialog = JSON.stringify(newData);
+            dialog.messageChild(messageToDialog);
+          } else {
+            console.error("Error saving settings:", saveResult.error.message);
+          }
         });
       } else {
         dialog.close();
@@ -356,7 +388,12 @@ window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onOpenSettingDialog(event) {
-  const data = await ConfigLoader.loadAsString();
+  const policyConfig = await ConfigLoader.loadFileConfig();
+  const userConfig = await ConfigLoader.loadUserConfig();
+  const data = {
+    policy : policyConfig,
+    user : userConfig,
+  }
   let asyncContext = event;
   const { status, asyncContext: updatedAsyncContext } = await openDialog({
     url: window.location.origin + "/setting.html",

@@ -37,7 +37,7 @@ fluent-tabs {
   height: 100%;
 }
 
-#cancel-button {
+.button-container fluent-button {
   margin-left: 10px;
 }
 
@@ -59,3 +59,12 @@ fluent-text-area::part(control){
   margin-left: 10px;
   margin-right: 10px;
 }
+
+/* fluent-tab:hover {
+  background-color: #F5F5F5;
+}
+
+fluent-tab:active {
+  background-color: #FAFAFA;
+} */
+

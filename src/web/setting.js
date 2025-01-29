@@ -3,51 +3,109 @@ import { ConfigLoader } from "./config-loader.mjs";
 import { L10n } from "./l10n.mjs";
 
 let l10n;
+let policyConfig;
+let userConfig;
+let effectiveConfig;
 
 Office.onReady((info) => {
-      const language = Office.context.displayLanguage;
-      l10n = L10n.get(language);
-      l10n.ready.then(() => l10n.translateAll());
-      document.documentElement.setAttribute("lang", language);
     Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
+    const language = Office.context.displayLanguage;
+    l10n = L10n.get(language);
+    l10n.ready.then(() => l10n.translateAll());
+    document.documentElement.setAttribute("lang", language);
+    policyConfig = ConfigLoader.createDefaultConfig();
+    userConfig = ConfigLoader.createEmptyConfig();
+    effectiveConfig = ConfigLoader.createEmptyConfig();
     sendStatusToParent("ready");
 });
+
+function createTrustedDomainsString(policy, user) {
+    if (policy.trustedDomains && policy.trustedDomains.length > 0) {
+        const policyDomainsString = policy.trustedDomains?.join("\n# ") ?? "";
+        const userDomainsString = user.trustedDomains?.join("\n") ?? l10n.get("setting_trustedDomainsExample");
+        return l10n.get(
+            "setting_trustedDomainsPolicy",
+            {
+                policy: policyDomainsString,
+                user: userDomainsString
+            });
+    }
+    else if (user.trustedDomains && user.trustedDomains.length > 0) {
+        return user.trustedDomains.join("\n");
+    }
+    else {
+        return l10n.get("setting_trustedDomainsTemplate");
+    }
+}
+
+function createUnsafeDomainsString(policy, user) {
+    if (policy.unsafeDomains && policy.unsafeDomains.length > 0) {
+        const policyUnsafeDomainsString = policy.unsafeDomains?.join("\n# ") ?? "";
+        const userUnsafeDomainsString = user.unsafeDomains?.join("\n") ?? l10n.get("setting_unsafeDomainsExample");
+        return l10n.get(
+            "setting_unsafeDomainsPolicy",
+            {
+                policy: policyUnsafeDomainsString,
+                user: userUnsafeDomainsString
+            });
+    }
+    else if (user.unsafeDomains && user.unsafeDomains.length > 0) {
+        return user.unsafeDomains.join("\n");
+    }
+    else {
+        return l10n.get("setting_unsafeDomainsTemplate");
+    }
+}
+
+function createUnsafeFilesString(policy, user) {
+    if (policy.unsafeFiles && policy.unsafeFiles.length > 0) {
+        const policyUnsafeFilesString = policy.unsafeFiles?.join("\n# ") ?? "";
+        const userUnsafeFilesString = user.unsafeFiles?.join("\n") ?? l10n.get("setting_unsafeFilesExample");
+        return l10n.get(
+            "setting_unsafeFilesPolicy",
+            {
+                policy: policyUnsafeFilesString,
+                user: userUnsafeFilesString
+            });
+    }
+    else if (user.unsafeFiles && user.unsafeFiles.length > 0) {
+        return user.unsafeFiles.join("\n");
+    }
+    else {
+        return l10n.get("setting_unsafeFilesTemplate");
+    }
+}
 
 async function onMessageFromParent(arg) {
     if (!arg.message) {
         return;
     }
-    const config = JSON.parse(arg.message);
-    if (!config) {
+    const configs = JSON.parse(arg.message);
+    if (!configs) {
         return;
     }
-    const common = ConfigLoader.toDictionary(config.common, ConfigLoader.commonParamDefs);
-    console.debug(config);
+    await l10n.ready;
+    policyConfig = ConfigLoader.merge(policyConfig, configs.policy);
+    userConfig = ConfigLoader.merge(userConfig, configs.user);
+    effectiveConfig = ConfigLoader.merge(effectiveConfig, policyConfig);
+    effectiveConfig = ConfigLoader.merge(effectiveConfig, userConfig);
+    const trustedDomainsString = createTrustedDomainsString(policyConfig, userConfig);
+    const unsafeDomainsString = createUnsafeDomainsString(policyConfig, userConfig);
+    const unsafeFilesString = createUnsafeFilesString(policyConfig, userConfig);
 
-    if (common.CountEnabled) {
-        document.getElementById('countEnabled').checked = true;
-    }
-    if (common.CountAllowSkip) {
-        document.getElementById('countAllowSkip').checked = true;
-    }
-    if (common.SafeBccEnabled) {
-        document.getElementById('safeBccEnabled').checked = true;
-    }
-    if (common.MainSkipIfNoExt) {
-        document.getElementById('mainSkipIfNoExt').checked = true;
-    }
-    if (common.SafeNewDomainsEnabled) {
-        document.getElementById('safeNewDomainsEnabled').checked = true;
-    }
-    if (common.CountSeconds) {
-        document.getElementById('countSeconds').value = common.CountSeconds;
-    }
-    if (common.SafeBccThreshold) {
-        document.getElementById('safeBccThreshold').value = common.SafeBccThreshold;
-    }
-    document.getElementById('trustedDomainsTextArea').value = config.trustedDomains ?? "";
-    document.getElementById('unsafeDomainsTextArea').value = config.unsafeDomains ?? "";
-    document.getElementById('unsafeFilesTextArea').value = config.unsafeFiles ?? "";
+    document.getElementById('trustedDomainsTextArea').value = trustedDomainsString;
+    document.getElementById('unsafeDomainsTextArea').value = unsafeDomainsString;
+    document.getElementById('unsafeFilesTextArea').value = unsafeFilesString;
+
+    const common = effectiveConfig.common;
+    console.debug(effectiveConfig);
+    document.getElementById('countEnabled').checked = common.CountEnabled;
+    document.getElementById('countAllowSkip').checked = common.CountAllowSkip;
+    document.getElementById('safeBccEnabled').checked = common.SafeBccEnabled;
+    document.getElementById('mainSkipIfNoExt').checked = common.MainSkipIfNoExt;
+    document.getElementById('safeNewDomainsEnabled').checked = common.SafeNewDomainsEnabled;
+    document.getElementById('countSeconds').value = common.CountSeconds;
+    document.getElementById('safeBccThreshold').value = common.SafeBccThreshold;
 }
 
 function sendStatusToParent(status) {
@@ -62,7 +120,15 @@ function sendConfigToParent(config) {
     Office.context.ui.messageParent(jsonMessage);
 }
 
-function parseCommonConfig() {
+function serializeCommonConfig(opt, cur) {
+    const def = policyConfig.common[opt];
+    if (userConfig.common.hasOwnProperty(opt) || cur != def) {
+        return `${opt}=${cur}\n`;
+    }
+    return "";
+}
+
+function serializeCommonConfigs() {
     const countEnabled = document.getElementById('countEnabled').checked;
     const countAllowSkip = document.getElementById('countAllowSkip').checked;
     const countSeconds = document.getElementById('countSeconds').value;
@@ -70,30 +136,20 @@ function parseCommonConfig() {
     const safeBccThreshold = document.getElementById('safeBccThreshold').value;
     const safeNewDomainsEnabled = document.getElementById('safeNewDomainsEnabled').checked;
     const mainSkipIfNoExt = document.getElementById('mainSkipIfNoExt').checked;
-    let commonConfig = [];
-    if (countEnabled) {
-        commonConfig.push("CountEnabled=True");
-        commonConfig.push("CountSeconds=" + (countSeconds ?? "0"));
-    }
-    if (countAllowSkip) {
-        commonConfig.push("CountAllowSkip=True");
-    }
-    if (safeBccEnabled) {
-        commonConfig.push("SafeBccEnabled=True");;
-        commonConfig.push("SafeBccThreshold=" + (safeBccThreshold ?? "0"));
-    }
-    if (safeNewDomainsEnabled) {
-        commonConfig.push("SafeNewDomainsEnabled=True");
-    }
-    if (mainSkipIfNoExt) {
-        commonConfig.push("MainSkipIfNoExt=True");
-    }
-    let commonConfigString = commonConfig.join('\n');
+    let commonConfigString = "";
+    commonConfigString += serializeCommonConfig("CountEnabled", countEnabled);
+    commonConfigString += serializeCommonConfig("CountSeconds", countSeconds);
+    commonConfigString += serializeCommonConfig("CountAllowSkip", countAllowSkip);
+    commonConfigString += serializeCommonConfig("SafeBccEnabled", safeBccEnabled);
+    commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
+    commonConfigString += serializeCommonConfig("SafeNewDomainsEnabled", safeNewDomainsEnabled);
+    commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
     return commonConfigString;
 }
 
 window.onSave = () => {
-    const common = parseCommonConfig();
+    console.debug("onSave");
+    const common = serializeCommonConfigs();
     const trustedDomains = document.getElementById('trustedDomainsTextArea').value ?? "";
     const unsafeDomains = document.getElementById('unsafeDomainsTextArea').value ?? "";
     const unsafeFiles = document.getElementById('unsafeFilesTextArea').value ?? "";
@@ -111,5 +167,14 @@ window.onSave = () => {
 };
 
 window.onCancel = () => {
+    console.debug("onCancel");
     sendStatusToParent("cancel");
+};
+
+window.onReset = () => {
+    console.debug("onReset");
+    policyConfig = ConfigLoader.createDefaultConfig();
+    userConfig = ConfigLoader.createEmptyConfig();
+    effectiveConfig = ConfigLoader.createEmptyConfig();
+    sendStatusToParent("resetUserConfig");
 };

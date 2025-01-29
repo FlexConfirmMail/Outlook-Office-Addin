@@ -49,10 +49,10 @@ export class ConfigLoader {
   }
 
   static toArray(str) {
-    if (!str) {
-      return null;
-    }
     const resultList = [];
+    if (!str) {
+      return resultList;
+    }
     str = str.trim();
     for (let item of str.split("\n")) {
       item = item.trim();
@@ -65,10 +65,10 @@ export class ConfigLoader {
   }
 
   static toDictionary(str, paramDefs) {
-    if (!str) {
-      return null;
-    }
     const dictionary = {};
+    if (!str) {
+      return dictionary;
+    }
     str = str.trim();
     for (let item of str.split("\n")) {
       item = item.trim();
@@ -103,7 +103,16 @@ export class ConfigLoader {
     }
   }
 
-  static async load() {
+  static async loadEffectiveConfig() {
+    const [fileConfig, userConfig] = await Promise.all([
+      this.loadFileConfig(),
+      this.loadUserConfig()
+    ]);
+    const effectiveConfig = await this.merge(fileConfig, userConfig);
+    return effectiveConfig;
+  }
+
+  static async loadFileConfig() {
     const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
       this.loadFile("configs/TrustedDomains.txt"),
       this.loadFile("configs/UnsafeDomains.txt"),
@@ -114,21 +123,6 @@ export class ConfigLoader {
     const unsafeDomains = this.toArray(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
-    return {
-      trustedDomains,
-      unsafeDomains,
-      unsafeFiles,
-      common,
-    };
-  }
-
-  static async loadAsString() {
-    const [trustedDomains, unsafeDomains, unsafeFiles, common] = await Promise.all([
-      this.loadFile("configs/TrustedDomains.txt"),
-      this.loadFile("configs/UnsafeDomains.txt"),
-      this.loadFile("configs/UnsafeFiles.txt"),
-      this.loadFile("configs/Common.txt"),
-    ]);
     return {
       trustedDomains,
       unsafeDomains,
@@ -161,53 +155,55 @@ export class ConfigLoader {
     }
   }
 
-  /**
-   * Load user config from roamingSettings.
-   * Note tha this function does not work in the dialog context
-   * because Office.context.roamingSettings does not work in the
-   * dialog context as its specification.
-   * @returns user data hash
-   */
-  static async loadUserConfigAsString() {
-    const trustedDomains = Office.context.roamingSettings.get("trustedDomains") ?? "";
-    const unsafeDomains = Office.context.roamingSettings.get("unsafeDomains") ?? "";
-    const unsafeFiles = Office.context.roamingSettings.get("unsafeFiles") ?? "";
-    const common = Office.context.roamingSettings.get("common") ?? "";
+  static createDefaultConfig()
+  {
     return {
-      common,
-      trustedDomains,
-      unsafeDomains,
-      unsafeFiles
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: false,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
+    }
+  }
+
+  static createEmptyConfig()
+  {
+    return {
+      common: {},
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
     }
   }
 
   static merge(left, right) {
-    if (!left) {
-      return right;
+    if (right.common.CountEnabled != null) {
+      left.common.CountEnabled = right.common.CountEnabled;
     }
-    if (!right) {
-      return left;
-    }
-    if (right.common.countEnabled != null) {
-      left.common.countEnabled = right.common.countEnabled;
-    }
-    if (right.common.countAllowSkip != null) {
-      left.common.countAllowSkip = right.common.countAllowSkip;
+    if (right.common.CountAllowSkip != null) {
+      left.common.CountAllowSkip = right.common.CountAllowSkip;
     }
     if (right.common.SafeBccEnabled != null) {
-      left.common.safeBccEnabled = right.common.safeBccEnabled;
+      left.common.SafeBccEnabled = right.common.SafeBccEnabled;
     }
     if (right.common.MainSkipIfNoExt != null) {
-      left.common.mainSkipIfNoExt = right.common.mainSkipIfNoExt;
+      left.common.MainSkipIfNoExt = right.common.MainSkipIfNoExt;
     }
     if (right.common.SafeNewDomainsEnabled != null) {
-      left.common.safeNewDomainsEnabled = right.common.safeNewDomainsEnabled;
+      left.common.SafeNewDomainsEnabled = right.common.SafeNewDomainsEnabled;
     }
     if (right.common.CountSeconds != null) {
-      left.common.countSeconds = right.common.countSeconds;
+      left.common.CountSeconds = right.common.CountSeconds;
     }
     if (right.common.SafeBccThreshold != null) {
-      left.common.safeBccThreshold = right.common.safeBccThreshold;
+      left.common.SafeBccThreshold = right.common.SafeBccThreshold;
     }
     left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
     left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
