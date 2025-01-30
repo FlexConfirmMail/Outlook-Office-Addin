@@ -193,7 +193,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         Office.context.roamingSettings.set("unsafeFiles", config.unsafeFiles ?? "");
         Office.context.roamingSettings.saveAsync((saveResult) => {
           // This function should return (resolve) after finishing saveAsync.
-          // If returing before finishing saveAsync, roamingSettings is not 
+          // If returing before finishing saveAsync, roamingSettings is not
           // updated until refresh the page.
           if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
             console.debug("Settings saved successfully");
@@ -220,9 +220,9 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
           if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
             console.debug("Settings saved successfully");
             const newData = {
-              policy : data.policy,
-              user : ConfigLoader.createEmptyConfig(),
-            }
+              policy: data.policy,
+              user: ConfigLoader.createEmptyConfig(),
+            };
             const messageToDialog = JSON.stringify(newData);
             dialog.messageChild(messageToDialog);
           } else {
@@ -391,10 +391,10 @@ async function onOpenSettingDialog(event) {
   const policyConfig = await ConfigLoader.loadFileConfig();
   const userConfig = await ConfigLoader.loadUserConfig();
   const data = {
-    policy : policyConfig,
-    user : userConfig,
-  }
-  let asyncContext = event;
+    policy: policyConfig,
+    user: userConfig,
+  };
+  const asyncContext = event;
   const { status, asyncContext: updatedAsyncContext } = await openDialog({
     url: window.location.origin + "/setting.html",
     data,
@@ -402,6 +402,7 @@ async function onOpenSettingDialog(event) {
     height: Math.min(60, charsToPercentage(50, screen.availHeight)),
     width: Math.min(80, charsToPercentage(70, screen.availWidth)),
   });
+  console.debug(`onOpensettingDialog: ${status}`);
   updatedAsyncContext.completed({ allowEvent: true });
 }
 window.onOpenSettingDialog = onOpenSettingDialog;

@@ -104,10 +104,7 @@ export class ConfigLoader {
   }
 
   static async loadEffectiveConfig() {
-    const [fileConfig, userConfig] = await Promise.all([
-      this.loadFileConfig(),
-      this.loadUserConfig()
-    ]);
+    const [fileConfig, userConfig] = await Promise.all([this.loadFileConfig(), this.loadUserConfig()]);
     const effectiveConfig = await this.merge(fileConfig, userConfig);
     return effectiveConfig;
   }
@@ -151,12 +148,11 @@ export class ConfigLoader {
       common,
       trustedDomains,
       unsafeDomains,
-      unsafeFiles
-    }
+      unsafeFiles,
+    };
   }
 
-  static createDefaultConfig()
-  {
+  static createDefaultConfig() {
     return {
       common: {
         CountEnabled: true,
@@ -170,17 +166,16 @@ export class ConfigLoader {
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
-    }
+    };
   }
 
-  static createEmptyConfig()
-  {
+  static createEmptyConfig() {
     return {
       common: {},
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
-    }
+    };
   }
 
   static merge(left, right) {
