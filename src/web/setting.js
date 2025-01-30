@@ -73,10 +73,10 @@ async function onMessageFromParent(arg) {
     return;
   }
   await l10n.ready;
-  updateDialogSetting(configs.policy, configs.user)
+  updateDialogSetting(configs.policy, configs.user);
 }
 
-function updateDialogSetting (policy, user) {
+function updateDialogSetting(policy, user) {
   policyConfig = ConfigLoader.merge(policyConfig, policy);
   userConfig = ConfigLoader.merge(userConfig, user);
   effectiveConfig = ConfigLoader.merge(effectiveConfig, policyConfig);
