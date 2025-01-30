@@ -54,6 +54,6 @@
   "setting_saveAndQuit": "保存并退出",
   "setting_cancel": "取消",
   "setting_configDelayDeliveryTime": "Delay delivery",
-  "setting_delayDeliveryEnabled": "Emable delay delivery",
-  "setting_delayDeliverySeconds": "Delay sending a message by (in seconds)"
+  "setting_delayDeliveryEnabled": "Enable delay delivery",
+  "setting_delayDeliverySeconds": "Delay delivery a message by (in seconds)"
 }
