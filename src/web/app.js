@@ -210,25 +210,6 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
             });
           }
         });
-      } else if (messageFromDialog.status == "resetUserConfig") {
-        console.debug("reset user config");
-        Office.context.roamingSettings.remove("common");
-        Office.context.roamingSettings.remove("trustedDomains");
-        Office.context.roamingSettings.remove("unsafeDomains");
-        Office.context.roamingSettings.remove("unsafeFiles");
-        Office.context.roamingSettings.saveAsync((saveResult) => {
-          if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
-            console.debug("Settings saved successfully");
-            const newData = {
-              policy: data.policy,
-              user: ConfigLoader.createEmptyConfig(),
-            };
-            const messageToDialog = JSON.stringify(newData);
-            dialog.messageChild(messageToDialog);
-          } else {
-            console.error("Error saving settings:", saveResult.error.message);
-          }
-        });
       } else {
         dialog.close();
         resolve({

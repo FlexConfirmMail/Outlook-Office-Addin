@@ -73,8 +73,12 @@ async function onMessageFromParent(arg) {
     return;
   }
   await l10n.ready;
-  policyConfig = ConfigLoader.merge(policyConfig, configs.policy);
-  userConfig = ConfigLoader.merge(userConfig, configs.user);
+  updateDialogSetting(configs.policy, configs.user)
+}
+
+function updateDialogSetting (policy, user) {
+  policyConfig = ConfigLoader.merge(policyConfig, policy);
+  userConfig = ConfigLoader.merge(userConfig, user);
   effectiveConfig = ConfigLoader.merge(effectiveConfig, policyConfig);
   effectiveConfig = ConfigLoader.merge(effectiveConfig, userConfig);
   const trustedDomainsString = createTrustedDomainsString(policyConfig, userConfig);
@@ -161,8 +165,10 @@ window.onCancel = () => {
 
 window.onReset = () => {
   console.debug("onReset");
+  const currentPolocyConfig = policyConfig;
+
   policyConfig = ConfigLoader.createDefaultConfig();
   userConfig = ConfigLoader.createEmptyConfig();
   effectiveConfig = ConfigLoader.createEmptyConfig();
-  sendStatusToParent("resetUserConfig");
+  updateDialogSetting(currentPolocyConfig, userConfig);
 };
