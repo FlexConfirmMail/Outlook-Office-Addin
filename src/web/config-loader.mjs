@@ -7,6 +7,8 @@ export class ConfigLoader {
     SafeNewDomainsEnabled: "boolean",
     CountSeconds: "number",
     SafeBccThreshold: "number",
+    DelayDeliveryEnabled: "boolean",
+    DelayDeliverySeconds: "number",
   };
 
   static DICTONARY_LINE_SPLITTER = /^([^=]+)=(.*)$/;
@@ -162,6 +164,8 @@ export class ConfigLoader {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
+        DelayDeliveryEnabled: false,
+        DelayDeliverySeconds: 60,
       },
       trustedDomains: [],
       unsafeDomains: [],
@@ -199,6 +203,12 @@ export class ConfigLoader {
     }
     if (right.common.SafeBccThreshold != null) {
       left.common.SafeBccThreshold = right.common.SafeBccThreshold;
+    }
+    if (right.common.DelayDeliveryEnabled != null) {
+      left.common.DelayDeliveryEnabled = right.common.DelayDeliveryEnabled;
+    }
+    if (right.common.DelayDeliverySeconds != null) {
+      left.common.DelayDeliverySeconds = right.common.DelayDeliverySeconds;
     }
     left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
     left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
