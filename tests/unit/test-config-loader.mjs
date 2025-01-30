@@ -138,17 +138,17 @@ test_toArray.parameters = {
     str: "a@example.com\n#comment@example.com\nb@example.com",
     expected: ["a@example.com", "b@example.com"],
   },
-  "null to null": {
+  "null to empty": {
     str: null,
-    expected: null,
+    expected: [],
   },
-  "undefined to null": {
+  "undefined to empty": {
     str: undefined,
-    expected: null,
+    expected: [],
   },
-  "empty string to null": {
+  "empty string to empty": {
     str: "",
-    expected: null,
+    expected: [],
   },
 }
 export function test_toArray({ str, expected }) {
@@ -251,20 +251,178 @@ test_toDictionaryCommon.parameters = {
   },
   "null to null": {
     str: null,
-    expected: null,
+    expected: {},
   },
-  "undefined to null": {
+  "undefined to empty": {
     str: undefined,
-    expected: null,
+    expected: {},
   },
-  "empty string to null": {
+  "empty string to empty": {
     str: "",
-    expected: null,
+    expected: {},
   },
 }
 export function test_toDictionaryCommon({ str, expected }) {
   is(
     expected,
     ConfigLoader.toDictionary(str, ConfigLoader.commonParamDefs)
+  );
+}
+
+export function test_createDefaultConfig() {
+  is(
+    {
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: false,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
+    },
+    ConfigLoader.createDefaultConfig()
+  );
+}
+
+export function test_createEmptyConfig() {
+  is(
+    {
+      common: {},
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
+    },
+    ConfigLoader.createEmptyConfig()
+  );
+}
+
+
+test_merge.parameters = {
+  "left is empty": {
+    left: {
+      common: {},
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
+    },
+    right: {
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: true,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: ["trustedDomain"],
+      unsafeDomains: ["unsafeDomain"],
+      unsafeFiles: ["unsafeFile"],
+    },
+    expected: {
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: true,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: ["trustedDomain"],
+      unsafeDomains: ["unsafeDomain"],
+      unsafeFiles: ["unsafeFile"],
+    }
+  },
+  "right is empty": {
+    left: {
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: true,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: ["trustedDomain"],
+      unsafeDomains: ["unsafeDomain"],
+      unsafeFiles: ["unsafeFile"],
+    },
+    right: {
+      common: {},
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
+    },
+    expected: {
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: true,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: ["trustedDomain"],
+      unsafeDomains: ["unsafeDomain"],
+      unsafeFiles: ["unsafeFile"],
+    }
+  },
+  "use right defined params": {
+    left: {
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: true,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: ["trustedDomain_left"],
+      unsafeDomains: ["unsafeDomain_left"],
+      unsafeFiles: ["unsafeFile_left"],
+    },
+    right: {
+      common: {
+        CountEnabled: false,
+        CountAllowSkip: false,
+        SafeBccEnabled: false,
+        MainSkipIfNoExt: false,
+        SafeNewDomainsEnabled: false,
+        CountSeconds: 2,
+        SafeBccThreshold: 2,
+      },
+      trustedDomains: ["trustedDomain_right"],
+      unsafeDomains: ["unsafeDomain_right"],
+      unsafeFiles: ["unsafeFile_right"],
+    },
+    expected: {
+      common: {
+        CountEnabled: false,
+        CountAllowSkip: false,
+        SafeBccEnabled: false,
+        MainSkipIfNoExt: false,
+        SafeNewDomainsEnabled: false,
+        CountSeconds: 2,
+        SafeBccThreshold: 2,
+      },
+      trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
+      unsafeDomains: ["unsafeDomain_left", "unsafeDomain_right"],
+      unsafeFiles: ["unsafeFile_left", "unsafeFile_right"],
+    },
+  },
+}
+export function test_merge({ left, right, expected }) {
+  is(
+    expected,
+    ConfigLoader.merge(left, right)
   );
 }
