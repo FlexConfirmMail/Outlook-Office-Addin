@@ -97,6 +97,20 @@ function getAttachmentsAsync() {
   });
 }
 
+function getDelayDeliveryTime() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.delayDeliveryTime.getAsync((asyncResult) => {
+        const value = asyncResult.value;
+        resolve(value);
+      });
+    } catch (error) {
+      console.log(`Error while getting DelayDeliveryTime: ${error}`);
+      reject(error);
+    }
+  });
+}
+
 function setDelayDeliveryTimeAsync(deliveryTime) {
   return new Promise((resolve, reject) => {
     try {
@@ -367,11 +381,14 @@ async function onItemSend(event) {
   console.debug("granted: continue to send");
 
   if (data.config.common?.DelayDeliveryEnabled) {
-    const currentTime = new Date().getTime();
-    const delayDeliverySeconds = data.config.common?.DelayDeliverySeconds ?? 60;
-    const delayInMilliseconds = delayDeliverySeconds * 1000;
-    const deliveryTime = new Date(currentTime + delayInMilliseconds);
-    await setDelayDeliveryTimeAsync(deliveryTime);
+    const currentSetting = await getDelayDeliveryTime();
+    if (currentSetting == 0) {
+      const currentTime = new Date().getTime();
+      const delayDeliverySeconds = data.config.common?.DelayDeliverySeconds ?? 60;
+      const delayInMilliseconds = delayDeliverySeconds * 1000;
+      const deliveryTime = new Date(currentTime + delayInMilliseconds);
+      await setDelayDeliveryTimeAsync(deliveryTime);
+    }
   }
   asyncContext.completed({ allowEvent: true });
 }
