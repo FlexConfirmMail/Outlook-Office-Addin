@@ -53,5 +53,8 @@
   "setting_aboutAddon": "Version",
   "setting_resetSetting": "Reset setting",
   "setting_saveAndQuit": "Save and Exit",
-  "setting_cancel": "Cancel"
+  "setting_cancel": "Cancel",
+  "setting_configDelayDeliveryTime": "Delay delivery",
+  "setting_delayDeliveryEnabled": "Enable delay delivery",
+  "setting_delayDeliverySeconds": "Delay delivery a message by (in seconds)"
 }

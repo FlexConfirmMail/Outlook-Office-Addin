@@ -53,5 +53,8 @@
   "setting_aboutAddon": "このアドオンについて",
   "setting_resetSetting": "設定をリセットする",
   "setting_saveAndQuit": "保存して閉じる",
-  "setting_cancel": "キャンセル"
+  "setting_cancel": "キャンセル",
+  "setting_configDelayDeliveryTime": "遅延送信設定",
+  "setting_delayDeliveryEnabled": "遅延送信を有効化する",
+  "setting_delayDeliverySeconds": "送信までの遅延秒数:"
 }

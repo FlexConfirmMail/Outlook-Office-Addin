@@ -98,6 +98,8 @@ function updateDialogSetting(policy, user) {
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
   document.getElementById("countSeconds").value = common.CountSeconds;
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
+  document.getElementById("delayDeliveryEnabled").checked = common.DelayDeliveryEnabled;
+  document.getElementById("delayDeliverySeconds").value = common.DelayDeliverySeconds;
 }
 
 function sendStatusToParent(status) {
@@ -128,6 +130,8 @@ function serializeCommonConfigs() {
   const safeBccThreshold = document.getElementById("safeBccThreshold").value;
   const safeNewDomainsEnabled = document.getElementById("safeNewDomainsEnabled").checked;
   const mainSkipIfNoExt = document.getElementById("mainSkipIfNoExt").checked;
+  const delayDeliveryEnabled = document.getElementById("delayDeliveryEnabled").checked;
+  const delayDeliverySeconds = document.getElementById("delayDeliverySeconds").value;
   let commonConfigString = "";
   commonConfigString += serializeCommonConfig("CountEnabled", countEnabled);
   commonConfigString += serializeCommonConfig("CountSeconds", countSeconds);
@@ -136,6 +140,8 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
   commonConfigString += serializeCommonConfig("SafeNewDomainsEnabled", safeNewDomainsEnabled);
   commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
+  commonConfigString += serializeCommonConfig("DelayDeliveryEnabled", delayDeliveryEnabled);
+  commonConfigString += serializeCommonConfig("DelayDeliverySeconds", delayDeliverySeconds);
   return commonConfigString;
 }
 

@@ -97,6 +97,38 @@ function getAttachmentsAsync() {
   });
 }
 
+function getDelayDeliveryTime() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.delayDeliveryTime.getAsync((asyncResult) => {
+        const value = asyncResult.value;
+        resolve(value);
+      });
+    } catch (error) {
+      console.log(`Error while getting DelayDeliveryTime: ${error}`);
+      reject(error);
+    }
+  });
+}
+
+function setDelayDeliveryTimeAsync(deliveryTime) {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.delayDeliveryTime.setAsync(deliveryTime, (asyncResult) => {
+        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+          console.log(asyncResult.error.message);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    } catch (error) {
+      console.log(`Error while setting DelayDeliveryTime: ${error}`);
+      reject(error);
+    }
+  });
+}
+
 async function getAllData() {
   const [to, cc, bcc, attachments, mailId, config] = await Promise.all([
     getToAsync(),
@@ -347,6 +379,17 @@ async function onItemSend(event) {
   }
 
   console.debug("granted: continue to send");
+
+  if (data.config.common?.DelayDeliveryEnabled) {
+    const currentSetting = await getDelayDeliveryTime();
+    if (currentSetting == 0) {
+      const currentTime = new Date().getTime();
+      const delayDeliverySeconds = data.config.common?.DelayDeliverySeconds ?? 60;
+      const delayInMilliseconds = delayDeliverySeconds * 1000;
+      const deliveryTime = new Date(currentTime + delayInMilliseconds);
+      await setDelayDeliveryTimeAsync(deliveryTime);
+    }
+  }
   asyncContext.completed({ allowEvent: true });
 }
 window.onItemSend = onItemSend;
@@ -380,7 +423,7 @@ async function onOpenSettingDialog(event) {
     url: window.location.origin + "/setting.html",
     data,
     asyncContext,
-    height: Math.min(60, charsToPercentage(50, screen.availHeight)),
+    height: Math.min(80, charsToPercentage(70, screen.availHeight)),
     width: Math.min(80, charsToPercentage(70, screen.availWidth)),
   });
   console.debug(`onOpensettingDialog: ${status}`);
