@@ -94,8 +94,12 @@ export class ConfigLoader {
     console.debug("loadFile ", url);
     try {
       const response = await fetch(url);
+      console.debug("response:", response);
+      if (!response.ok)
+      {
+        return null;
+      }
       const data = await response.text();
-      console.debug(data);
       return data;
     } catch (err) {
       console.error(err);
