@@ -67,3 +67,34 @@ fluent-dialog .newly-added-domain-content strong {
 .new-domain-button-container {
   margin-top: 20px;
 }
+
+fluent-card {
+  margin-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.cards,
+.button-container {
+  padding-left: 20px; 
+  padding-right: 20px;
+}
+
+.cards {
+  align-items: stretch;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  overflow: auto;
+}

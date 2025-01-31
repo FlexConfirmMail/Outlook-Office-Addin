@@ -1,0 +1,66 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="lib/fluentui/web-components/web-components.min.js" type="module"></script>
+    <script src="lib/office-js/office.js" type="text/javascript"></script>
+    <link href="dialog.css" rel="stylesheet">
+    <link href="setting.css" rel="stylesheet">
+</head>
+
+<body class="dialog-body">
+    <div class="dialog-content">
+        <fluent-tabs activeid="entrees">
+            <fluent-tab id="generalSetting" data-l10n-text-content="setting_configGeneral"></fluent-tab>
+            <fluent-tab id="trustedDomains" data-l10n-text-content="setting_configTrustedDomains"></fluent-tab>
+            <fluent-tab id="unsafeDomains" data-l10n-text-content="setting_configUnsafeDomains"></fluent-tab>
+            <fluent-tab id="unsafeFiles" data-l10n-text-content="setting_configUnsafeFiles"></fluent-tab>
+            <fluent-tab id="about" data-l10n-text-content="setting_aboutAddon"></fluent-tab>
+            <fluent-tab-panel id="generalSettingPanel">
+                <fluent-card class="top-card">
+                    <strong data-l10n-text-content="setting_configCount"></strong>
+                    <fluent-divider></fluent-divider>
+                    <fluent-checkbox id="countEnabled" data-l10n-text-content="setting_configCountEnabled"></fluent-checkbox><br />
+                    <fluent-checkbox id="countAllowSkip" data-l10n-text-content="setting_configCountAllowSkip"></fluent-checkbox><br />
+                    <fluent-number-field id="countSeconds" data-l10n-text-content="setting_configCountSeconds"></fluent-number-field>
+                </fluent-card>
+                <fluent-card>
+                    <strong data-l10n-text-content="setting_configWarning"></strong>
+                    <fluent-divider></fluent-divider>
+                    <fluent-checkbox id="safeBccEnabled" data-l10n-text-content="setting_configSafeBccEnabled"></fluent-checkbox><br />
+                    <fluent-number-field id="safeBccThreshold" data-l10n-text-content="setting_configSafeBccThreshold"></fluent-number-field><br />
+                    <fluent-checkbox
+                        id="safeNewDomainsEnabled" data-l10n-text-content="setting_configSafeNewDomainsEnabled"></fluent-checkbox><br />
+                </fluent-card>
+                <fluent-card>
+                    <strong data-l10n-text-content="setting_configMisc"></strong>
+                    <fluent-divider></fluent-divider>
+                    <fluent-checkbox id="mainSkipIfNoExt" data-l10n-text-content="setting_configMainSkipIfNoExt"></fluent-checkbox>
+                </fluent-card>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="trustedDomainsPanel">
+                <fluent-text-area id="trustedDomainsTextArea"></fluent-text-area>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="unsafeDomainsPanel">
+                <fluent-text-area id="unsafeDomainsTextArea"></fluent-text-area>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="unsafeFilesPanel">
+                <fluent-text-area id="unsafeFilesTextArea"></fluent-text-area>
+            </fluent-tab-panel>
+            <fluent-tab-panel id="aboutPanel">
+                <h3>FlexConfirmMail</h3>
+                <p>2025 ClearCode Inc. All rights reserved.</p>
+            </fluent-tab-panel>
+        </fluent-tabs>
+    </div>
+    <div class="dialog-footer">
+        <div class="button-container">
+            <fluent-button id="reset-button" onclick="onReset()" data-l10n-text-content="setting_resetSetting"></fluent-button>
+            <fluent-button id="save-button" onclick="onSave()" data-l10n-text-content="setting_saveAndQuit"></fluent-button>
+            <fluent-button id="cancel-button" onclick="onCancel()" data-l10n-text-content="setting_cancel"></fluent-button>
+        </div>
+    </div>
+</body>
+
+</html>

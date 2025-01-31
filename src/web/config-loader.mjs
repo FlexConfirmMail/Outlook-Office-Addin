@@ -49,10 +49,10 @@ export class ConfigLoader {
   }
 
   static toArray(str) {
-    if (!str) {
-      return null;
-    }
     const resultList = [];
+    if (!str) {
+      return resultList;
+    }
     str = str.trim();
     for (let item of str.split("\n")) {
       item = item.trim();
@@ -65,10 +65,10 @@ export class ConfigLoader {
   }
 
   static toDictionary(str, paramDefs) {
-    if (!str) {
-      return null;
-    }
     const dictionary = {};
+    if (!str) {
+      return dictionary;
+    }
     str = str.trim();
     for (let item of str.split("\n")) {
       item = item.trim();
@@ -103,7 +103,13 @@ export class ConfigLoader {
     }
   }
 
-  static async load() {
+  static async loadEffectiveConfig() {
+    const [fileConfig, userConfig] = await Promise.all([this.loadFileConfig(), this.loadUserConfig()]);
+    const effectiveConfig = await this.merge(fileConfig, userConfig);
+    return effectiveConfig;
+  }
+
+  static async loadFileConfig() {
     const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
       this.loadFile("configs/TrustedDomains.txt"),
       this.loadFile("configs/UnsafeDomains.txt"),
@@ -120,5 +126,83 @@ export class ConfigLoader {
       unsafeFiles,
       common,
     };
+  }
+
+  /**
+   * Load user config from roamingSettings.
+   * Note tha this function does not work in the dialog context
+   * because Office.context.roamingSettings does not work in the
+   * dialog context as its specification.
+   * @returns user data hash
+   */
+  static async loadUserConfig() {
+    const trustedDomainsString = Office.context.roamingSettings.get("trustedDomains") ?? "";
+    const unsafeDomainsString = Office.context.roamingSettings.get("unsafeDomains") ?? "";
+    const unsafeFilesString = Office.context.roamingSettings.get("unsafeFiles") ?? "";
+    const commonString = Office.context.roamingSettings.get("common") ?? "";
+    const trustedDomains = this.toArray(trustedDomainsString);
+    const unsafeDomains = this.toArray(unsafeDomainsString);
+    const unsafeFiles = this.toArray(unsafeFilesString);
+    const common = this.toDictionary(commonString, this.commonParamDefs);
+    return {
+      common,
+      trustedDomains,
+      unsafeDomains,
+      unsafeFiles,
+    };
+  }
+
+  static createDefaultConfig() {
+    return {
+      common: {
+        CountEnabled: true,
+        CountAllowSkip: true,
+        SafeBccEnabled: true,
+        MainSkipIfNoExt: false,
+        SafeNewDomainsEnabled: true,
+        CountSeconds: 3,
+        SafeBccThreshold: 4,
+      },
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
+    };
+  }
+
+  static createEmptyConfig() {
+    return {
+      common: {},
+      trustedDomains: [],
+      unsafeDomains: [],
+      unsafeFiles: [],
+    };
+  }
+
+  static merge(left, right) {
+    if (right.common.CountEnabled != null) {
+      left.common.CountEnabled = right.common.CountEnabled;
+    }
+    if (right.common.CountAllowSkip != null) {
+      left.common.CountAllowSkip = right.common.CountAllowSkip;
+    }
+    if (right.common.SafeBccEnabled != null) {
+      left.common.SafeBccEnabled = right.common.SafeBccEnabled;
+    }
+    if (right.common.MainSkipIfNoExt != null) {
+      left.common.MainSkipIfNoExt = right.common.MainSkipIfNoExt;
+    }
+    if (right.common.SafeNewDomainsEnabled != null) {
+      left.common.SafeNewDomainsEnabled = right.common.SafeNewDomainsEnabled;
+    }
+    if (right.common.CountSeconds != null) {
+      left.common.CountSeconds = right.common.CountSeconds;
+    }
+    if (right.common.SafeBccThreshold != null) {
+      left.common.SafeBccThreshold = right.common.SafeBccThreshold;
+    }
+    left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
+    left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
+    left.unsafeFiles = left.unsafeFiles.concat(right.unsafeFiles);
+    return left;
   }
 }

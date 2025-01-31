@@ -11,7 +11,11 @@
   <ProviderName>ClearCode</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="FlexConfirmMail"/>
-  <Description DefaultValue="A template to get started."/>
+  <Description DefaultValue="A template to get started.">
+    <Override Locale="en-US" Value="Based on flexible rules, you can get confirmations for email addresses of recipients and attachments."/>
+    <Override Locale="ja-JP" Value="柔軟なルールに基づいて、宛先のメールアドレスや添付ファイルに対する確認を表示する事ができます。"/>
+    <Override Locale="zh-CN" Value="Based on flexible rules, you can get confirmations for email addresses of recipients and attachments."/>
+  </Description>
   <IconUrl DefaultValue="https://127.0.0.1:10041/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://127.0.0.1:10041/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://github.com/FlexConfirmMail/Outlook-Office-Addin"/>
@@ -62,15 +66,62 @@
               </LaunchEvents>
               <SourceLocation resid="residUILessFunctionFileUrl"/>
             </ExtensionPoint>
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="msgComposeCmdGroup">
+                  <Label resid="CommandsGroup.Label"/>
+                  <Control xsi:type="Button" id="msgComposeInsertGist">
+                    <Label resid="SettingButton.Label"/>
+                    <Supertip>
+                      <Title resid="SettingButton.SupertipTitle"/>
+                      <Description resid="SettingButton.SupertipText"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16x16"/>
+                      <bt:Image size="32" resid="Icon.32x32"/>
+                      <bt:Image size="80" resid="Icon.80x80"/>
+                    </Icon>
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>onOpenSettingDialog</FunctionName>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
           </DesktopFormFactor>
         </Host>
       </Hosts>
       <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://127.0.0.1:10041/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://127.0.0.1:10041/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://127.0.0.1:10041/assets/icon-80.png"/>
+      </bt:Images>
         <bt:Urls>
            <!-- The JavaScript code is hosted on a secure and trusted web server. -->
           <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://127.0.0.1:10041/app.html" ></bt:Url>
           <bt:Url id="residUILessFunctionJsFileUrl" DefaultValue="https://127.0.0.1:10041/app.js" ></bt:Url>
         </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="CommandsGroup.Label" DefaultValue="FlexConfirmMail"/>
+          <bt:String id="SettingButton.Label" DefaultValue="FlexConfirmMail Setting">
+            <bt:Override Locale="en-US" Value="FlexConfirmMail Setting"/>
+            <bt:Override Locale="ja-JP" Value="FlexConfirmMail設定"/>
+            <bt:Override Locale="zh-CN" Value="FlexConfirmMail设置"/>
+          </bt:String>
+          <bt:String id="SettingButton.SupertipTitle" DefaultValue="FlexConfirmMail Setting">
+            <bt:Override Locale="en-US" Value="FlexConfirmMail Setting"/>
+            <bt:Override Locale="ja-JP" Value="FlexConfirmMail設定"/>
+            <bt:Override Locale="zh-CN" Value="FlexConfirmMail设置"/>
+          </bt:String>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="SettingButton.SupertipText" DefaultValue="Open FlexConfirmMail Setting">
+            <bt:Override Locale="en-US" Value="Open FlexConfirmMail Setting"/>
+            <bt:Override Locale="ja-JP" Value="FlexConfirmMail設定を開く"/>
+            <bt:Override Locale="zh-CN" Value="打开FlexConfirmMail设置"/>
+          </bt:String>
+        </bt:LongStrings>
       </Resources>
     </VersionOverrides>
   </VersionOverrides>

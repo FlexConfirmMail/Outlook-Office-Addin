@@ -104,7 +104,7 @@ async function getAllData() {
     getBccAsync(),
     getAttachmentsAsync(),
     getMailIdAsync(),
-    ConfigLoader.load(),
+    ConfigLoader.loadEffectiveConfig(),
   ]);
   let originalRecipients = {};
   if (mailId) {
@@ -181,6 +181,35 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
       if (messageFromDialog.status == "ready") {
         const messageToDialog = JSON.stringify(data);
         dialog.messageChild(messageToDialog);
+      } else if (messageFromDialog.status == "saveUserConfig") {
+        // We can't execute Office.context.roamingSettings.saveAsync in the dialog context
+        // as Office API specification. In order to save the config to roamingSettings, we
+        // should get the current config from the dialog message and save it in this function.
+        const config = messageFromDialog.config ?? {};
+        console.debug("user config: ", config);
+        Office.context.roamingSettings.set("common", config.common ?? "");
+        Office.context.roamingSettings.set("trustedDomains", config.trustedDomains ?? "");
+        Office.context.roamingSettings.set("unsafeDomains", config.unsafeDomains ?? "");
+        Office.context.roamingSettings.set("unsafeFiles", config.unsafeFiles ?? "");
+        Office.context.roamingSettings.saveAsync((saveResult) => {
+          // This function should return (resolve) after finishing saveAsync.
+          // If returing before finishing saveAsync, roamingSettings is not
+          // updated until refresh the page.
+          if (saveResult.status === Office.AsyncResultStatus.Succeeded) {
+            console.debug("Settings saved successfully");
+            dialog.close();
+            resolve({
+              status: messageFromDialog.status,
+              asyncContext,
+            });
+          } else {
+            console.error("Error saving settings:", saveResult.error.message);
+            resolve({
+              status: Office.AsyncResultStatus.Failed,
+              asyncContext,
+            });
+          }
+        });
       } else {
         dialog.close();
         resolve({
@@ -337,3 +366,24 @@ async function onNewMessageComposeCreated(event) {
   event.completed();
 }
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function onOpenSettingDialog(event) {
+  const policyConfig = await ConfigLoader.loadFileConfig();
+  const userConfig = await ConfigLoader.loadUserConfig();
+  const data = {
+    policy: policyConfig,
+    user: userConfig,
+  };
+  const asyncContext = event;
+  const { status, asyncContext: updatedAsyncContext } = await openDialog({
+    url: window.location.origin + "/setting.html",
+    data,
+    asyncContext,
+    height: Math.min(60, charsToPercentage(50, screen.availHeight)),
+    width: Math.min(80, charsToPercentage(70, screen.availWidth)),
+  });
+  console.debug(`onOpensettingDialog: ${status}`);
+  updatedAsyncContext.completed({ allowEvent: true });
+}
+window.onOpenSettingDialog = onOpenSettingDialog;
