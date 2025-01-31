@@ -97,8 +97,7 @@ export class ConfigLoader {
     try {
       const response = await fetch(url);
       console.debug("response:", response);
-      if (!response.ok)
-      {
+      if (!response.ok) {
         return null;
       }
       const data = await response.text();
