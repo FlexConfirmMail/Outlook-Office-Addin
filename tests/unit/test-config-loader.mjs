@@ -515,7 +515,6 @@ test_merge.parameters = {
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
-          "CountSeconds",
         ],
       },
       trustedDomains: ["trustedDomain_left"],

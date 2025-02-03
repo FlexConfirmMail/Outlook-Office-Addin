@@ -216,44 +216,46 @@ export class ConfigLoader {
   }
 
   static merge(left, right) {
-    const fixedParameters = left.common.FixedParameters ?? [];
-    if (right.common.CountEnabled != null && !fixedParameters.includes("CountEnabled")) {
+    const fixedParametersSet = new Set(left.common.FixedParameters ?? []);
+    if (right.common.CountEnabled != null && !fixedParametersSet.has("CountEnabled")) {
       left.common.CountEnabled = right.common.CountEnabled;
     }
-    if (right.common.CountAllowSkip != null && !fixedParameters.includes("CountAllowSkip")) {
+    if (right.common.CountAllowSkip != null && !fixedParametersSet.has("CountAllowSkip")) {
       left.common.CountAllowSkip = right.common.CountAllowSkip;
     }
-    if (right.common.SafeBccEnabled != null && !fixedParameters.includes("SafeBccEnabled")) {
+    if (right.common.SafeBccEnabled != null && !fixedParametersSet.has("SafeBccEnabled")) {
       left.common.SafeBccEnabled = right.common.SafeBccEnabled;
     }
-    if (right.common.MainSkipIfNoExt != null && !fixedParameters.includes("MainSkipIfNoExt")) {
+    if (right.common.MainSkipIfNoExt != null && !fixedParametersSet.has("MainSkipIfNoExt")) {
       left.common.MainSkipIfNoExt = right.common.MainSkipIfNoExt;
     }
-    if (right.common.SafeNewDomainsEnabled != null && !fixedParameters.includes("SafeNewDomainsEnabled")) {
+    if (right.common.SafeNewDomainsEnabled != null && !fixedParametersSet.has("SafeNewDomainsEnabled")) {
       left.common.SafeNewDomainsEnabled = right.common.SafeNewDomainsEnabled;
     }
-    if (right.common.CountSeconds != null && !fixedParameters.includes("CountSeconds")) {
+    if (right.common.CountSeconds != null && !fixedParametersSet.has("CountSeconds")) {
       left.common.CountSeconds = right.common.CountSeconds;
     }
-    if (right.common.SafeBccThreshold != null && !fixedParameters.includes("SafeBccThreshold")) {
+    if (right.common.SafeBccThreshold != null && !fixedParametersSet.has("SafeBccThreshold")) {
       left.common.SafeBccThreshold = right.common.SafeBccThreshold;
     }
-    if (right.common.DelayDeliveryEnabled != null && !fixedParameters.includes("DelayDeliveryEnabled")) {
+    if (right.common.DelayDeliveryEnabled != null && !fixedParametersSet.has("DelayDeliveryEnabled")) {
       left.common.DelayDeliveryEnabled = right.common.DelayDeliveryEnabled;
     }
-    if (right.common.DelayDeliverySeconds != null && !fixedParameters.includes("DelayDeliverySeconds")) {
+    if (right.common.DelayDeliverySeconds != null && !fixedParametersSet.has("DelayDeliverySeconds")) {
       left.common.DelayDeliverySeconds = right.common.DelayDeliverySeconds;
     }
-    if (!fixedParameters.includes("TrustedDomains")) {
+    if (!fixedParametersSet.has("TrustedDomains")) {
       left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
     }
-    if (!fixedParameters.includes("UnsafeDomains")) {
+    if (!fixedParametersSet.has("UnsafeDomains")) {
       left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
     }
-    if (!fixedParameters.includes("UnsafeFiles")) {
+    if (!fixedParametersSet.has("UnsafeFiles")) {
       left.unsafeFiles = left.unsafeFiles.concat(right.unsafeFiles);
     }
-    left.common.FixedParameters = fixedParameters.concat(right.common.FixedParameters ?? []);
+    const rightFixedParametersSet = new Set(right.common.FixedParameters ?? []);
+    const newFixedParametersSet = new Set([...fixedParametersSet, ...rightFixedParametersSet]);
+    left.common.FixedParameters = [...newFixedParametersSet];
     return left;
   }
 }

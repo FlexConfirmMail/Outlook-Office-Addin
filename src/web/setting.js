@@ -83,40 +83,40 @@ function updateDialogSetting(policy, user) {
   effectiveConfig = ConfigLoader.merge(effectiveConfig, userConfig);
   console.debug(effectiveConfig);
   const common = effectiveConfig.common;
-  const fixedParameters = policyConfig.common.FixedParameters ?? [];
+  const fixedParametersSet = new Set(policyConfig.common.FixedParameters ?? []);
   const trustedDomainsString = createTrustedDomainsString(policyConfig, userConfig);
   const unsafeDomainsString = createUnsafeDomainsString(policyConfig, userConfig);
   const unsafeFilesString = createUnsafeFilesString(policyConfig, userConfig);
 
   document.getElementById("trustedDomainsTextArea").value = trustedDomainsString;
-  document.getElementById("trustedDomainsTextArea").disabled = fixedParameters.includes("TrustedDomains");
+  document.getElementById("trustedDomainsTextArea").disabled = fixedParametersSet.has("TrustedDomains");
   document.getElementById("unsafeDomainsTextArea").value = unsafeDomainsString;
-  document.getElementById("unsafeDomainsTextArea").disabled = fixedParameters.includes("UnsafeDomains");
+  document.getElementById("unsafeDomainsTextArea").disabled = fixedParametersSet.has("UnsafeDomains");
   document.getElementById("unsafeFilesTextArea").value = unsafeFilesString;
-  document.getElementById("unsafeFilesTextArea").disabled = fixedParameters.includes("UnsafeFiles");
+  document.getElementById("unsafeFilesTextArea").disabled = fixedParametersSet.has("UnsafeFiles");
 
   document.getElementById("countEnabled").checked = common.CountEnabled;
-  document.getElementById("countEnabled").disabled = fixedParameters.includes("CountEnabled");
+  document.getElementById("countEnabled").disabled = fixedParametersSet.has("CountEnabled");
   document.getElementById("countAllowSkip").checked = common.CountAllowSkip;
   document.getElementById("countAllowSkip").disabled =
-    fixedParameters.includes("CountEnabled") || fixedParameters.includes("CountAllowSkip");
+    fixedParametersSet.has("CountEnabled") || fixedParametersSet.has("CountAllowSkip");
   document.getElementById("safeBccEnabled").checked = common.SafeBccEnabled;
-  document.getElementById("safeBccEnabled").disabled = fixedParameters.includes("SafeBccEnabled");
+  document.getElementById("safeBccEnabled").disabled = fixedParametersSet.has("SafeBccEnabled");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
-  document.getElementById("mainSkipIfNoExt").disabled = fixedParameters.includes("MainSkipIfNoExt");
+  document.getElementById("mainSkipIfNoExt").disabled = fixedParametersSet.has("MainSkipIfNoExt");
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
-  document.getElementById("safeNewDomainsEnabled").disabled = fixedParameters.includes("SafeNewDomainsEnabled");
+  document.getElementById("safeNewDomainsEnabled").disabled = fixedParametersSet.has("SafeNewDomainsEnabled");
   document.getElementById("countSeconds").value = common.CountSeconds;
   document.getElementById("countSeconds").disabled =
-    fixedParameters.includes("CountEnabled") || fixedParameters.includes("CountSeconds");
+    fixedParametersSet.has("CountEnabled") || fixedParametersSet.has("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
   document.getElementById("safeBccThreshold").disabled =
-    fixedParameters.includes("SafeBccEnabled") || fixedParameters.includes("SafeBccThreshold");
+    fixedParametersSet.has("SafeBccEnabled") || fixedParametersSet.has("SafeBccThreshold");
   document.getElementById("delayDeliveryEnabled").checked = common.DelayDeliveryEnabled;
-  document.getElementById("delayDeliveryEnabled").disabled = fixedParameters.includes("DelayDeliveryEnabled");
+  document.getElementById("delayDeliveryEnabled").disabled = fixedParametersSet.has("DelayDeliveryEnabled");
   document.getElementById("delayDeliverySeconds").value = common.DelayDeliverySeconds;
   document.getElementById("delayDeliverySeconds").disabled =
-    fixedParameters.includes("DelayDeliveryEnabled") || fixedParameters.includes("DelayDeliverySeconds");
+    fixedParametersSet.has("DelayDeliveryEnabled") || fixedParametersSet.has("DelayDeliverySeconds");
 }
 
 function sendStatusToParent(status) {
