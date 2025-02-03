@@ -5,3 +5,4 @@ CountAllowSkip = True
 CountSeconds = 5
 MainSkipIfNoExt = True
 SafeNewDomainsEnabled = True
+FixedParameters = MainSkipIfNoExt,CountSeconds,SafeBccEnabled
