@@ -89,16 +89,17 @@ function updateDialogSetting(policy, user) {
   const unsafeFilesString = createUnsafeFilesString(policyConfig, userConfig);
 
   document.getElementById("trustedDomainsTextArea").value = trustedDomainsString;
-  document.getElementById("trustedDomainsTextArea").disabled  = fixedParameters.includes("TrustedDomains");
+  document.getElementById("trustedDomainsTextArea").disabled = fixedParameters.includes("TrustedDomains");
   document.getElementById("unsafeDomainsTextArea").value = unsafeDomainsString;
-  document.getElementById("unsafeDomainsTextArea").disabled  = fixedParameters.includes("UnsafeDomains");
+  document.getElementById("unsafeDomainsTextArea").disabled = fixedParameters.includes("UnsafeDomains");
   document.getElementById("unsafeFilesTextArea").value = unsafeFilesString;
-  document.getElementById("unsafeFilesTextArea").disabled  = fixedParameters.includes("UnsafeFiles");
+  document.getElementById("unsafeFilesTextArea").disabled = fixedParameters.includes("UnsafeFiles");
 
   document.getElementById("countEnabled").checked = common.CountEnabled;
   document.getElementById("countEnabled").disabled = fixedParameters.includes("CountEnabled");
   document.getElementById("countAllowSkip").checked = common.CountAllowSkip;
-  document.getElementById("countAllowSkip").disabled = fixedParameters.includes("CountEnabled") || fixedParameters.includes("CountAllowSkip");
+  document.getElementById("countAllowSkip").disabled =
+    fixedParameters.includes("CountEnabled") || fixedParameters.includes("CountAllowSkip");
   document.getElementById("safeBccEnabled").checked = common.SafeBccEnabled;
   document.getElementById("safeBccEnabled").disabled = fixedParameters.includes("SafeBccEnabled");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
@@ -106,13 +107,16 @@ function updateDialogSetting(policy, user) {
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
   document.getElementById("safeNewDomainsEnabled").disabled = fixedParameters.includes("SafeNewDomainsEnabled");
   document.getElementById("countSeconds").value = common.CountSeconds;
-  document.getElementById("countSeconds").disabled = fixedParameters.includes("CountEnabled") || fixedParameters.includes("CountSeconds");
+  document.getElementById("countSeconds").disabled =
+    fixedParameters.includes("CountEnabled") || fixedParameters.includes("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
-  document.getElementById("safeBccThreshold").disabled = fixedParameters.includes("SafeBccEnabled") || fixedParameters.includes("SafeBccThreshold");
+  document.getElementById("safeBccThreshold").disabled =
+    fixedParameters.includes("SafeBccEnabled") || fixedParameters.includes("SafeBccThreshold");
   document.getElementById("delayDeliveryEnabled").checked = common.DelayDeliveryEnabled;
   document.getElementById("delayDeliveryEnabled").disabled = fixedParameters.includes("DelayDeliveryEnabled");
   document.getElementById("delayDeliverySeconds").value = common.DelayDeliverySeconds;
-  document.getElementById("delayDeliverySeconds").disabled = fixedParameters.includes("DelayDeliveryEnabled") || fixedParameters.includes("DelayDeliverySeconds");
+  document.getElementById("delayDeliverySeconds").disabled =
+    fixedParameters.includes("DelayDeliveryEnabled") || fixedParameters.includes("DelayDeliverySeconds");
 }
 
 function sendStatusToParent(status) {

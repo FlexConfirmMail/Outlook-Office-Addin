@@ -47,9 +47,9 @@ export class ConfigLoader {
 
   /**
    * Parse CSV string to array.
-   * This method is not fully support CSV specification. 
-   * @param {*} str 
-   * @returns 
+   * This method is not fully support CSV specification.
+   * @param {*} str
+   * @returns
    */
   static parseCommaSeparatedValues(str) {
     if (!str) {
