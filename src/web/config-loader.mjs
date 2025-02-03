@@ -9,6 +9,7 @@ export class ConfigLoader {
     SafeBccThreshold: "number",
     DelayDeliveryEnabled: "boolean",
     DelayDeliverySeconds: "number",
+    FixedParameters: "commaSeparatedValues",
   };
 
   static DICTONARY_LINE_SPLITTER = /^([^=]+)=(.*)$/;
@@ -33,8 +34,36 @@ export class ConfigLoader {
         }
         break;
       }
+      case "commaSeparatedValues": {
+        const csvArrayResult = this.parseCommaSeparatedValues(valueStr);
+        if (csvArrayResult !== null) {
+          return csvArrayResult;
+        }
+        break;
+      }
     }
     return null;
+  }
+
+  /**
+   * Parse CSV string to array.
+   * This method is not fully support CSV specification.
+   * @param {*} str
+   * @returns
+   */
+  static parseCommaSeparatedValues(str) {
+    if (!str) {
+      return null;
+    }
+    const resultList = [];
+    for (let item of str.split(",")) {
+      item = item.trim();
+      if (item.length <= 0) {
+        continue;
+      }
+      resultList.push(item);
+    }
+    return resultList;
   }
 
   static parseBool(str) {
@@ -169,6 +198,7 @@ export class ConfigLoader {
         SafeBccThreshold: 4,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 60,
+        FixedParameters: [],
       },
       trustedDomains: [],
       unsafeDomains: [],
@@ -186,36 +216,46 @@ export class ConfigLoader {
   }
 
   static merge(left, right) {
-    if (right.common.CountEnabled != null) {
+    const fixedParametersSet = new Set(left.common.FixedParameters ?? []);
+    if (right.common.CountEnabled != null && !fixedParametersSet.has("CountEnabled")) {
       left.common.CountEnabled = right.common.CountEnabled;
     }
-    if (right.common.CountAllowSkip != null) {
+    if (right.common.CountAllowSkip != null && !fixedParametersSet.has("CountAllowSkip")) {
       left.common.CountAllowSkip = right.common.CountAllowSkip;
     }
-    if (right.common.SafeBccEnabled != null) {
+    if (right.common.SafeBccEnabled != null && !fixedParametersSet.has("SafeBccEnabled")) {
       left.common.SafeBccEnabled = right.common.SafeBccEnabled;
     }
-    if (right.common.MainSkipIfNoExt != null) {
+    if (right.common.MainSkipIfNoExt != null && !fixedParametersSet.has("MainSkipIfNoExt")) {
       left.common.MainSkipIfNoExt = right.common.MainSkipIfNoExt;
     }
-    if (right.common.SafeNewDomainsEnabled != null) {
+    if (right.common.SafeNewDomainsEnabled != null && !fixedParametersSet.has("SafeNewDomainsEnabled")) {
       left.common.SafeNewDomainsEnabled = right.common.SafeNewDomainsEnabled;
     }
-    if (right.common.CountSeconds != null) {
+    if (right.common.CountSeconds != null && !fixedParametersSet.has("CountSeconds")) {
       left.common.CountSeconds = right.common.CountSeconds;
     }
-    if (right.common.SafeBccThreshold != null) {
+    if (right.common.SafeBccThreshold != null && !fixedParametersSet.has("SafeBccThreshold")) {
       left.common.SafeBccThreshold = right.common.SafeBccThreshold;
     }
-    if (right.common.DelayDeliveryEnabled != null) {
+    if (right.common.DelayDeliveryEnabled != null && !fixedParametersSet.has("DelayDeliveryEnabled")) {
       left.common.DelayDeliveryEnabled = right.common.DelayDeliveryEnabled;
     }
-    if (right.common.DelayDeliverySeconds != null) {
+    if (right.common.DelayDeliverySeconds != null && !fixedParametersSet.has("DelayDeliverySeconds")) {
       left.common.DelayDeliverySeconds = right.common.DelayDeliverySeconds;
     }
-    left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
-    left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
-    left.unsafeFiles = left.unsafeFiles.concat(right.unsafeFiles);
+    if (!fixedParametersSet.has("TrustedDomains")) {
+      left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
+    }
+    if (!fixedParametersSet.has("UnsafeDomains")) {
+      left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
+    }
+    if (!fixedParametersSet.has("UnsafeFiles")) {
+      left.unsafeFiles = left.unsafeFiles.concat(right.unsafeFiles);
+    }
+    const rightFixedParametersSet = new Set(right.common.FixedParameters ?? []);
+    const newFixedParametersSet = new Set([...fixedParametersSet, ...rightFixedParametersSet]);
+    left.common.FixedParameters = [...newFixedParametersSet];
     return left;
   }
 }

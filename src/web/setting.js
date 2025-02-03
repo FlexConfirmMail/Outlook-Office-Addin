@@ -81,25 +81,42 @@ function updateDialogSetting(policy, user) {
   userConfig = ConfigLoader.merge(userConfig, user);
   effectiveConfig = ConfigLoader.merge(effectiveConfig, policyConfig);
   effectiveConfig = ConfigLoader.merge(effectiveConfig, userConfig);
+  console.debug(effectiveConfig);
+  const common = effectiveConfig.common;
+  const fixedParametersSet = new Set(policyConfig.common.FixedParameters ?? []);
   const trustedDomainsString = createTrustedDomainsString(policyConfig, userConfig);
   const unsafeDomainsString = createUnsafeDomainsString(policyConfig, userConfig);
   const unsafeFilesString = createUnsafeFilesString(policyConfig, userConfig);
 
   document.getElementById("trustedDomainsTextArea").value = trustedDomainsString;
+  document.getElementById("trustedDomainsTextArea").disabled = fixedParametersSet.has("TrustedDomains");
   document.getElementById("unsafeDomainsTextArea").value = unsafeDomainsString;
+  document.getElementById("unsafeDomainsTextArea").disabled = fixedParametersSet.has("UnsafeDomains");
   document.getElementById("unsafeFilesTextArea").value = unsafeFilesString;
+  document.getElementById("unsafeFilesTextArea").disabled = fixedParametersSet.has("UnsafeFiles");
 
-  const common = effectiveConfig.common;
-  console.debug(effectiveConfig);
   document.getElementById("countEnabled").checked = common.CountEnabled;
+  document.getElementById("countEnabled").disabled = fixedParametersSet.has("CountEnabled");
   document.getElementById("countAllowSkip").checked = common.CountAllowSkip;
+  document.getElementById("countAllowSkip").disabled =
+    fixedParametersSet.has("CountEnabled") || fixedParametersSet.has("CountAllowSkip");
   document.getElementById("safeBccEnabled").checked = common.SafeBccEnabled;
+  document.getElementById("safeBccEnabled").disabled = fixedParametersSet.has("SafeBccEnabled");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
+  document.getElementById("mainSkipIfNoExt").disabled = fixedParametersSet.has("MainSkipIfNoExt");
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
+  document.getElementById("safeNewDomainsEnabled").disabled = fixedParametersSet.has("SafeNewDomainsEnabled");
   document.getElementById("countSeconds").value = common.CountSeconds;
+  document.getElementById("countSeconds").disabled =
+    fixedParametersSet.has("CountEnabled") || fixedParametersSet.has("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
+  document.getElementById("safeBccThreshold").disabled =
+    fixedParametersSet.has("SafeBccEnabled") || fixedParametersSet.has("SafeBccThreshold");
   document.getElementById("delayDeliveryEnabled").checked = common.DelayDeliveryEnabled;
+  document.getElementById("delayDeliveryEnabled").disabled = fixedParametersSet.has("DelayDeliveryEnabled");
   document.getElementById("delayDeliverySeconds").value = common.DelayDeliverySeconds;
+  document.getElementById("delayDeliverySeconds").disabled =
+    fixedParametersSet.has("DelayDeliveryEnabled") || fixedParametersSet.has("DelayDeliverySeconds");
 }
 
 function sendStatusToParent(status) {
@@ -142,6 +159,8 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
   commonConfigString += serializeCommonConfig("DelayDeliveryEnabled", delayDeliveryEnabled);
   commonConfigString += serializeCommonConfig("DelayDeliverySeconds", delayDeliverySeconds);
+  // FixedParameters is for policy setting.
+  // Do not serialize FixedParameters for user setting.
   return commonConfigString;
 }
 

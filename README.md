@@ -1,5 +1,22 @@
 # FlexConfirmMail for Outlook with Office addin
 
+## 製品仕様
+
+### Common.txtパラメータ一覧
+
+| パラメータ名 | データ型 | 説明 | 備考 |
+|--------------|----------|----------|----------|
+| CountEnabled | 真偽値 | メール送信前のカウントダウンを有効化する ||
+| CountAllowSkip | 真偽値 | カウントダウンのダイアログの「いますぐ送信」ボタンを有効化する ||
+| CountSeconds | 数値 | 送信までのカウントダウン秒数 ||
+| SafeBccEnabled | 真偽値 | To/CCに一定数以上のドメインが含まれている場合に警告する ||
+| SafeBccThreshold | 数値 | SafeBccEnabledで警告対象となるドメインの数 ||
+| MainSkipIfNoExt | 真偽値 | 宛先が社内のみの場合は確認をスキップする ||
+| SafeNewDomainsEnabled | 真偽値 | 返信の宛先に今まで含まれていなかったドメインのアドレスが追加された場合に警告する ||
+| DelayDeliveryEnabled | 真偽値 | 遅延送信を有効化する | 確認完了後にメールを下書きに移動し、指定された秒数経過後に送信する。<br/>スケジュール送信で送信日時が指定されていた場合、スケジュール送信の日時を優先する。 |
+| DelayDeliverySeconds | 数値 |  送信までの遅延秒数 ||
+| FixedParameters | 文字列 | ユーザーによる上書きを禁止するパラメータの一覧 | FixedParameters=CountEnabled,CountAllowSkip のようにカンマ区切りでパラメータ名を指定する<br/>本パラメータ一覧の他に<br/>TruestedDomains（社内ドメイン・アドレス）<br/>UnsafeDomains（注意が必要なドメイン・アドレス）<br/>UnsafeFiles（注意が必要なファイル）<br/>が指定可能。 |
+
 ## 開発者向け動作確認方法
 
 ### 準備
