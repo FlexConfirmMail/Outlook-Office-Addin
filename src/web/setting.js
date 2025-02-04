@@ -37,7 +37,7 @@ function createDisplayTrustedDomains() {
   }
 }
 
-function serializeSaveTrustedDomains() {
+function serializeTrustedDomains() {
   let trustedDomainsString = document.getElementById("trustedDomainsTextArea").value ?? "";
   if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
     const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
@@ -71,7 +71,7 @@ function createDisplayUnsafeDomains() {
   }
 }
 
-function serializeSaveUnsafeDomains() {
+function serializeUnsafeDomains() {
   let unsafeDomainsString = document.getElementById("unsafeDomainsTextArea").value ?? "";
   if (policyConfig.unsafeDomains && policyConfig.unsafeDomains.length > 0) {
     const policyDomainsString = policyConfig.unsafeDomains?.join("\n# ") ?? "";
@@ -225,8 +225,8 @@ function serializeCommonConfigs() {
 window.onSave = () => {
   console.debug("onSave");
   const commonString = serializeCommonConfigs();
-  const trustedDomainsString = serializeSaveTrustedDomains();
-  const unsafeDomainsString = serializeSaveUnsafeDomains();
+  const trustedDomainsString = serializeTrustedDomains();
+  const unsafeDomainsString = serializeUnsafeDomains();
   const unsafeFilesString = serializeUnsafeFiles();
   console.debug("commonString: ", commonString);
   console.debug("trustedDomainsString: ", trustedDomainsString);
