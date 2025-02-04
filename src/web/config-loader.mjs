@@ -127,13 +127,13 @@ export class ConfigLoader {
       const response = await fetch(url);
       console.debug("response:", response);
       if (!response.ok) {
-        return null;
+        return "";
       }
       const data = await response.text();
       return data;
     } catch (err) {
       console.error(err);
-      return null;
+      return "";
     }
   }
 
@@ -144,12 +144,16 @@ export class ConfigLoader {
   }
 
   static async loadFileConfig() {
-    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
+    let [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
       this.loadFile("configs/TrustedDomains.txt"),
       this.loadFile("configs/UnsafeDomains.txt"),
       this.loadFile("configs/UnsafeFiles.txt"),
       this.loadFile("configs/Common.txt"),
     ]);
+    trustedDomainsString = trustedDomainsString.trim();
+    unsafeDomainsString = unsafeDomainsString.trim();
+    unsafeFilesString = unsafeFilesString.trim();
+    commonString = commonString.trim();
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.toArray(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
@@ -159,6 +163,10 @@ export class ConfigLoader {
       unsafeDomains,
       unsafeFiles,
       common,
+      trustedDomainsString,
+      unsafeDomainsString,
+      unsafeFilesString,
+      commonString,
     };
   }
 
@@ -170,10 +178,14 @@ export class ConfigLoader {
    * @returns user data hash
    */
   static async loadUserConfig() {
-    const trustedDomainsString = Office.context.roamingSettings.get("trustedDomains") ?? "";
-    const unsafeDomainsString = Office.context.roamingSettings.get("unsafeDomains") ?? "";
-    const unsafeFilesString = Office.context.roamingSettings.get("unsafeFiles") ?? "";
-    const commonString = Office.context.roamingSettings.get("common") ?? "";
+    let trustedDomainsString = Office.context.roamingSettings.get("TrustedDomains") ?? "";
+    let unsafeDomainsString = Office.context.roamingSettings.get("UnsafeDomains") ?? "";
+    let unsafeFilesString = Office.context.roamingSettings.get("UnsafeFiles") ?? "";
+    let commonString = Office.context.roamingSettings.get("Common") ?? "";
+    trustedDomainsString = trustedDomainsString.trim();
+    unsafeDomainsString = unsafeDomainsString.trim();
+    unsafeFilesString = unsafeFilesString.trim();
+    commonString = commonString.trim();
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.toArray(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
@@ -183,6 +195,10 @@ export class ConfigLoader {
       trustedDomains,
       unsafeDomains,
       unsafeFiles,
+      commonString,
+      trustedDomainsString,
+      unsafeDomainsString,
+      unsafeFilesString,
     };
   }
 
@@ -203,6 +219,10 @@ export class ConfigLoader {
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
+      commonString: "",
+      trustedDomainsString: "",
+      unsafeDomainsString: "",
+      unsafeFilesString: "",
     };
   }
 
@@ -212,6 +232,10 @@ export class ConfigLoader {
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
+      commonString: "",
+      trustedDomainsString: "",
+      unsafeDomainsString: "",
+      unsafeFilesString: "",
     };
   }
 
@@ -246,16 +270,33 @@ export class ConfigLoader {
     }
     if (!fixedParametersSet.has("TrustedDomains")) {
       left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
+      left.trustedDomainsString += "\n" + right.trustedDomainsString;
+      left.trustedDomainsString = left.trustedDomainsString.trim();
     }
     if (!fixedParametersSet.has("UnsafeDomains")) {
       left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
+      left.unsafeDomainsString += "\n" + right.unsafeDomainsString;
+      left.unsafeDomainsString = left.unsafeDomainsString.trim();
     }
     if (!fixedParametersSet.has("UnsafeFiles")) {
       left.unsafeFiles = left.unsafeFiles.concat(right.unsafeFiles);
+      left.unsafeFilesString += "\n" + right.unsafeFilesString;
+      left.unsafeFilesString = left.unsafeFilesString.trim();
     }
     const rightFixedParametersSet = new Set(right.common.FixedParameters ?? []);
     const newFixedParametersSet = new Set([...fixedParametersSet, ...rightFixedParametersSet]);
     left.common.FixedParameters = [...newFixedParametersSet];
+    let commonString = "";
+    for (const [key, value] of Object.entries(left.common)) {
+      if (key === "FixedParameters") {
+        if (value.length > 0) {
+          commonString += `${key} = ${value.join(",")}\n`;
+        }
+      } else {
+        commonString += `${key} = ${value}\n`;
+      }
+    }
+    left.commonString = commonString.trim();
     return left;
   }
 }

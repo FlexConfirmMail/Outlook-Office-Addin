@@ -287,6 +287,10 @@ export function test_createDefaultConfig() {
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
+      commonString: "",
+      trustedDomainsString: "",
+      unsafeDomainsString: "",
+      unsafeFilesString: "",
     },
     ConfigLoader.createDefaultConfig()
   );
@@ -299,11 +303,14 @@ export function test_createEmptyConfig() {
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
+      commonString: "",
+      trustedDomainsString: "",
+      unsafeDomainsString: "",
+      unsafeFilesString: "",
     },
     ConfigLoader.createEmptyConfig()
   );
 }
-
 
 test_merge.parameters = {
   "left is empty": {
@@ -312,6 +319,10 @@ test_merge.parameters = {
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
+      commonString: "",
+      trustedDomainsString: "",
+      unsafeDomainsString: "",
+      unsafeFilesString: "",
     },
     right: {
       common: {
@@ -329,6 +340,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: ["unsafeDomain"],
       unsafeFiles: ["unsafeFile"],
+      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      trustedDomainsString: "trustedDomain",
+      unsafeDomainsString: "unsafeDomain",
+      unsafeFilesString: "unsafeFile",
     },
     expected: {
       common: {
@@ -346,6 +361,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: ["unsafeDomain"],
       unsafeFiles: ["unsafeFile"],
+      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      trustedDomainsString: "trustedDomain",
+      unsafeDomainsString: "unsafeDomain",
+      unsafeFilesString: "unsafeFile",
     }
   },
   "right is empty": {
@@ -365,12 +384,20 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: ["unsafeDomain"],
       unsafeFiles: ["unsafeFile"],
+      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      trustedDomainsString: "trustedDomain",
+      unsafeDomainsString: "unsafeDomain",
+      unsafeFilesString: "unsafeFile",
     },
     right: {
       common: {},
       trustedDomains: [],
       unsafeDomains: [],
       unsafeFiles: [],
+      commonString: "",
+      trustedDomainsString: "",
+      unsafeDomainsString: "",
+      unsafeFilesString: "",
     },
     expected: {
       common: {
@@ -388,6 +415,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: ["unsafeDomain"],
       unsafeFiles: ["unsafeFile"],
+      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      trustedDomainsString: "trustedDomain",
+      unsafeDomainsString: "unsafeDomain",
+      unsafeFilesString: "unsafeFile",
     }
   },
   "use right defined params": {
@@ -407,6 +438,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: ["unsafeDomain_left"],
       unsafeFiles: ["unsafeFile_left"],
+      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      trustedDomainsString: "trustedDomain_left",
+      unsafeDomainsString: "unsafeDomain_left",
+      unsafeFilesString: "unsafeFile_left",
     },
     right: {
       common: {
@@ -424,6 +459,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_right"],
       unsafeDomains: ["unsafeDomain_right"],
       unsafeFiles: ["unsafeFile_right"],
+      commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nMainSkipIfNoExt = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
+      trustedDomainsString: "trustedDomain_right",
+      unsafeDomainsString: "unsafeDomain_right",
+      unsafeFilesString: "unsafeFile_right",
     },
     expected: {
       common: {
@@ -441,6 +480,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
       unsafeDomains: ["unsafeDomain_left", "unsafeDomain_right"],
       unsafeFiles: ["unsafeFile_left", "unsafeFile_right"],
+      commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nMainSkipIfNoExt = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
+      trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
+      unsafeDomainsString: "unsafeDomain_left\nunsafeDomain_right",
+      unsafeFilesString: "unsafeFile_left\nunsafeFile_right",
     },
   },
   "fix all parameters": {
@@ -473,6 +516,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: ["unsafeDomain_left"],
       unsafeFiles: ["unsafeFile_left"],
+      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60\nFixedParameters = CountEnabled,CountAllowSkip,SafeBccEnabled,MainSkipIfNoExt,SafeNewDomainsEnabled,CountSeconds,SafeBccThreshold,DelayDeliveryEnabled,DelayDeliverySeconds,TrustedDomains,UnsafeDomains,UnsafeFiles",
+      trustedDomainsString: "trustedDomain_left",
+      unsafeDomainsString: "unsafeDomain_left",
+      unsafeFilesString: "unsafeFile_left",
     },
     right: {
       common: {
@@ -490,6 +537,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_right"],
       unsafeDomains: ["unsafeDomain_right"],
       unsafeFiles: ["unsafeFile_right"],
+      commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nMainSkipIfNoExt = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
+      trustedDomainsString: "trustedDomain_right",
+      unsafeDomainsString: "unsafeDomain_right",
+      unsafeFilesString: "unsafeFile_right",
     },
     expected: {
       common: {
@@ -520,6 +571,10 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: ["unsafeDomain_left"],
       unsafeFiles: ["unsafeFile_left"],
+      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60\nFixedParameters = CountEnabled,CountAllowSkip,SafeBccEnabled,MainSkipIfNoExt,SafeNewDomainsEnabled,CountSeconds,SafeBccThreshold,DelayDeliveryEnabled,DelayDeliverySeconds,TrustedDomains,UnsafeDomains,UnsafeFiles",
+      trustedDomainsString: "trustedDomain_left",
+      unsafeDomainsString: "unsafeDomain_left",
+      unsafeFilesString: "unsafeFile_left",
     },
   },
 }

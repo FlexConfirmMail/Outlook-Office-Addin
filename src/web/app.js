@@ -219,10 +219,10 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         // should get the current config from the dialog message and save it in this function.
         const config = messageFromDialog.config ?? {};
         console.debug("user config: ", config);
-        Office.context.roamingSettings.set("common", config.common ?? "");
-        Office.context.roamingSettings.set("trustedDomains", config.trustedDomains ?? "");
-        Office.context.roamingSettings.set("unsafeDomains", config.unsafeDomains ?? "");
-        Office.context.roamingSettings.set("unsafeFiles", config.unsafeFiles ?? "");
+        Office.context.roamingSettings.set("Common", config.commonString ?? "");
+        Office.context.roamingSettings.set("TrustedDomains", config.trustedDomainsString ?? "");
+        Office.context.roamingSettings.set("UnsafeDomains", config.unsafeDomainsString ?? "");
+        Office.context.roamingSettings.set("UnsafeFiles", config.unsafeFilesString ?? "");
         Office.context.roamingSettings.saveAsync((saveResult) => {
           // This function should return (resolve) after finishing saveAsync.
           // If returing before finishing saveAsync, roamingSettings is not
