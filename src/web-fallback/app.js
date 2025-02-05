@@ -1,5 +1,4 @@
-Office.onReady(() => {
-});
+Office.onReady(() => {});
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onItemSend(event) {
