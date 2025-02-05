@@ -19,49 +19,106 @@ Office.onReady(() => {
   sendStatusToParent("ready");
 });
 
-function createTrustedDomainsString(policy, user) {
-  if (policy.trustedDomains && policy.trustedDomains.length > 0) {
-    const policyDomainsString = policy.trustedDomains?.join("\n# ") ?? "";
-    const userDomainsString = user.trustedDomains?.join("\n") ?? l10n.get("setting_trustedDomainsExample");
+function createDisplayTrustedDomains() {
+  if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
+    const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
+    let userDomainsString = userConfig.trustedDomainsString?.trim() ?? "";
+    if (!userDomainsString) {
+      userDomainsString = l10n.get("setting_trustedDomainsExample");
+    }
     return l10n.get("setting_trustedDomainsPolicy", {
       policy: policyDomainsString,
       user: userDomainsString,
     });
-  } else if (user.trustedDomains && user.trustedDomains.length > 0) {
-    return user.trustedDomains.join("\n");
+  } else if (userConfig.trustedDomainsString) {
+    return userConfig.trustedDomainsString;
   } else {
     return l10n.get("setting_trustedDomainsTemplate");
   }
 }
 
-function createUnsafeDomainsString(policy, user) {
-  if (policy.unsafeDomains && policy.unsafeDomains.length > 0) {
-    const policyUnsafeDomainsString = policy.unsafeDomains?.join("\n# ") ?? "";
-    const userUnsafeDomainsString = user.unsafeDomains?.join("\n") ?? l10n.get("setting_unsafeDomainsExample");
+function serializeTrustedDomains() {
+  let trustedDomainsString = document.getElementById("trustedDomainsTextArea").value ?? "";
+  if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
+    const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
+    const template = l10n
+      .get("setting_trustedDomainsPolicy", {
+        policy: policyDomainsString,
+        user: "",
+      })
+      .trim();
+    trustedDomainsString = trustedDomainsString.replace(template, "");
+  }
+  trustedDomainsString = trustedDomainsString.trim();
+  return trustedDomainsString;
+}
+
+function createDisplayUnsafeDomains() {
+  if (policyConfig.unsafeDomains && policyConfig.unsafeDomains.length > 0) {
+    const policyUnsafeDomainsString = policyConfig.unsafeDomains?.join("\n# ") ?? "";
+    let userUnsafeDomainsString = userConfig.unsafeDomainsString?.trim() ?? "";
+    if (!userUnsafeDomainsString) {
+      userUnsafeDomainsString = l10n.get("setting_unsafeDomainsExample");
+    }
     return l10n.get("setting_unsafeDomainsPolicy", {
       policy: policyUnsafeDomainsString,
       user: userUnsafeDomainsString,
     });
-  } else if (user.unsafeDomains && user.unsafeDomains.length > 0) {
-    return user.unsafeDomains.join("\n");
+  } else if (userConfig.unsafeDomainsString) {
+    return userConfig.unsafeDomainsString;
   } else {
     return l10n.get("setting_unsafeDomainsTemplate");
   }
 }
 
-function createUnsafeFilesString(policy, user) {
-  if (policy.unsafeFiles && policy.unsafeFiles.length > 0) {
-    const policyUnsafeFilesString = policy.unsafeFiles?.join("\n# ") ?? "";
-    const userUnsafeFilesString = user.unsafeFiles?.join("\n") ?? l10n.get("setting_unsafeFilesExample");
+function serializeUnsafeDomains() {
+  let unsafeDomainsString = document.getElementById("unsafeDomainsTextArea").value ?? "";
+  if (policyConfig.unsafeDomains && policyConfig.unsafeDomains.length > 0) {
+    const policyDomainsString = policyConfig.unsafeDomains?.join("\n# ") ?? "";
+    const template = l10n
+      .get("setting_unsafeDomainsPolicy", {
+        policy: policyDomainsString,
+        user: "",
+      })
+      .trim();
+    unsafeDomainsString = unsafeDomainsString.replace(template, "");
+  }
+  unsafeDomainsString = unsafeDomainsString.trim();
+  return unsafeDomainsString;
+}
+
+function createDisplayUnsafeFiles() {
+  if (policyConfig.unsafeFiles && policyConfig.unsafeFiles.length > 0) {
+    const policyUnsafeFilesString = policyConfig.unsafeFiles?.join("\n# ") ?? "";
+    let userUnsafeFilesString = userConfig.unsafeFilesString?.trim() ?? "";
+    if (!userUnsafeFilesString) {
+      userUnsafeFilesString = l10n.get("setting_unsafeFilesExample");
+    }
     return l10n.get("setting_unsafeFilesPolicy", {
       policy: policyUnsafeFilesString,
       user: userUnsafeFilesString,
     });
-  } else if (user.unsafeFiles && user.unsafeFiles.length > 0) {
-    return user.unsafeFiles.join("\n");
+  } else if (userConfig.unsafeFilesString) {
+    return userConfig.unsafeFilesString;
   } else {
     return l10n.get("setting_unsafeFilesTemplate");
   }
+}
+
+function serializeUnsafeFiles() {
+  let unsafeFilesString = document.getElementById("unsafeFilesTextArea").value ?? "";
+  if (policyConfig.unsafeFiles && policyConfig.unsafeFiles.length > 0) {
+    const policyUnsafeFilesString = policyConfig.unsafeFiles?.join("\n# ") ?? "";
+    const template = l10n
+      .get("setting_unsafeFilesPolicy", {
+        policy: policyUnsafeFilesString,
+        user: "",
+      })
+      .trim();
+    unsafeFilesString = unsafeFilesString.replace(template, "");
+  }
+  unsafeFilesString = unsafeFilesString.trim();
+  return unsafeFilesString;
 }
 
 async function onMessageFromParent(arg) {
@@ -69,6 +126,7 @@ async function onMessageFromParent(arg) {
     return;
   }
   const configs = JSON.parse(arg.message);
+  console.debug("configs: ", configs);
   if (!configs) {
     return;
   }
@@ -84,9 +142,9 @@ function updateDialogSetting(policy, user) {
   console.debug(effectiveConfig);
   const common = effectiveConfig.common;
   const fixedParametersSet = new Set(policyConfig.common.FixedParameters ?? []);
-  const trustedDomainsString = createTrustedDomainsString(policyConfig, userConfig);
-  const unsafeDomainsString = createUnsafeDomainsString(policyConfig, userConfig);
-  const unsafeFilesString = createUnsafeFilesString(policyConfig, userConfig);
+  const trustedDomainsString = createDisplayTrustedDomains();
+  const unsafeDomainsString = createDisplayUnsafeDomains();
+  const unsafeFilesString = createDisplayUnsafeFiles();
 
   document.getElementById("trustedDomainsTextArea").value = trustedDomainsString;
   document.getElementById("trustedDomainsTextArea").disabled = fixedParametersSet.has("TrustedDomains");
@@ -166,19 +224,19 @@ function serializeCommonConfigs() {
 
 window.onSave = () => {
   console.debug("onSave");
-  const common = serializeCommonConfigs();
-  const trustedDomains = document.getElementById("trustedDomainsTextArea").value ?? "";
-  const unsafeDomains = document.getElementById("unsafeDomainsTextArea").value ?? "";
-  const unsafeFiles = document.getElementById("unsafeFilesTextArea").value ?? "";
-  console.debug("common: " + common);
-  console.debug("trustedDomains: " + trustedDomains);
-  console.debug("unsafeDomains: " + unsafeDomains);
-  console.debug("unsafeFiles: " + unsafeFiles);
+  const commonString = serializeCommonConfigs();
+  const trustedDomainsString = serializeTrustedDomains();
+  const unsafeDomainsString = serializeUnsafeDomains();
+  const unsafeFilesString = serializeUnsafeFiles();
+  console.debug("commonString: ", commonString);
+  console.debug("trustedDomainsString: ", trustedDomainsString);
+  console.debug("unsafeDomainsString: ", unsafeDomainsString);
+  console.debug("unsafeFilesString: ", unsafeFilesString);
   const config = {
-    common,
-    trustedDomains,
-    unsafeDomains,
-    unsafeFiles,
+    commonString,
+    trustedDomainsString,
+    unsafeDomainsString,
+    unsafeFilesString,
   };
   sendConfigToParent(config);
 };
