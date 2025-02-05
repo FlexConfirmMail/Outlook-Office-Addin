@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Confirmation</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -9,22 +10,23 @@
     <link href="dialog.css" rel="stylesheet">
     <link href="count-down.css" rel="stylesheet">
 </head>
-<body>
-    <div class="card-container">
-        <div class="cards">
-            <fluent-card>
-                <p id="message" hidden>
-                  <span data-l10n-text-content="countDown_messageBefore"></span>
-                  <span id="count"></span>
-                  <span data-l10n-text-content="countDown_messageAfter"></span></p>
-            </fluent-card>
-        </div>
+
+<body class="dialog-body">
+    <div class="dialog-content">
+        <p id="message" hidden>
+            <span data-l10n-text-content="countDown_messageBefore"></span>
+            <span id="count"></span>
+            <span data-l10n-text-content="countDown_messageAfter"></span>
+        </p>
+    </div>
+    <div class="dialog-footer">
         <div class="button-container">
             <fluent-button id="send-button" onclick="onSend()"
-                           data-l10n-text-content="countDown_sendButtonLabel"></fluent-button>
+                data-l10n-text-content="countDown_sendButtonLabel"></fluent-button>
             <fluent-button id="cancel-button" onclick="onCancel()"
-                           data-l10n-text-content="countDown_cancelButtonLabel"></fluent-button>
+                data-l10n-text-content="countDown_cancelButtonLabel"></fluent-button>
         </div>
     </div>
 </body>
+
 </html>

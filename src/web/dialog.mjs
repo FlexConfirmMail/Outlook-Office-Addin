@@ -7,10 +7,14 @@
 
 export function resizeToContent() {
   const range = document.createRange();
-  range.selectNodeContents(document.querySelector(".card-container"));
+  const element = document.querySelector(".dialog-body");
+  range.selectNodeContents(element);
   const contentsRect = range.getBoundingClientRect();
+  const styles = window.getComputedStyle(element);
+  const marginTop = parseFloat(styles.marginTop) || 0;
+  const marginBottom = parseFloat(styles.marginBottom) || 0;
 
   const widthDelta = contentsRect.width - window.innerWidth;
-  const heightDelta = contentsRect.height - window.innerHeight;
+  const heightDelta = contentsRect.height + marginTop + marginBottom - window.innerHeight;
   window.resizeBy(Math.min(0, widthDelta), Math.min(0, heightDelta));
 }
