@@ -130,7 +130,7 @@ export class ConfigLoader {
         return "";
       }
       const data = await response.text();
-      return data;
+      return data.trim();
     } catch (err) {
       console.error(err);
       return "";
@@ -144,16 +144,12 @@ export class ConfigLoader {
   }
 
   static async loadFileConfig() {
-    let [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
+    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
       this.loadFile("configs/TrustedDomains.txt"),
       this.loadFile("configs/UnsafeDomains.txt"),
       this.loadFile("configs/UnsafeFiles.txt"),
       this.loadFile("configs/Common.txt"),
     ]);
-    trustedDomainsString = trustedDomainsString.trim();
-    unsafeDomainsString = unsafeDomainsString.trim();
-    unsafeFilesString = unsafeFilesString.trim();
-    commonString = commonString.trim();
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.toArray(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
@@ -178,14 +174,10 @@ export class ConfigLoader {
    * @returns user data hash
    */
   static async loadUserConfig() {
-    let trustedDomainsString = Office.context.roamingSettings.get("TrustedDomains") ?? "";
-    let unsafeDomainsString = Office.context.roamingSettings.get("UnsafeDomains") ?? "";
-    let unsafeFilesString = Office.context.roamingSettings.get("UnsafeFiles") ?? "";
-    let commonString = Office.context.roamingSettings.get("Common") ?? "";
-    trustedDomainsString = trustedDomainsString.trim();
-    unsafeDomainsString = unsafeDomainsString.trim();
-    unsafeFilesString = unsafeFilesString.trim();
-    commonString = commonString.trim();
+    const trustedDomainsString = Office.context.roamingSettings.get("TrustedDomains")?.trim() ?? "";
+    const unsafeDomainsString = Office.context.roamingSettings.get("UnsafeDomains")?.trim() ?? "";
+    const unsafeFilesString = Office.context.roamingSettings.get("UnsafeFiles")?.trim() ?? "";
+    const commonString = Office.context.roamingSettings.get("Common")?.trim() ?? "";
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.toArray(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
