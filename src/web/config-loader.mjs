@@ -139,7 +139,8 @@ export class ConfigLoader {
 
   static async loadEffectiveConfig() {
     const [fileConfig, userConfig] = await Promise.all([this.loadFileConfig(), this.loadUserConfig()]);
-    const effectiveConfig = await this.merge(fileConfig, userConfig);
+    const effectiveFileConfig = this.merge(this.createDefaultConfig(), fileConfig);
+    const effectiveConfig = this.merge(effectiveFileConfig, userConfig);
     return effectiveConfig;
   }
 
