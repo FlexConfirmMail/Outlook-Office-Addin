@@ -115,7 +115,7 @@ npm run watch:run-test-server
 * Webブラウザで[Outlook 用アドイン]ページが開く 
 * [個人用アドイン]->[カスタムアドイン]->[カスタムアドインの追加]を選択する
 * [ファイルから追加]を選択する
-* `flex-confirm-mail-outlook-web`リポジトリの`manifest.xml`を指定する
+* `flex-confirm-mail-outlook-web`リポジトリの`FlexConfirmMail.manifest.xml`を指定する
 * [カスタムアドイン]にFlexConfirmMailが追加される
 
 何らかのメールを送信しようとしたときに「FlexConfirmMail が要求を処理しています」というメッセージや、「FlexConfirmMail」というタイトルのダイアログが表示されれば正しくインストールできている。
