@@ -25,6 +25,7 @@ fluent-divider {
   bottom: 0;
   padding: 10px;
   text-align: center;
+  background: white;
 }
 
 .dialog-body {
