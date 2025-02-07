@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Confirmation</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -9,35 +10,40 @@
     <link href="dialog.css" rel="stylesheet">
     <link href="confirm.css" rel="stylesheet">
 </head>
+
 <body class="dialog-body">
-    <div class="card-container">
-        <div class="cards">
-            <fluent-card>
-                <div class="heading-container">
-                    <h3 data-l10n-text-content="confirmation_trustedCaption"></h3>
-                    <fluent-button onclick="onCheckAllTrusted()"
-                                   data-l10n-text-content="confirmation_trustedCheckAllButtonLabel"></fluent-button>
-                </div>
-                <fluent-divider></fluent-divider>
-                <div id="trusted-domains">
-                </div>
-            </fluent-card>
-            <fluent-card>
-                <h3 data-l10n-text-content="confirmation_untrustedCaption"></h3>
-                <fluent-divider></fluent-divider>
-                <div id="untrusted-domains"></div>
-            </fluent-card>
-            <fluent-card>
-                <h3 data-l10n-text-content="confirmation_miscCaption"></h3>
-                <fluent-divider></fluent-divider>
-                <div id="attachment-and-others"></div>
-            </fluent-card>
+    <div class="dialog-content">
+        <div class="card-container">
+            <div class="cards">
+                <fluent-card>
+                    <div class="heading-container">
+                        <h3 data-l10n-text-content="confirmation_trustedCaption"></h3>
+                        <fluent-button onclick="onCheckAllTrusted()"
+                            data-l10n-text-content="confirmation_trustedCheckAllButtonLabel"></fluent-button>
+                    </div>
+                    <fluent-divider></fluent-divider>
+                    <div id="trusted-domains">
+                    </div>
+                </fluent-card>
+                <fluent-card>
+                    <h3 data-l10n-text-content="confirmation_untrustedCaption"></h3>
+                    <fluent-divider></fluent-divider>
+                    <div id="untrusted-domains"></div>
+                </fluent-card>
+                <fluent-card>
+                    <h3 data-l10n-text-content="confirmation_miscCaption"></h3>
+                    <fluent-divider></fluent-divider>
+                    <div id="attachment-and-others"></div>
+                </fluent-card>
+            </div>
         </div>
+    </div>
+    <div class="dialog-footer">
         <div class="button-container">
             <fluent-button id="send-button" onclick="onSend()" disabled
-                           data-l10n-text-content="confirmation_sendButtonLabel"></fluent-button>
+                data-l10n-text-content="confirmation_sendButtonLabel"></fluent-button>
             <fluent-button id="cancel-button" onclick="onCancel()"
-                           data-l10n-text-content="confirmation_cancelButtonLabel"></fluent-button>
+                data-l10n-text-content="confirmation_cancelButtonLabel"></fluent-button>
         </div>
     </div>
     <fluent-dialog id="newly-added-domain-address-dialog" hidden trap-focus modal>
@@ -50,11 +56,12 @@
             </fluent-card>
             <div class="new-domain-button-container">
                 <fluent-button id="send-new-domain-button" onclick="onSendNewDomain()"
-                               data-l10n-text-content="newlyAddedDomainReconfirmation_sendButtonLabel"></fluent-button>
+                    data-l10n-text-content="newlyAddedDomainReconfirmation_sendButtonLabel"></fluent-button>
                 <fluent-button id="cancel-new-domain-button" onclick="onCancelNewDomain()"
-                               data-l10n-text-content="newlyAddedDomainReconfirmation_cancelButtonLabel"></fluent-button>
+                    data-l10n-text-content="newlyAddedDomainReconfirmation_cancelButtonLabel"></fluent-button>
             </div>
         </div>
     </fluent-dialog>
 </body>
+
 </html>
