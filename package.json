@@ -14,6 +14,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
+    "build:fallback": "webpack --config webpack.config.fallback.js --mode production",
     "dev-server": "webpack serve --mode development",
     "lint": "office-addin-lint check --files src/**/*.{js,mjs}",
     "lint:fix": "office-addin-lint fix --files src/**/*.{js,mjs}",
