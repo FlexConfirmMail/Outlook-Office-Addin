@@ -70,17 +70,6 @@ module.exports = async (env, options) => {
             to: "locales/[name][ext][query]",
           },
           {
-            from: "manifest*.xml",
-            to: "[name]" + "[ext]",
-            transform(content) {
-              if (dev) {
-                return content;
-              } else {
-                return content.toString().replace(new RegExp(urlDev, "g"), urlProd);
-              }
-            },
-          },
-          {
             from: "node_modules/@microsoft/office-js/dist",
             to: "lib/office-js",
           },
