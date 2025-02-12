@@ -1,4 +1,5 @@
 @echo on
 
 call npm install 
-call npx webpack
+call npm run build
+call npm run build:fallback
