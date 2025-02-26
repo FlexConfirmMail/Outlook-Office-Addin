@@ -345,7 +345,7 @@ async function tryCountDown(data, asyncContext) {
   }
 
   return {
-    allowed: status === "ok" || status == "done",
+    allowed: status === "ok" || status == "done" || status == "skip",
     asyncContext,
   };
 }
