@@ -2,7 +2,7 @@ import { ConfigLoader } from "./config-loader.mjs";
 import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 
-const ORIGINAL_RECIPIENTS_KEY_PREFIX = "FCM_OriginalRecipients";
+const ORIGINAL_RECIPIENTS_KEY = "FCM_OriginalRecipients";
 const CONFIRM_ATTACHMENT_TYPES = new Set([
   // Office.MailboxEnums are not accessible before initialized.
   "cloud", // Office.MailboxEnums.AttachmentType.Cloud,
@@ -69,14 +69,20 @@ function getToAsync() {
   });
 }
 
-function getMailIdAsync() {
+function getSessionDataAsync(key) {
   return new Promise((resolve, reject) => {
     try {
-      Office.context.mailbox.item.getItemIdAsync((asyncResult) => {
-        resolve(asyncResult.value);
+      Office.context.mailbox.item.sessionData.getAsync(key, (asyncResult) => {
+        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+          resolve(asyncResult.value);
+        } else {
+          console.debug(`Error while getting SessionData [${key}]: ${asyncResult.error.message}`);
+          // Regards no value
+          resolve("");
+        }
       });
     } catch (error) {
-      console.log(`Error while getting ItemId: ${error}`);
+      console.log(`Error while getting SessionData [${key}]: ${error}`);
       reject(error);
     }
   });
@@ -129,22 +135,54 @@ function setDelayDeliveryTimeAsync(deliveryTime) {
   });
 }
 
+function setSessionDataAsync(key, value) {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.sessionData.setAsync(key, value, (asyncResult) => {
+        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+          console.log(asyncResult.error.message);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    } catch (error) {
+      console.log(`Error while setting SessionData: ${error}`);
+      reject(error);
+    }
+  });
+}
+
+function removeSessionDataAsync(key) {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.sessionData.removeAsync(key, (asyncResult) => {
+        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+          console.log(asyncResult.error.message);
+          resolve(false);
+        } else {
+          resolve(true);
+        }
+      });
+    } catch (error) {
+      console.log(`Error while removing SessionData: ${error}`);
+      reject(error);
+    }
+  });
+}
+
 async function getAllData() {
-  const [to, cc, bcc, attachments, mailId, config] = await Promise.all([
+  const [to, cc, bcc, attachments, config] = await Promise.all([
     getToAsync(),
     getCcAsync(),
     getBccAsync(),
     getAttachmentsAsync(),
-    getMailIdAsync(),
     ConfigLoader.loadEffectiveConfig(),
   ]);
   let originalRecipients = {};
-  if (mailId) {
-    const id = `${ORIGINAL_RECIPIENTS_KEY_PREFIX}_${mailId}`;
-    const originalRecipientsJson = sessionStorage.getItem(id);
-    if (originalRecipientsJson) {
-      originalRecipients = JSON.parse(originalRecipientsJson);
-    }
+  const originalRecipientsJson = await getSessionDataAsync(ORIGINAL_RECIPIENTS_KEY);
+  if (originalRecipientsJson) {
+    originalRecipients = JSON.parse(originalRecipientsJson);
   }
   return {
     target: {
@@ -154,7 +192,6 @@ async function getAllData() {
       attachments,
     },
     config,
-    mailId,
     originalRecipients,
   };
 }
@@ -276,9 +313,6 @@ async function tryConfirm(data, asyncContext) {
 
   if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
     console.log("Skip confirmation: no untrusted recipient");
-    if (data.mailId) {
-      sessionStorage.removeItem(data.mailId);
-    }
     return {
       allowed: true,
       asyncContext,
@@ -390,21 +424,23 @@ async function onItemSend(event) {
       await setDelayDeliveryTimeAsync(deliveryTime);
     }
   }
+  if (data.originalRecipients) {
+    await removeSessionDataAsync(ORIGINAL_RECIPIENTS_KEY);
+  }
   asyncContext.completed({ allowEvent: true });
 }
 window.onItemSend = onItemSend;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onNewMessageComposeCreated(event) {
-  const [to, cc, bcc, mailId] = await Promise.all([getToAsync(), getCcAsync(), getBccAsync(), getMailIdAsync()]);
-  if (mailId && (to.length > 0 || cc.length > 0 || bcc.length > 0)) {
+  const [to, cc, bcc] = await Promise.all([getToAsync(), getCcAsync(), getBccAsync()]);
+  if (to.length > 0 || cc.length > 0 || bcc.length > 0) {
     const originalRecipients = {
       to,
       cc,
       bcc,
     };
-    const id = `${ORIGINAL_RECIPIENTS_KEY_PREFIX}_${mailId}`;
-    sessionStorage.setItem(id, JSON.stringify(originalRecipients));
+    await setSessionDataAsync(ORIGINAL_RECIPIENTS_KEY, JSON.stringify(originalRecipients));
   }
   event.completed();
 }
@@ -430,3 +466,5 @@ async function onOpenSettingDialog(event) {
   updatedAsyncContext.completed({ allowEvent: true });
 }
 window.onOpenSettingDialog = onOpenSettingDialog;
+
+Office.actions.associate("onNewMessageComposeCreated", onNewMessageComposeCreated);
