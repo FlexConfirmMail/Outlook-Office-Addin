@@ -156,8 +156,7 @@ function updateDialogSetting(policy, user) {
   document.getElementById("countEnabled").checked = common.CountEnabled;
   document.getElementById("countEnabled").disabled = fixedParametersSet.has("CountEnabled");
   document.getElementById("countAllowSkip").checked = common.CountAllowSkip;
-  document.getElementById("countAllowSkip").disabled =
-    fixedParametersSet.has("CountEnabled") || fixedParametersSet.has("CountAllowSkip");
+  document.getElementById("countAllowSkip").disabled = fixedParametersSet.has("CountAllowSkip");
   document.getElementById("safeBccEnabled").checked = common.SafeBccEnabled;
   document.getElementById("safeBccEnabled").disabled = fixedParametersSet.has("SafeBccEnabled");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
@@ -165,16 +164,13 @@ function updateDialogSetting(policy, user) {
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
   document.getElementById("safeNewDomainsEnabled").disabled = fixedParametersSet.has("SafeNewDomainsEnabled");
   document.getElementById("countSeconds").value = common.CountSeconds;
-  document.getElementById("countSeconds").disabled =
-    fixedParametersSet.has("CountEnabled") || fixedParametersSet.has("CountSeconds");
+  document.getElementById("countSeconds").disabled = fixedParametersSet.has("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
-  document.getElementById("safeBccThreshold").disabled =
-    fixedParametersSet.has("SafeBccEnabled") || fixedParametersSet.has("SafeBccThreshold");
+  document.getElementById("safeBccThreshold").disabled = fixedParametersSet.has("SafeBccThreshold");
   document.getElementById("delayDeliveryEnabled").checked = common.DelayDeliveryEnabled;
   document.getElementById("delayDeliveryEnabled").disabled = fixedParametersSet.has("DelayDeliveryEnabled");
   document.getElementById("delayDeliverySeconds").value = common.DelayDeliverySeconds;
-  document.getElementById("delayDeliverySeconds").disabled =
-    fixedParametersSet.has("DelayDeliveryEnabled") || fixedParametersSet.has("DelayDeliverySeconds");
+  document.getElementById("delayDeliverySeconds").disabled = fixedParametersSet.has("DelayDeliverySeconds");
 }
 
 function sendStatusToParent(status) {
