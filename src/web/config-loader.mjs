@@ -124,7 +124,7 @@ export class ConfigLoader {
   static async loadFile(url) {
     console.debug("loadFile ", url);
     try {
-      const response = await fetch(url, { cache: "no-cache" });
+      const response = await fetch(url, { cache: "no-store" });
       console.debug("response:", response);
       if (!response.ok) {
         return "";
