@@ -156,6 +156,9 @@ async function onMessageFromParent(arg) {
   console.log(data);
   await Promise.all([l10n.ready, safeBccConfirmation.loaded, attachmentsConfirmation.loaded]);
 
+  if (data.classified.trusted.length == 0) {
+    $("#check-all-trusted").prop("disabled", true);
+  }
   const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
   appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
   const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
