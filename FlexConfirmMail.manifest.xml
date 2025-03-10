@@ -11,7 +11,7 @@
   <ProviderName>ClearCode</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="FlexConfirmMail"/>
-  <Description DefaultValue="A template to get started.">
+  <Description DefaultValue="Based on flexible rules, you can get confirmations for email addresses of recipients and attachments.">
     <Override Locale="en-US" Value="Based on flexible rules, you can get confirmations for email addresses of recipients and attachments."/>
     <Override Locale="ja-JP" Value="柔軟なルールに基づいて、宛先のメールアドレスや添付ファイルに対する確認を表示する事ができます。"/>
     <Override Locale="zh-CN" Value="Based on flexible rules, you can get confirmations for email addresses of recipients and attachments."/>
