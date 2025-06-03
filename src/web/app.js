@@ -178,7 +178,7 @@ function removeSessionDataAsync(key) {
   });
 }
 
-async function getAllData() {
+async function getAllMailData() {
   const [to, cc, bcc, attachments, config] = await Promise.all([
     getToAsync(),
     getCcAsync(),
@@ -391,14 +391,10 @@ async function tryCountDown(data, asyncContext) {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function onItemSend(event) {
-  console.debug("onItemSend ", event);
-  const data = await getAllData();
-  console.debug(data);
-
+async function onMailSend(event) {
   let asyncContext = event;
-
+  const data = await getAllMailData();
+  console.debug(data);
   {
     const { allowed, asyncContext: updatedAsyncContext } = await tryConfirm(data, asyncContext);
     if (!allowed) {
@@ -435,6 +431,19 @@ async function onItemSend(event) {
     await removeSessionDataAsync(ORIGINAL_RECIPIENTS_KEY);
   }
   asyncContext.completed({ allowEvent: true });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function onItemSend(event) {
+  const itemType = Office.context.mailbox.item.itemType;
+  switch (itemType) {
+    case Office.MailboxEnums.ItemType.Message:
+      onMailSend(event);
+      return;
+    default:
+      event.completed({ allowEvent: true });
+      return;
+  }
 }
 window.onItemSend = onItemSend;
 
