@@ -437,12 +437,12 @@ async function onMailSend(event) {
 async function onItemSend(event) {
   const itemType = Office.context.mailbox.item.itemType;
   switch (itemType) {
-      case Office.MailboxEnums.ItemType.Message:
-        onMailSend(event);
-        return;
-      default:
-        event.completed({ allowEvent: true });
-        return;
+    case Office.MailboxEnums.ItemType.Message:
+      onMailSend(event);
+      return;
+    default:
+      event.completed({ allowEvent: true });
+      return;
   }
 }
 window.onItemSend = onItemSend;
