@@ -46,12 +46,20 @@ export class SafeBccConfirmation {
       return [];
     }
 
-    switch (this.itemType){
+    switch (this.itemType) {
       case Office.MailboxEnums.ItemType.Message:
-        return [{ label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", { threshold: this.threshold }) }];
+        return [
+          { label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", { threshold: this.threshold }) },
+        ];
       case Office.MailboxEnums.ItemType.Appointment:
       default:
-        return [{ label: this.locale.get("confirmation_safeBccThresholdForAttendeesCheckboxLabel", { threshold: this.threshold }) }];
+        return [
+          {
+            label: this.locale.get("confirmation_safeBccThresholdForAttendeesCheckboxLabel", {
+              threshold: this.threshold,
+            }),
+          },
+        ];
     }
   }
 }

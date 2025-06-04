@@ -262,7 +262,7 @@ async function getAllAppointmentData() {
       attachments,
     },
     config,
-    originalRecipients : originalAttendees,
+    originalRecipients: originalAttendees,
     itemType: Office.MailboxEnums.ItemType.Appointment,
   };
 }
@@ -377,16 +377,24 @@ function charsToPercentage(chars, maxSize) {
 
 async function tryConfirm(data, asyncContext) {
   const { trustedDomains, unsafeDomains } = data.config;
-  switch (data.itemType){
-    case Office.MailboxEnums.ItemType.Message:
+  switch (data.itemType) {
+    case Office.MailboxEnums.ItemType.Message: {
       const { to, cc, bcc } = data.target;
       data.classified = RecipientClassifier.classifyAll({ locale, to, cc, bcc, trustedDomains, unsafeDomains });
       break;
+    }
     case Office.MailboxEnums.ItemType.Appointment:
-    default:
+    default: {
       const { requiredAttendees, optionalAttendees } = data.target;
-      data.classified = RecipientClassifier.classifyAll({ locale, requiredAttendees, optionalAttendees, trustedDomains, unsafeDomains });
+      data.classified = RecipientClassifier.classifyAll({
+        locale,
+        requiredAttendees,
+        optionalAttendees,
+        trustedDomains,
+        unsafeDomains,
+      });
       break;
+    }
   }
   console.debug("classified: ", data.classified);
 
@@ -570,7 +578,10 @@ window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onAppointmentOrganizer(event) {
-  const [requiredAttendees, optionalAttendees] = await Promise.all([getRequiredAttendeeAsync(), getOptionalAttendeeAsync()]);
+  const [requiredAttendees, optionalAttendees] = await Promise.all([
+    getRequiredAttendeeAsync(),
+    getOptionalAttendeeAsync(),
+  ]);
   if (requiredAttendees.length > 0 || optionalAttendees.length > 0) {
     const originalAttendees = {
       requiredAttendees,

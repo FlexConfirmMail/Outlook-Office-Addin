@@ -26,7 +26,13 @@ export class AddedDomainsReconfirmation {
     const originalBccDomains = data.originalRecipients.bcc?.map((_) => _.domain) ?? [];
     const originalRequiredAttendeesDomains = data.originalRecipients.requiredAttendees?.map((_) => _.domain) ?? [];
     const originalOptionalAttendeesDomains = data.originalRecipients.optionalAttendees?.map((_) => _.domain) ?? [];
-    const originalDomains = new Set([...originalToDomains, ...originalCcDomains, ...originalBccDomains, ...originalRequiredAttendeesDomains, ...originalOptionalAttendeesDomains]);
+    const originalDomains = new Set([
+      ...originalToDomains,
+      ...originalCcDomains,
+      ...originalBccDomains,
+      ...originalRequiredAttendeesDomains,
+      ...originalOptionalAttendeesDomains,
+    ]);
     if (originalDomains.size === 0) {
       return;
     }
