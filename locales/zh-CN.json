@@ -7,10 +7,13 @@
   "confirmation_cancelButtonLabel": "取消",
 
   "confirmation_safeBccThresholdCheckboxLabel": "[警告] To/Cc 包含${threshold}个以上的域",
+  "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[警告] Attendees 包含${threshold}个以上的域",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[警告] 包含不安全的域 (${domain})",
   "confirmation_unsafeRecipientCheckboxLabel": "[警告] 包含不安全地址 (${address})",
   "confirmation_unsafeAttachmentCheckboxLabel": "[警告] 包含不安全的文件名 (${name})",
   "confirmation_attachmentCheckboxLabel": "[附件] ${name}",
+  "confirmation_requiredAttendee": "Required Attendee",
+  "confirmation_optionalAttendee": "Optional Attendee",
 
   "newlyAddedDomainReconfirmation_caption": "警告！",
   "newlyAddedDomainReconfirmation_messageBefore": "收件人添加了以下原邮件收件人中未包含的域名地址。",

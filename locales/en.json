@@ -7,10 +7,13 @@
   "confirmation_cancelButtonLabel": "Cancel",
 
   "confirmation_safeBccThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains",
+  "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[Warn] Attendee fields contain no less than ${threshold} domains",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[Warn] An unsafe domain \"${domain}\" found in the recipient list",
   "confirmation_unsafeRecipientCheckboxLabel": "[Warn] An unsafe address \"${address}\" found in the recipient list",
   "confirmation_unsafeAttachmentCheckboxLabel": "[Warn] An unsafe keyword (${name}) found in the attachment list",
   "confirmation_attachmentCheckboxLabel": "[Attachment] ${name}",
+  "confirmation_requiredAttendee": "Required Attendee",
+  "confirmation_optionalAttendee": "Optional Attendee",
 
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",

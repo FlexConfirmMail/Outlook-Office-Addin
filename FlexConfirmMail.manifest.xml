@@ -62,6 +62,7 @@
             <ExtensionPoint xsi:type="LaunchEvent">
               <LaunchEvents>
                 <LaunchEvent Type="OnNewMessageCompose" FunctionName="onNewMessageComposeCreated"/>
+                <LaunchEvent Type="OnAppointmentOrganizer" FunctionName="onAppointmentOrganizer"/>
               </LaunchEvents>
               <SourceLocation resid="residUILessFunctionFileUrl"/>
             </ExtensionPoint>
