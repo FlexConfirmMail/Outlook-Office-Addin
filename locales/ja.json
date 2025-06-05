@@ -17,6 +17,7 @@
 
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。",
+  "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "変更前の予定の出席者に含まれていなかったドメインの以下の出席者が追加されています。",
   "newlyAddedDomainReconfirmation_messageAfter": "送信してよろしいですか？",
   "newlyAddedDomainReconfirmation_sendButtonLabel": "送信",
   "newlyAddedDomainReconfirmation_cancelButtonLabel": "キャンセル",
@@ -45,6 +46,7 @@
   "setting_configCountSeconds": "送信までのカウントダウン秒数:",
   "setting_configGeneral": "一般",
   "setting_configMainSkipIfNoExt": "宛先が社内のみの場合は確認をスキップする",
+  "setting_configEnableAppintmentWarning": "予定表で予定を送信する場合にも警告する",
   "setting_configSafeBccEnabled": "To/CCに一定数以上のドメインが含まれている場合に警告する",
   "setting_configSafeBccThreshold": "警告対象となるドメインの数:",
   "setting_configSafeNewDomainsEnabled": "返信の宛先に今まで含まれていなかったドメインのアドレスが追加された場合に警告する",

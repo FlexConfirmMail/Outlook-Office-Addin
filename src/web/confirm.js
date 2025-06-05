@@ -193,4 +193,10 @@ async function onMessageFromParent(arg) {
   attachmentsConfirmation.init(data);
   appendMiscWarningCheckboxes(attachmentsConfirmation.warningConfirmationItems);
   appendMiscCheckboxes(attachmentsConfirmation.confirmationItems);
+
+  const newlyAddedDomainsBeforeMessage =
+    data.itemType === Office.MailboxEnums.ItemType.Message
+      ? l10n.get("newlyAddedDomainReconfirmation_messageBefore")
+      : l10n.get("newlyAddedDomainReconfirmation_messageBeforeForAppointment");
+  $("#newly-added-domains-message-before").text(newlyAddedDomainsBeforeMessage);
 }
