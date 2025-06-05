@@ -168,7 +168,9 @@ function updateDialogSetting(policy, user) {
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
   document.getElementById("mainSkipIfNoExt").disabled = fixedParametersSet.has("MainSkipIfNoExt");
   document.getElementById("EnableAppointmentConfirmation").checked = common.EnableAppointmentConfirmation;
-  document.getElementById("EnableAppointmentConfirmation").disabled = fixedParametersSet.has("EnableAppointmentConfirmation");
+  document.getElementById("EnableAppointmentConfirmation").disabled = fixedParametersSet.has(
+    "EnableAppointmentConfirmation"
+  );
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
   document.getElementById("safeNewDomainsEnabled").disabled = fixedParametersSet.has("SafeNewDomainsEnabled");
   document.getElementById("countSeconds").value = common.CountSeconds;

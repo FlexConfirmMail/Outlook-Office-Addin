@@ -255,7 +255,10 @@ export class ConfigLoader {
     if (right.common.MainSkipIfNoExt != null && !fixedParametersSet.has("MainSkipIfNoExt")) {
       left.common.MainSkipIfNoExt = right.common.MainSkipIfNoExt;
     }
-    if (right.common.EnableAppointmentConfirmation != null && !fixedParametersSet.has("EnableAppointmentConfirmation")) {
+    if (
+      right.common.EnableAppointmentConfirmation != null &&
+      !fixedParametersSet.has("EnableAppointmentConfirmation")
+    ) {
       left.common.EnableAppointmentConfirmation = right.common.EnableAppointmentConfirmation;
     }
     if (right.common.SafeNewDomainsEnabled != null && !fixedParametersSet.has("SafeNewDomainsEnabled")) {
