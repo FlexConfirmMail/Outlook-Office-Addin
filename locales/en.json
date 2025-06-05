@@ -46,7 +46,7 @@
   "setting_configCountSeconds": "Delay sending a message by",
   "setting_configGeneral": "General",
   "setting_configMainSkipIfNoExt": "Skip confirmation if all the recpients are trusted.",
-  "setting_configEnableAppintmentWarning": "Enable warning on sending an appointment from Calendar.",
+  "setting_configEnableAppointmentConfirmation": "Enable warning on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "Enable \"too many domains in To/Cc fields\" warnings",
   "setting_configSafeBccThreshold": "Warn if To/Cc fields contain",
   "setting_configSafeNewDomainsEnabled": "Confirm when any recipients with domains different from any existing recipients are added",

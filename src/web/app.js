@@ -517,7 +517,7 @@ async function onAppointmentSend(event) {
   let asyncContext = event;
   const data = await getAllAppointmentData();
   console.debug(data);
-  if (!data.config.common?.EnableAppointmentWarning) {
+  if (!data.config.common?.EnableAppointmentConfirmation) {
     asyncContext.completed({ allowEvent: true });
     return;
   }

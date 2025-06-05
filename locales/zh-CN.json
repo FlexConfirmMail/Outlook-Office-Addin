@@ -46,7 +46,7 @@
   "setting_configCountSeconds": "倒计时秒:",
   "setting_configGeneral": "一般",
   "setting_configMainSkipIfNoExt": "如果所有目的地都是受信任的，则立即发送",
-  "setting_configEnableAppintmentWarning": "Enable warning on sending an appointment from Calendar.",
+  "setting_configEnableAppointmentConfirmation": "Enable warning on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "当To/Cc包含许多域时发出警告",
   "setting_configSafeBccThreshold": "警告的阈值:",
   "setting_configSafeNewDomainsEnabled": "当回复的收件人地址中新增了与现有收件人域名不同的地址时，系统将警告确认",
