@@ -67,10 +67,32 @@
               <SourceLocation resid="residUILessFunctionFileUrl"/>
             </ExtensionPoint>
             <ExtensionPoint xsi:type="MessageComposeCommandSurface">
-              <OfficeTab id="TabDefault">
+              <OfficeTab id="msgComposeTabDefault">
                 <Group id="msgComposeCmdGroup">
                   <Label resid="CommandsGroup.Label"/>
-                  <Control xsi:type="Button" id="msgComposeInsertGist">
+                  <Control xsi:type="Button" id="msgComposeFlexConfirmMail">
+                    <Label resid="SettingButton.Label"/>
+                    <Supertip>
+                      <Title resid="SettingButton.SupertipTitle"/>
+                      <Description resid="SettingButton.SupertipText"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16x16"/>
+                      <bt:Image size="32" resid="Icon.32x32"/>
+                      <bt:Image size="80" resid="Icon.80x80"/>
+                    </Icon>
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>onOpenSettingDialog</FunctionName>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+            <ExtensionPoint xsi:type="AppointmentOrganizerCommandSurface">
+              <OfficeTab id="appointmentComposeTabDefault">
+                <Group id="appointmentComposeCmdGroup">
+                  <Label resid="CommandsGroup.Label"/>
+                  <Control xsi:type="Button" id="appointmentComposeFlexConfirmMail">
                     <Label resid="SettingButton.Label"/>
                     <Supertip>
                       <Title resid="SettingButton.SupertipTitle"/>
