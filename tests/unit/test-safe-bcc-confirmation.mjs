@@ -8,6 +8,20 @@
 import * as L10nUtils from "./l10n.mjs";
 import { SafeBccConfirmation } from "../../src/web/safe-bcc-confirmation.mjs";
 import { assert } from "tiny-esm-test-runner";
+import { OfficeMockObject } from 'office-addin-mock';
+
+const mockData = {
+  host: "outlook", // Outlookの場合必須
+  MailboxEnums : {
+    ItemType: {
+      Message: "message",
+      Appointment: "appointment"
+    }
+  }
+};
+const officeMock = new OfficeMockObject(mockData);
+global.Office = officeMock;
+
 const { ok, ng, is } = assert;
 
 let confirmation;
@@ -41,6 +55,7 @@ test_shouldNotConfirm.parameters = {
         },
       },
     },
+    itemType: Office.MailboxEnums.ItemType.Message,
   },
   ZeroThreshold: {
     data: {
@@ -55,6 +70,7 @@ test_shouldNotConfirm.parameters = {
           SafeBccThreshold: 0,
         },
       },
+      itemType: Office.MailboxEnums.ItemType.Message,
     },
   },
   LessThanThreshold: {
@@ -71,6 +87,7 @@ test_shouldNotConfirm.parameters = {
         },
       },
     },
+    itemType: Office.MailboxEnums.ItemType.Message,
   },
   ManyBcc: {
     data: {
@@ -88,7 +105,37 @@ test_shouldNotConfirm.parameters = {
           SafeBccThreshold: 1,
         },
       },
+      itemType: Office.MailboxEnums.ItemType.Message,
     },
+  },
+  ZeroThresholdAttendee: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+        optionalAttendees: [recipient("example@example.net")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccThreshold: 0,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Appointoment,
+    },
+  },
+  LessThanThresholdAttendee: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccThreshold: 2,
+        },
+      },
+    },
+    itemType: Office.MailboxEnums.ItemType.Appointoment,
   },
 };
 export function test_shouldNotConfirm({ data }) {
@@ -111,6 +158,7 @@ test_shouldConfirm.parameters = {
           SafeBccThreshold: 1,
         },
       },
+      itemType: Office.MailboxEnums.ItemType.Message,
     },
     warnings: [
       "[警告] To・Ccに1件以上のドメインが含まれています。"
@@ -129,9 +177,46 @@ test_shouldConfirm.parameters = {
           SafeBccThreshold: 2,
         },
       },
+      itemType: Office.MailboxEnums.ItemType.Message
     },
     warnings: [
       "[警告] To・Ccに2件以上のドメインが含まれています。"
+    ],
+  },
+  MoreThanThresholdAttenees: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+        optionalAttendees: [recipient("example@example.net")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccThreshold: 1,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Appointoment,
+    },
+    warnings: [
+      "[警告] 出席者に1件以上のドメインが含まれています。"
+    ],
+  },
+  EqualsToThreshold: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+        optionalAttendees: [recipient("example@example.net")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccThreshold: 2,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Appointoment,
+    },
+    warnings: [
+      "[警告] 出席者に2件以上のドメインが含まれています。"
     ],
   },
 };
