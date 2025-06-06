@@ -52,27 +52,28 @@ export class RecipientClassifier {
     const unsafeWithDomain = new Set();
     const unsafe = new Set();
 
-    for (const recipient of recipients) {
-      const classifiedRecipient = {
-        ...RecipientParser.parse(recipient),
-      };
+    if (recipients) {
+      for (const recipient of recipients) {
+        const classifiedRecipient = {
+          ...RecipientParser.parse(recipient),
+        };
 
-      if (
-        this.$trustedPatternsMatchers.domain.test(classifiedRecipient.domain) ||
-        this.$trustedPatternsMatchers.full.test(classifiedRecipient.address)
-      ) {
-        trusted.add(classifiedRecipient);
-      } else {
-        untrusted.add(classifiedRecipient);
-      }
+        if (
+          this.$trustedPatternsMatchers.domain.test(classifiedRecipient.domain) ||
+          this.$trustedPatternsMatchers.full.test(classifiedRecipient.address)
+        ) {
+          trusted.add(classifiedRecipient);
+        } else {
+          untrusted.add(classifiedRecipient);
+        }
 
-      if (this.$unsafePatternsMatchers.domain.test(classifiedRecipient.domain)) {
-        unsafeWithDomain.add(classifiedRecipient);
-      } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
-        unsafe.add(classifiedRecipient);
+        if (this.$unsafePatternsMatchers.domain.test(classifiedRecipient.domain)) {
+          unsafeWithDomain.add(classifiedRecipient);
+        } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
+          unsafe.add(classifiedRecipient);
+        }
       }
     }
-
     return {
       trusted: Array.from(trusted),
       untrusted: Array.from(untrusted),
@@ -81,7 +82,7 @@ export class RecipientClassifier {
     };
   }
 
-  static classifyAll({ to, cc, bcc, trustedDomains, unsafeDomains }) {
+  static classifyAll({ locale, to, cc, bcc, requiredAttendees, optionalAttendees, trustedDomains, unsafeDomains }) {
     const classifier = new RecipientClassifier({
       trustedDomains: trustedDomains || [],
       unsafeDomains: unsafeDomains || [],
@@ -89,6 +90,8 @@ export class RecipientClassifier {
     const classifiedTo = classifier.classify(to);
     const classifiedCc = classifier.classify(cc);
     const classifiedBcc = classifier.classify(bcc);
+    const classifiedRequiredAttendee = classifier.classify(requiredAttendees);
+    const classifiedOptionalAttendee = classifier.classify(optionalAttendees);
 
     return {
       trusted: [
@@ -96,6 +99,14 @@ export class RecipientClassifier {
           ...classifiedTo.trusted.map((recipient) => ({ ...recipient, type: "To" })),
           ...classifiedCc.trusted.map((recipient) => ({ ...recipient, type: "Cc" })),
           ...classifiedBcc.trusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.trusted.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.trusted.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
         ]),
       ],
       untrusted: [
@@ -103,6 +114,14 @@ export class RecipientClassifier {
           ...classifiedTo.untrusted.map((recipient) => ({ ...recipient, type: "To" })),
           ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
           ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.untrusted.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.untrusted.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
         ]),
       ],
       unsafeWithDomain: [
@@ -110,6 +129,14 @@ export class RecipientClassifier {
           ...classifiedTo.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
           ...classifiedCc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
           ...classifiedBcc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.unsafeWithDomain.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.unsafeWithDomain.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
         ]),
       ],
       unsafe: [
@@ -117,6 +144,14 @@ export class RecipientClassifier {
           ...classifiedTo.unsafe.map((recipient) => ({ ...recipient, type: "To" })),
           ...classifiedCc.unsafe.map((recipient) => ({ ...recipient, type: "Cc" })),
           ...classifiedBcc.unsafe.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.unsafe.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.unsafe.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
         ]),
       ],
     };

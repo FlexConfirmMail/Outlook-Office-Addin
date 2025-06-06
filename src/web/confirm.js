@@ -139,6 +139,8 @@ async function onMessageFromParent(arg) {
   //     to : [{emailAddress:"mail@example.com"}, ...],
   //     cc : [...],
   //     bcc : [...],
+  //     requiredAttendees : [...],
+  //     optionalAttendees : [...],
   //     attachments: [{name:"...",size:0,isInline:false}, ...],
   //   },
   //   config: {
@@ -146,7 +148,6 @@ async function onMessageFromParent(arg) {
   //     unsafeDomains : [...],
   //     unsafeFiles : [...],
   //   },
-  //   mailId: "FCM_OriginalRecipients_0123",
   //   originalRecipients: {
   //     to : [...],
   //     cc : [...],
@@ -158,6 +159,7 @@ async function onMessageFromParent(arg) {
   //     unsafeWithDomain: [...],
   //     unsafe: [...],
   //   },
+  //   itemType: Office.MailboxEnums.ItemType.Message,
   // }
 
   console.log(data);
@@ -193,4 +195,10 @@ async function onMessageFromParent(arg) {
   attachmentsConfirmation.init(data);
   appendMiscWarningCheckboxes(attachmentsConfirmation.warningConfirmationItems);
   appendMiscCheckboxes(attachmentsConfirmation.confirmationItems);
+
+  const newlyAddedDomainsBeforeMessage =
+    data.itemType === Office.MailboxEnums.ItemType.Message
+      ? l10n.get("newlyAddedDomainReconfirmation_messageBefore")
+      : l10n.get("newlyAddedDomainReconfirmation_messageBeforeForAppointment");
+  $("#newly-added-domains-message-before").text(newlyAddedDomainsBeforeMessage);
 }

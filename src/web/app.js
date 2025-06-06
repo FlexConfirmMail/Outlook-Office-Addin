@@ -5,16 +5,19 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 Copyright (c) 2025 ClearCode Inc.
 */
+import { L10n } from "./l10n.mjs";
 import { ConfigLoader } from "./config-loader.mjs";
 import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY = "FCM_OriginalRecipients";
+const ORIGINAL_ATTENDEES_KEY = "FCM_OriginalAttendees";
 const CONFIRM_ATTACHMENT_TYPES = new Set([
   // Office.MailboxEnums are not accessible before initialized.
   "cloud", // Office.MailboxEnums.AttachmentType.Cloud,
   "file", // Office.MailboxEnums.AttachmentType.File,
 ]);
+let locale;
 
 Office.initialize = (reason) => {
   console.debug("Office.initialize reasion = ", reason);
@@ -23,6 +26,8 @@ Office.initialize = (reason) => {
 Office.onReady(() => {
   const language = Office.context.displayLanguage;
   document.documentElement.setAttribute("lang", language);
+  locale = L10n.get(language);
+  locale.ready.then(() => locale.translateAll());
 });
 
 function getBccAsync() {
@@ -54,6 +59,40 @@ function getCcAsync() {
       });
     } catch (error) {
       console.log(`Error while getting Cc: ${error}`);
+      reject(error);
+    }
+  });
+}
+
+function getRequiredAttendeeAsync() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.requiredAttendees.getAsync((asyncResult) => {
+        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
+          ...officeAddonRecipient,
+          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
+        }));
+        resolve(recipients);
+      });
+    } catch (error) {
+      console.log(`Error while getting required attendees: ${error}`);
+      reject(error);
+    }
+  });
+}
+
+function getOptionalAttendeeAsync() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.optionalAttendees.getAsync((asyncResult) => {
+        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
+          ...officeAddonRecipient,
+          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
+        }));
+        resolve(recipients);
+      });
+    } catch (error) {
+      console.log(`Error while getting optional attendees: ${error}`);
       reject(error);
     }
   });
@@ -200,6 +239,31 @@ async function getAllMailData() {
     },
     config,
     originalRecipients,
+    itemType: Office.MailboxEnums.ItemType.Message,
+  };
+}
+
+async function getAllAppointmentData() {
+  const [requiredAttendees, optionalAttendees, attachments, config] = await Promise.all([
+    getRequiredAttendeeAsync(),
+    getOptionalAttendeeAsync(),
+    getAttachmentsAsync(),
+    ConfigLoader.loadEffectiveConfig(),
+  ]);
+  let originalAttendees = {};
+  const originalAttendeesJson = await getSessionDataAsync(ORIGINAL_ATTENDEES_KEY);
+  if (originalAttendeesJson) {
+    originalAttendees = JSON.parse(originalAttendeesJson);
+  }
+  return {
+    target: {
+      requiredAttendees,
+      optionalAttendees,
+      attachments,
+    },
+    config,
+    originalRecipients: originalAttendees,
+    itemType: Office.MailboxEnums.ItemType.Appointment,
   };
 }
 
@@ -312,10 +376,26 @@ function charsToPercentage(chars, maxSize) {
 }
 
 async function tryConfirm(data, asyncContext) {
-  const { to, cc, bcc } = data.target;
   const { trustedDomains, unsafeDomains } = data.config;
-
-  data.classified = RecipientClassifier.classifyAll({ to, cc, bcc, trustedDomains, unsafeDomains });
+  switch (data.itemType) {
+    case Office.MailboxEnums.ItemType.Message: {
+      const { to, cc, bcc } = data.target;
+      data.classified = RecipientClassifier.classifyAll({ locale, to, cc, bcc, trustedDomains, unsafeDomains });
+      break;
+    }
+    case Office.MailboxEnums.ItemType.Appointment:
+    default: {
+      const { requiredAttendees, optionalAttendees } = data.target;
+      data.classified = RecipientClassifier.classifyAll({
+        locale,
+        requiredAttendees,
+        optionalAttendees,
+        trustedDomains,
+        unsafeDomains,
+      });
+      break;
+    }
+  }
   console.debug("classified: ", data.classified);
 
   if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
@@ -433,12 +513,51 @@ async function onMailSend(event) {
   asyncContext.completed({ allowEvent: true });
 }
 
+async function onAppointmentSend(event) {
+  let asyncContext = event;
+  const data = await getAllAppointmentData();
+  console.debug(data);
+  if (!data.config.common?.AppointmentConfirmationEnabled) {
+    asyncContext.completed({ allowEvent: true });
+    return;
+  }
+
+  {
+    const { allowed, asyncContext: updatedAsyncContext } = await tryConfirm(data, asyncContext);
+    if (!allowed) {
+      console.debug("canceled by confirmation");
+      asyncContext.completed({ allowEvent: false });
+      return;
+    }
+    asyncContext = updatedAsyncContext;
+  }
+
+  {
+    const { allowed, asyncContext: updatedAsyncContext } = await tryCountDown(data, asyncContext);
+    if (!allowed) {
+      console.debug("canceled by countdown");
+      asyncContext.completed({ allowEvent: false });
+      return;
+    }
+    asyncContext = updatedAsyncContext;
+  }
+
+  console.debug("granted: continue to send");
+  if (data.originalRecipients) {
+    await removeSessionDataAsync(ORIGINAL_RECIPIENTS_KEY);
+  }
+  asyncContext.completed({ allowEvent: true });
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onItemSend(event) {
   const itemType = Office.context.mailbox.item.itemType;
   switch (itemType) {
     case Office.MailboxEnums.ItemType.Message:
       onMailSend(event);
+      return;
+    case Office.MailboxEnums.ItemType.Appointment:
+      onAppointmentSend(event);
       return;
     default:
       event.completed({ allowEvent: true });
@@ -461,6 +580,23 @@ async function onNewMessageComposeCreated(event) {
   event.completed();
 }
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function onAppointmentOrganizer(event) {
+  const [requiredAttendees, optionalAttendees] = await Promise.all([
+    getRequiredAttendeeAsync(),
+    getOptionalAttendeeAsync(),
+  ]);
+  if (requiredAttendees.length > 0 || optionalAttendees.length > 0) {
+    const originalAttendees = {
+      requiredAttendees,
+      optionalAttendees,
+    };
+    await setSessionDataAsync(ORIGINAL_ATTENDEES_KEY, JSON.stringify(originalAttendees));
+  }
+  event.completed();
+}
+window.onAppointmentOrganizer = onAppointmentOrganizer;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onOpenSettingDialog(event) {

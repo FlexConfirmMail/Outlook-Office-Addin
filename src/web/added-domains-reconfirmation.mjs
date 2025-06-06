@@ -24,11 +24,24 @@ export class AddedDomainsReconfirmation {
     const originalToDomains = data.originalRecipients.to?.map((_) => _.domain) ?? [];
     const originalCcDomains = data.originalRecipients.cc?.map((_) => _.domain) ?? [];
     const originalBccDomains = data.originalRecipients.bcc?.map((_) => _.domain) ?? [];
-    const originalDomains = new Set([...originalToDomains, ...originalCcDomains, ...originalBccDomains]);
+    const originalRequiredAttendeesDomains = data.originalRecipients.requiredAttendees?.map((_) => _.domain) ?? [];
+    const originalOptionalAttendeesDomains = data.originalRecipients.optionalAttendees?.map((_) => _.domain) ?? [];
+    const originalDomains = new Set([
+      ...originalToDomains,
+      ...originalCcDomains,
+      ...originalBccDomains,
+      ...originalRequiredAttendeesDomains,
+      ...originalOptionalAttendeesDomains,
+    ]);
     if (originalDomains.size === 0) {
       return;
     }
-    const targetRecipients = new Set([...data.target.to, ...data.target.cc, ...data.target.bcc]);
+    const to = data.target.to ?? [];
+    const cc = data.target.cc ?? [];
+    const bcc = data.target.bcc ?? [];
+    const requiredAttendees = data.target.requiredAttendees ?? [];
+    const optionalAttendees = data.target.optionalAttendees ?? [];
+    const targetRecipients = new Set([...to, ...cc, ...bcc, ...requiredAttendees, ...optionalAttendees]);
     for (const recipient of targetRecipients) {
       if (originalDomains.has(recipient.domain)) {
         continue;

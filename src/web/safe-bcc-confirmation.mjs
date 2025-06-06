@@ -19,6 +19,7 @@ export class SafeBccConfirmation {
   clear() {
     this.shouldConfirm = false;
     this.threshold = 0;
+    this.itemType = Office.MailboxEnums.ItemType.Message;
   }
 
   init(data) {
@@ -26,15 +27,18 @@ export class SafeBccConfirmation {
     if (!data.config.common.SafeBccEnabled) {
       return;
     }
-
     this.threshold = data.config.common.SafeBccThreshold;
     if (this.threshold < 1) {
       return;
     }
-
-    const recipients = [...data.target.to, ...data.target.cc];
+    const to = data.target.to ?? [];
+    const cc = data.target.cc ?? [];
+    const requiredAttendees = data.target.requiredAttendees ?? [];
+    const optionalAttendees = data.target.optionalAttendees ?? [];
+    const recipients = [...to, ...cc, ...requiredAttendees, ...optionalAttendees];
     const domains = new Set(recipients.map((recipient) => recipient.domain));
     this.shouldConfirm = domains.size >= this.threshold;
+    this.itemType = data.itemType;
   }
 
   get warningConfirmationItems() {
@@ -42,6 +46,20 @@ export class SafeBccConfirmation {
       return [];
     }
 
-    return [{ label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", { threshold: this.threshold }) }];
+    switch (this.itemType) {
+      case Office.MailboxEnums.ItemType.Message:
+        return [
+          { label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", { threshold: this.threshold }) },
+        ];
+      case Office.MailboxEnums.ItemType.Appointment:
+      default:
+        return [
+          {
+            label: this.locale.get("confirmation_safeBccThresholdForAttendeesCheckboxLabel", {
+              threshold: this.threshold,
+            }),
+          },
+        ];
+    }
   }
 }
