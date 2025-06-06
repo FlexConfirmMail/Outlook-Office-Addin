@@ -167,9 +167,9 @@ function updateDialogSetting(policy, user) {
   document.getElementById("safeBccEnabled").disabled = fixedParametersSet.has("SafeBccEnabled");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
   document.getElementById("mainSkipIfNoExt").disabled = fixedParametersSet.has("MainSkipIfNoExt");
-  document.getElementById("EnableAppointmentConfirmation").checked = common.EnableAppointmentConfirmation;
-  document.getElementById("EnableAppointmentConfirmation").disabled = fixedParametersSet.has(
-    "EnableAppointmentConfirmation"
+  document.getElementById("AppointmentConfirmationEnabled").checked = common.AppointmentConfirmationEnabled;
+  document.getElementById("AppointmentConfirmationEnabled").disabled = fixedParametersSet.has(
+    "AppointmentConfirmationEnabled"
   );
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
   document.getElementById("safeNewDomainsEnabled").disabled = fixedParametersSet.has("SafeNewDomainsEnabled");
@@ -211,7 +211,7 @@ function serializeCommonConfigs() {
   const safeBccThreshold = document.getElementById("safeBccThreshold").value;
   const safeNewDomainsEnabled = document.getElementById("safeNewDomainsEnabled").checked;
   const mainSkipIfNoExt = document.getElementById("mainSkipIfNoExt").checked;
-  const EnableAppointmentConfirmation = document.getElementById("EnableAppointmentConfirmation").checked;
+  const appointmentConfirmationEnabled = document.getElementById("AppointmentConfirmationEnabled").checked;
   const delayDeliveryEnabled = document.getElementById("delayDeliveryEnabled").checked;
   const delayDeliverySeconds = document.getElementById("delayDeliverySeconds").value;
   let commonConfigString = "";
@@ -222,7 +222,7 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
   commonConfigString += serializeCommonConfig("SafeNewDomainsEnabled", safeNewDomainsEnabled);
   commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
-  commonConfigString += serializeCommonConfig("EnableAppointmentConfirmation", EnableAppointmentConfirmation);
+  commonConfigString += serializeCommonConfig("AppointmentConfirmationEnabled", appointmentConfirmationEnabled);
   commonConfigString += serializeCommonConfig("DelayDeliveryEnabled", delayDeliveryEnabled);
   commonConfigString += serializeCommonConfig("DelayDeliverySeconds", delayDeliverySeconds);
   // FixedParameters is for policy setting.

@@ -11,7 +11,7 @@ export class ConfigLoader {
     CountAllowSkip: "boolean",
     SafeBccEnabled: "boolean",
     MainSkipIfNoExt: "boolean",
-    EnableAppointmentConfirmation: "boolean",
+    AppointmentConfirmationEnabled: "boolean",
     SafeNewDomainsEnabled: "boolean",
     CountSeconds: "number",
     SafeBccThreshold: "number",
@@ -210,7 +210,7 @@ export class ConfigLoader {
         CountAllowSkip: true,
         SafeBccEnabled: true,
         MainSkipIfNoExt: false,
-        EnableAppointmentConfirmation: false,
+        AppointmentConfirmationEnabled: false,
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
@@ -256,10 +256,10 @@ export class ConfigLoader {
       left.common.MainSkipIfNoExt = right.common.MainSkipIfNoExt;
     }
     if (
-      right.common.EnableAppointmentConfirmation != null &&
-      !fixedParametersSet.has("EnableAppointmentConfirmation")
+      right.common.AppointmentConfirmationEnabled != null &&
+      !fixedParametersSet.has("AppointmentConfirmationEnabled")
     ) {
-      left.common.EnableAppointmentConfirmation = right.common.EnableAppointmentConfirmation;
+      left.common.AppointmentConfirmationEnabled = right.common.AppointmentConfirmationEnabled;
     }
     if (right.common.SafeNewDomainsEnabled != null && !fixedParametersSet.has("SafeNewDomainsEnabled")) {
       left.common.SafeNewDomainsEnabled = right.common.SafeNewDomainsEnabled;
