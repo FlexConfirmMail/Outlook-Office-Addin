@@ -14,7 +14,10 @@ let userConfig;
 let effectiveConfig;
 
 Office.onReady(() => {
-  Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
+  Office.context.ui.addHandlerAsync(
+    Office.EventType.DialogParentMessageReceived,
+    onMessageFromParent
+  );
   const language = Office.context.displayLanguage;
   l10n = L10n.get(language);
   l10n.ready.then(() => l10n.translateAll());
@@ -153,9 +156,11 @@ function updateDialogSetting(policy, user) {
   const unsafeFilesString = createDisplayUnsafeFiles();
 
   document.getElementById("trustedDomainsTextArea").value = trustedDomainsString;
-  document.getElementById("trustedDomainsTextArea").disabled = fixedParametersSet.has("TrustedDomains");
+  document.getElementById("trustedDomainsTextArea").disabled =
+    fixedParametersSet.has("TrustedDomains");
   document.getElementById("unsafeDomainsTextArea").value = unsafeDomainsString;
-  document.getElementById("unsafeDomainsTextArea").disabled = fixedParametersSet.has("UnsafeDomains");
+  document.getElementById("unsafeDomainsTextArea").disabled =
+    fixedParametersSet.has("UnsafeDomains");
   document.getElementById("unsafeFilesTextArea").value = unsafeFilesString;
   document.getElementById("unsafeFilesTextArea").disabled = fixedParametersSet.has("UnsafeFiles");
 
@@ -167,20 +172,24 @@ function updateDialogSetting(policy, user) {
   document.getElementById("safeBccEnabled").disabled = fixedParametersSet.has("SafeBccEnabled");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
   document.getElementById("mainSkipIfNoExt").disabled = fixedParametersSet.has("MainSkipIfNoExt");
-  document.getElementById("AppointmentConfirmationEnabled").checked = common.AppointmentConfirmationEnabled;
+  document.getElementById("AppointmentConfirmationEnabled").checked =
+    common.AppointmentConfirmationEnabled;
   document.getElementById("AppointmentConfirmationEnabled").disabled = fixedParametersSet.has(
     "AppointmentConfirmationEnabled"
   );
   document.getElementById("safeNewDomainsEnabled").checked = common.SafeNewDomainsEnabled;
-  document.getElementById("safeNewDomainsEnabled").disabled = fixedParametersSet.has("SafeNewDomainsEnabled");
+  document.getElementById("safeNewDomainsEnabled").disabled =
+    fixedParametersSet.has("SafeNewDomainsEnabled");
   document.getElementById("countSeconds").value = common.CountSeconds;
   document.getElementById("countSeconds").disabled = fixedParametersSet.has("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
   document.getElementById("safeBccThreshold").disabled = fixedParametersSet.has("SafeBccThreshold");
   document.getElementById("delayDeliveryEnabled").checked = common.DelayDeliveryEnabled;
-  document.getElementById("delayDeliveryEnabled").disabled = fixedParametersSet.has("DelayDeliveryEnabled");
+  document.getElementById("delayDeliveryEnabled").disabled =
+    fixedParametersSet.has("DelayDeliveryEnabled");
   document.getElementById("delayDeliverySeconds").value = common.DelayDeliverySeconds;
-  document.getElementById("delayDeliverySeconds").disabled = fixedParametersSet.has("DelayDeliverySeconds");
+  document.getElementById("delayDeliverySeconds").disabled =
+    fixedParametersSet.has("DelayDeliverySeconds");
 }
 
 function sendStatusToParent(status) {
@@ -211,7 +220,9 @@ function serializeCommonConfigs() {
   const safeBccThreshold = document.getElementById("safeBccThreshold").value;
   const safeNewDomainsEnabled = document.getElementById("safeNewDomainsEnabled").checked;
   const mainSkipIfNoExt = document.getElementById("mainSkipIfNoExt").checked;
-  const appointmentConfirmationEnabled = document.getElementById("AppointmentConfirmationEnabled").checked;
+  const appointmentConfirmationEnabled = document.getElementById(
+    "AppointmentConfirmationEnabled"
+  ).checked;
   const delayDeliveryEnabled = document.getElementById("delayDeliveryEnabled").checked;
   const delayDeliverySeconds = document.getElementById("delayDeliverySeconds").value;
   let commonConfigString = "";
@@ -222,7 +233,10 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
   commonConfigString += serializeCommonConfig("SafeNewDomainsEnabled", safeNewDomainsEnabled);
   commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
-  commonConfigString += serializeCommonConfig("AppointmentConfirmationEnabled", appointmentConfirmationEnabled);
+  commonConfigString += serializeCommonConfig(
+    "AppointmentConfirmationEnabled",
+    appointmentConfirmationEnabled
+  );
   commonConfigString += serializeCommonConfig("DelayDeliveryEnabled", delayDeliveryEnabled);
   commonConfigString += serializeCommonConfig("DelayDeliverySeconds", delayDeliverySeconds);
   // FixedParameters is for policy setting.

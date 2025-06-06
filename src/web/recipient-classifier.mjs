@@ -24,7 +24,9 @@ export class RecipientClassifier {
         )
     );
     const negativeItems = new Set(
-      [...uniquePatterns].filter((pattern) => pattern.startsWith("-")).map((pattern) => pattern.replace(/^-/, ""))
+      [...uniquePatterns]
+        .filter((pattern) => pattern.startsWith("-"))
+        .map((pattern) => pattern.replace(/^-/, ""))
     );
     for (const negativeItem of negativeItems) {
       uniquePatterns.delete(negativeItem);
@@ -41,8 +43,14 @@ export class RecipientClassifier {
       }
     }
     return {
-      domain: new RegExp(`^(${Array.from(domainPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`, "i"),
-      full: new RegExp(`^(${Array.from(fullPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`, "i"),
+      domain: new RegExp(
+        `^(${Array.from(domainPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`,
+        "i"
+      ),
+      full: new RegExp(
+        `^(${Array.from(fullPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`,
+        "i"
+      ),
     };
   }
 
@@ -82,7 +90,16 @@ export class RecipientClassifier {
     };
   }
 
-  static classifyAll({ locale, to, cc, bcc, requiredAttendees, optionalAttendees, trustedDomains, unsafeDomains }) {
+  static classifyAll({
+    locale,
+    to,
+    cc,
+    bcc,
+    requiredAttendees,
+    optionalAttendees,
+    trustedDomains,
+    unsafeDomains,
+  }) {
     const classifier = new RecipientClassifier({
       trustedDomains: trustedDomains || [],
       unsafeDomains: unsafeDomains || [],

@@ -139,7 +139,9 @@ function getAttachmentsAsync() {
     try {
       Office.context.mailbox.item.getAttachmentsAsync((asyncResult) => {
         const attachments = asyncResult.value;
-        const maybeFiles = attachments.filter((attachment) => CONFIRM_ATTACHMENT_TYPES.has(attachment.attachmentType));
+        const maybeFiles = attachments.filter((attachment) =>
+          CONFIRM_ATTACHMENT_TYPES.has(attachment.attachmentType)
+        );
         resolve(maybeFiles);
       });
     } catch (error) {
@@ -380,7 +382,14 @@ async function tryConfirm(data, asyncContext) {
   switch (data.itemType) {
     case Office.MailboxEnums.ItemType.Message: {
       const { to, cc, bcc } = data.target;
-      data.classified = RecipientClassifier.classifyAll({ locale, to, cc, bcc, trustedDomains, unsafeDomains });
+      data.classified = RecipientClassifier.classifyAll({
+        locale,
+        to,
+        cc,
+        bcc,
+        trustedDomains,
+        unsafeDomains,
+      });
       break;
     }
     case Office.MailboxEnums.ItemType.Appointment:
@@ -549,7 +558,6 @@ async function onAppointmentSend(event) {
   asyncContext.completed({ allowEvent: true });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onItemSend(event) {
   const itemType = Office.context.mailbox.item.itemType;
   switch (itemType) {
@@ -596,7 +604,6 @@ async function onAppointmentOrganizer(event) {
 }
 window.onAppointmentOrganizer = onAppointmentOrganizer;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onOpenSettingDialog(event) {
   const policyConfig = await ConfigLoader.loadFileConfig();
   const userConfig = await ConfigLoader.loadUserConfig();

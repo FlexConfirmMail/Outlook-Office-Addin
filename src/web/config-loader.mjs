@@ -146,19 +146,23 @@ export class ConfigLoader {
   }
 
   static async loadEffectiveConfig() {
-    const [fileConfig, userConfig] = await Promise.all([this.loadFileConfig(), this.loadUserConfig()]);
+    const [fileConfig, userConfig] = await Promise.all([
+      this.loadFileConfig(),
+      this.loadUserConfig(),
+    ]);
     const effectiveFileConfig = this.merge(this.createDefaultConfig(), fileConfig);
     const effectiveConfig = this.merge(effectiveFileConfig, userConfig);
     return effectiveConfig;
   }
 
   static async loadFileConfig() {
-    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] = await Promise.all([
-      this.loadFile("configs/TrustedDomains.txt"),
-      this.loadFile("configs/UnsafeDomains.txt"),
-      this.loadFile("configs/UnsafeFiles.txt"),
-      this.loadFile("configs/Common.txt"),
-    ]);
+    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] =
+      await Promise.all([
+        this.loadFile("configs/TrustedDomains.txt"),
+        this.loadFile("configs/UnsafeDomains.txt"),
+        this.loadFile("configs/UnsafeFiles.txt"),
+        this.loadFile("configs/Common.txt"),
+      ]);
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.toArray(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
@@ -261,7 +265,10 @@ export class ConfigLoader {
     ) {
       left.common.AppointmentConfirmationEnabled = right.common.AppointmentConfirmationEnabled;
     }
-    if (right.common.SafeNewDomainsEnabled != null && !fixedParametersSet.has("SafeNewDomainsEnabled")) {
+    if (
+      right.common.SafeNewDomainsEnabled != null &&
+      !fixedParametersSet.has("SafeNewDomainsEnabled")
+    ) {
       left.common.SafeNewDomainsEnabled = right.common.SafeNewDomainsEnabled;
     }
     if (right.common.CountSeconds != null && !fixedParametersSet.has("CountSeconds")) {
@@ -270,10 +277,16 @@ export class ConfigLoader {
     if (right.common.SafeBccThreshold != null && !fixedParametersSet.has("SafeBccThreshold")) {
       left.common.SafeBccThreshold = right.common.SafeBccThreshold;
     }
-    if (right.common.DelayDeliveryEnabled != null && !fixedParametersSet.has("DelayDeliveryEnabled")) {
+    if (
+      right.common.DelayDeliveryEnabled != null &&
+      !fixedParametersSet.has("DelayDeliveryEnabled")
+    ) {
       left.common.DelayDeliveryEnabled = right.common.DelayDeliveryEnabled;
     }
-    if (right.common.DelayDeliverySeconds != null && !fixedParametersSet.has("DelayDeliverySeconds")) {
+    if (
+      right.common.DelayDeliverySeconds != null &&
+      !fixedParametersSet.has("DelayDeliverySeconds")
+    ) {
       left.common.DelayDeliverySeconds = right.common.DelayDeliverySeconds;
     }
     if (!fixedParametersSet.has("TrustedDomains")) {
