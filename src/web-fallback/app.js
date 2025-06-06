@@ -10,6 +10,11 @@ async function onNewMessageComposeCreated(event) {
 }
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
+async function onAppointmentOrganizer(event) {
+  event.completed();
+}
+window.onAppointmentOrganizer = onAppointmentOrganizer;
+
 async function onOpenSettingDialog(event) {
   event.completed({ allowEvent: true });
 }
