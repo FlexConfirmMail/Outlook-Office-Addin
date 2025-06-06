@@ -28,7 +28,10 @@ Office.onReady(() => {
 
   document.documentElement.setAttribute("lang", language);
 
-  Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
+  Office.context.ui.addHandlerAsync(
+    Office.EventType.DialogParentMessageReceived,
+    onMessageFromParent
+  );
   sendStatusToParent("ready");
 });
 
@@ -46,7 +49,9 @@ function sendStatusToParent(status) {
 window.onCheckAllTrusted = () => {
   const checkTargetLength = $("fluent-checkbox.check-target").length;
   const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
-  const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not(".checked").length;
+  const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not(
+    ".checked"
+  ).length;
   $("#trusted-domains fluent-checkbox.check-target").prop("checked", true);
   const hasUnchecked = checkTargetLength !== checkedTargetLength + toBeCheckedNumber;
   $("#send-button").prop("disabled", hasUnchecked);
@@ -177,8 +182,9 @@ async function onMessageFromParent(arg) {
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
 
   appendMiscWarningCheckboxes(
-    Array.from(new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())), (domain) =>
-      l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
+    Array.from(
+      new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
+      (domain) => l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
     )
   );
   appendMiscWarningCheckboxes(

@@ -49,7 +49,11 @@ export class SafeBccConfirmation {
     switch (this.itemType) {
       case Office.MailboxEnums.ItemType.Message:
         return [
-          { label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", { threshold: this.threshold }) },
+          {
+            label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", {
+              threshold: this.threshold,
+            }),
+          },
         ];
       case Office.MailboxEnums.ItemType.Appointment:
       default:

@@ -16,6 +16,7 @@ export class L10n {
       if (response.ok) {
         return response.json();
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       // missing file
     }
@@ -81,10 +82,10 @@ export class L10n {
       key in this.locale
         ? this.locale[key]
         : key in this.fallbackLocale
-        ? this.fallbackLocale[key]
-        : key in this.defaultLocale
-        ? this.defaultLocale[key]
-        : null;
+          ? this.fallbackLocale[key]
+          : key in this.defaultLocale
+            ? this.defaultLocale[key]
+            : null;
     if (message === null) {
       return key;
     }

@@ -20,7 +20,10 @@ Office.onReady(() => {
 
   document.documentElement.setAttribute("lang", language);
 
-  Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived, onMessageFromParent);
+  Office.context.ui.addHandlerAsync(
+    Office.EventType.DialogParentMessageReceived,
+    onMessageFromParent
+  );
   sendStatusToParent("ready");
 });
 

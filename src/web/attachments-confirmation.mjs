@@ -31,7 +31,9 @@ export class AttachmentsConfirmation {
       (unsafeFiles || []).filter((pattern) => !pattern.startsWith("#")) // reject commented out items
     );
     const negativeItems = new Set(
-      [...uniquePatterns].filter((pattern) => pattern.startsWith("-")).map((pattern) => pattern.replace(/^-/, ""))
+      [...uniquePatterns]
+        .filter((pattern) => pattern.startsWith("-"))
+        .map((pattern) => pattern.replace(/^-/, ""))
     );
     for (const negativeItem of negativeItems) {
       uniquePatterns.delete(negativeItem);
@@ -39,7 +41,10 @@ export class AttachmentsConfirmation {
     }
     const unsafeAttachmentMatcher =
       unsafeFiles.length > 0
-        ? new RegExp(Array.from(uniquePatterns, (pattern) => wildcardToRegexp(pattern)).join("|"), "i")
+        ? new RegExp(
+            Array.from(uniquePatterns, (pattern) => wildcardToRegexp(pattern)).join("|"),
+            "i"
+          )
         : null;
 
     for (const attachment of attachments) {
@@ -52,7 +57,9 @@ export class AttachmentsConfirmation {
 
   get warningConfirmationItems() {
     return Array.from(this.unsafeAttachments, (attachment) => ({
-      label: this.locale.get("confirmation_unsafeAttachmentCheckboxLabel", { name: attachment.name }),
+      label: this.locale.get("confirmation_unsafeAttachmentCheckboxLabel", {
+        name: attachment.name,
+      }),
     }));
   }
 
