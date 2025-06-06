@@ -16,7 +16,7 @@ export class L10n {
       if (response.ok) {
         return response.json();
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       // missing file
     }
