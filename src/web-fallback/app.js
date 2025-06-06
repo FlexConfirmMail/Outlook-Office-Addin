@@ -12,6 +12,11 @@ async function onNewMessageComposeCreated(event) {
 }
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
+async function onAppointmentOrganizer(event) {
+  event.completed();
+}
+window.onAppointmentOrganizer = onAppointmentOrganizer;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function onOpenSettingDialog(event) {
   event.completed({ allowEvent: true });
