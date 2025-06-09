@@ -48,10 +48,16 @@ function sendStatusToParent(status) {
 
 window.onCheckAllTrusted = () => {
   const checkTargetLength = document.querySelectorAll("fluent-checkbox.check-target").length;
-  const checkedTargetLength = document.querySelectorAll("fluent-checkbox.check-target.checked").length;
-  const trustedCheckboxes = document.querySelectorAll("#trusted-domains fluent-checkbox.check-target");
-  const toBeCheckedNumber = Array.from(trustedCheckboxes).filter(cb => !cb.classList.contains("checked")).length;
-  trustedCheckboxes.forEach(cb => cb.checked = true);
+  const checkedTargetLength = document.querySelectorAll(
+    "fluent-checkbox.check-target.checked"
+  ).length;
+  const trustedCheckboxes = document.querySelectorAll(
+    "#trusted-domains fluent-checkbox.check-target"
+  );
+  const toBeCheckedNumber = Array.from(trustedCheckboxes).filter(
+    (cb) => !cb.classList.contains("checked")
+  ).length;
+  trustedCheckboxes.forEach((cb) => (cb.checked = true));
   const hasUnchecked = checkTargetLength !== checkedTargetLength + toBeCheckedNumber;
   const sendButton = document.getElementById("send-button");
   sendButton.disabled = hasUnchecked;
@@ -71,7 +77,9 @@ window.onCancel = () => {
 
 window.checkboxChanged = (targetElement) => {
   const checkTargetLength = document.querySelectorAll("fluent-checkbox.check-target").length;
-  const checkedTargetLength = document.querySelectorAll("fluent-checkbox.check-target.checked").length;
+  const checkedTargetLength = document.querySelectorAll(
+    "fluent-checkbox.check-target.checked"
+  ).length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
   const adjustmentValue = targetElement.classList.contains("checked") ? -1 : 1;
   const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
@@ -210,5 +218,6 @@ async function onMessageFromParent(arg) {
     data.itemType === Office.MailboxEnums.ItemType.Message
       ? l10n.get("newlyAddedDomainReconfirmation_messageBefore")
       : l10n.get("newlyAddedDomainReconfirmation_messageBeforeForAppointment");
-  document.getElementById("newly-added-domains-message-before").textContent = newlyAddedDomainsBeforeMessage;
+  document.getElementById("newly-added-domains-message-before").textContent =
+    newlyAddedDomainsBeforeMessage;
 }
