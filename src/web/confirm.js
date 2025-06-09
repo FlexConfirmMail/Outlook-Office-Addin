@@ -119,7 +119,7 @@ function appendMiscCheckboxes(items) {
 }
 
 function appendMiscWarningCheckboxes(items) {
-  const container = document.getElementById("#attachment-and-others");
+  const container = document.getElementById("attachment-and-others");
   for (const item of items) {
     appendCheckbox({
       container,
