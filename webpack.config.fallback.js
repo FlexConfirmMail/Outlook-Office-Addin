@@ -60,17 +60,8 @@ module.exports = async (env, options) => {
             from: "assets/*",
             to: "assets/[name][ext][query]",
           },
-          {
-            from: "node_modules/@microsoft/office-js/dist",
-            to: "lib/office-js",
-          },
-          {
-            from: "node_modules/@microsoft/office-js/LICENSE.md",
-            to: "lib/office-js/LICENSE.md",
-          },
         ],
       }),
-
     ],
     devServer: {
       headers: {
