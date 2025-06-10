@@ -553,7 +553,7 @@ async function onAppointmentSend(event) {
 
   console.debug("granted: continue to send");
   if (data.originalRecipients) {
-    await removeSessionDataAsync(ORIGINAL_RECIPIENTS_KEY);
+    await removeSessionDataAsync(ORIGINAL_ATTENDEES_KEY);
   }
   asyncContext.completed({ allowEvent: true });
 }
