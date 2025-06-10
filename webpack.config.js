@@ -78,14 +78,6 @@ module.exports = async (env, options) => {
             to: "lib/office-js/LICENSE.md",
           },
           {
-            from: "node_modules/jquery/dist/jquery.min.js",
-            to: "lib/jquery/jquery.min.js",
-          },
-          {
-            from: "node_modules/jquery/LICENSE.txt",
-            to: "lib/jquery/LICENSE.txt",
-          },
-          {
             from: "node_modules/@fluentui/web-components/dist/web-components.min.js",
             to: "lib/fluentui/web-components/web-components.min.js",
           },

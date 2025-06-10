@@ -47,14 +47,20 @@ function sendStatusToParent(status) {
 }
 
 window.onCheckAllTrusted = () => {
-  const checkTargetLength = $("fluent-checkbox.check-target").length;
-  const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
-  const toBeCheckedNumber = $("#trusted-domains fluent-checkbox.check-target").not(
-    ".checked"
+  const checkTargetLength = document.querySelectorAll("fluent-checkbox.check-target").length;
+  const checkedTargetLength = document.querySelectorAll(
+    "fluent-checkbox.check-target.checked"
   ).length;
-  $("#trusted-domains fluent-checkbox.check-target").prop("checked", true);
+  const trustedCheckboxes = document.querySelectorAll(
+    "#trusted-domains fluent-checkbox.check-target"
+  );
+  const toBeCheckedNumber = Array.from(trustedCheckboxes).filter(
+    (cb) => !cb.classList.contains("checked")
+  ).length;
+  trustedCheckboxes.forEach((cb) => (cb.checked = true));
   const hasUnchecked = checkTargetLength !== checkedTargetLength + toBeCheckedNumber;
-  $("#send-button").prop("disabled", hasUnchecked);
+  const sendButton = document.getElementById("send-button");
+  sendButton.disabled = hasUnchecked;
 };
 
 window.onSend = () => {
@@ -70,26 +76,31 @@ window.onCancel = () => {
 };
 
 window.checkboxChanged = (targetElement) => {
-  const checkTargetLength = $("fluent-checkbox.check-target").length;
-  const checkedTargetLength = $("fluent-checkbox.check-target.checked").length;
+  const checkTargetLength = document.querySelectorAll("fluent-checkbox.check-target").length;
+  const checkedTargetLength = document.querySelectorAll(
+    "fluent-checkbox.check-target.checked"
+  ).length;
   // If the target is currently checked, the target is unchecked after this function and vice versa.
-  const adjustmentValue = $(targetElement).hasClass("checked") ? -1 : 1;
+  const adjustmentValue = targetElement.classList.contains("checked") ? -1 : 1;
   const hasUnchecked = checkTargetLength !== checkedTargetLength + adjustmentValue;
-  $("#send-button").prop("disabled", hasUnchecked);
+  const sendButton = document.getElementById("send-button");
+  sendButton.disabled = hasUnchecked;
 };
 
 function appendRecipientCheckboxes(target, groupedRecipients) {
   for (const [key, recipients] of Object.entries(groupedRecipients)) {
     const idForGroup = generateTempId();
     const idForGroupTitle = generateTempId();
-    target.append(`
-      <div>
-        <h4 id="${idForGroupTitle}"></h4>
-        <fluent-stack id=${idForGroup} orientation="vertical" vertical-align="start"></fluent-stack>
-      </div>`);
+    target.insertAdjacentHTML(
+      "beforeend",
+      `<div>
+          <h4 id="${idForGroupTitle}"></h4>
+          <fluent-stack id="${idForGroup}" orientation="vertical" vertical-align="start"></fluent-stack>
+      </div>`
+    );
     //In order to escape special chars, adding values with the text function.
-    $(`#${idForGroupTitle}`).text(key);
-    const container = $(`#${idForGroup}`);
+    document.getElementById(idForGroupTitle).textContent = key;
+    const container = document.getElementById(idForGroup);
     for (const recipient of recipients) {
       const label = `${recipient.type}: ${recipient.address}`;
       appendCheckbox({ container, label });
@@ -98,7 +109,7 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
 }
 
 function appendMiscCheckboxes(items) {
-  const container = $("#attachment-and-others");
+  const container = document.getElementById("attachment-and-others");
   for (const item of items) {
     appendCheckbox({
       container,
@@ -108,7 +119,7 @@ function appendMiscCheckboxes(items) {
 }
 
 function appendMiscWarningCheckboxes(items) {
-  const container = $("#attachment-and-others");
+  const container = document.getElementById("attachment-and-others");
   for (const item of items) {
     appendCheckbox({
       container,
@@ -126,13 +137,14 @@ function appendCheckbox({ container, id, label, warning }) {
   if (warning) {
     extraClasses.add("warning");
   }
-  container.append(
-    `<fluent-checkbox id="${id}" class="check-target ${[...extraClasses].join(
-      " "
-    )}" onchange="checkboxChanged(this)"></fluent-checkbox>`
-  );
-  //In order to escape special chars, adding values with the text function.
-  $(`#${id}`).text(label);
+  const checkbox = document.createElement("fluent-checkbox");
+  checkbox.id = id;
+  checkbox.className = "check-target " + [...extraClasses].join(" ");
+  checkbox.setAttribute("onchange", "checkboxChanged(this)");
+
+  //In order to escape special chars, use textContent.
+  checkbox.textContent = label;
+  container.appendChild(checkbox);
 }
 
 async function onMessageFromParent(arg) {
@@ -171,12 +183,12 @@ async function onMessageFromParent(arg) {
   await Promise.all([l10n.ready, safeBccConfirmation.loaded, attachmentsConfirmation.loaded]);
 
   if (data.classified.trusted.length == 0) {
-    $("#check-all-trusted").prop("disabled", true);
+    document.getElementById("check-all-trusted").disabled = true;
   }
   const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
-  appendRecipientCheckboxes($("#trusted-domains"), groupedByTypeTrusteds);
+  appendRecipientCheckboxes(document.getElementById("trusted-domains"), groupedByTypeTrusteds);
   const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
-  appendRecipientCheckboxes($("#untrusted-domains"), groupedByTypeUntrusted);
+  appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
 
   safeBccConfirmation.init(data);
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
@@ -206,5 +218,6 @@ async function onMessageFromParent(arg) {
     data.itemType === Office.MailboxEnums.ItemType.Message
       ? l10n.get("newlyAddedDomainReconfirmation_messageBefore")
       : l10n.get("newlyAddedDomainReconfirmation_messageBeforeForAppointment");
-  $("#newly-added-domains-message-before").text(newlyAddedDomainsBeforeMessage);
+  document.getElementById("newly-added-domains-message-before").textContent =
+    newlyAddedDomainsBeforeMessage;
 }

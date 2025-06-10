@@ -63,22 +63,25 @@ export class AddedDomainsReconfirmation {
   }
 
   initUI(sendStatusToParent) {
-    const targetElement = $("#newly-added-domain-address-list");
+    const targetElement = document.getElementById("newly-added-domain-address-list");
     for (const address of this.newDomainAddresses) {
-      const itemElement = $(`<li></li>`).appendTo(targetElement);
-      const strongElement = $(`<strong></strong>`).appendTo(itemElement);
-      strongElement.text(address);
+      const itemElement = document.createElement("li");
+      const strongElement = document.createElement("strong");
+      strongElement.textContent = address;
+      itemElement.appendChild(strongElement);
+      targetElement.appendChild(itemElement);
     }
+
     window.onSendNewDomain = () => {
-      $("#newly-added-domain-address-dialog").prop("hidden", true);
+      document.getElementById("newly-added-domain-address-dialog").hidden = true;
       sendStatusToParent("ok");
     };
     window.onCancelNewDomain = () => {
-      $("#newly-added-domain-address-dialog").prop("hidden", true);
+      document.getElementById("newly-added-domain-address-dialog").hidden = true;
     };
   }
 
   show() {
-    $("#newly-added-domain-address-dialog").prop("hidden", false);
+    document.getElementById("newly-added-domain-address-dialog").hidden = false;
   }
 }

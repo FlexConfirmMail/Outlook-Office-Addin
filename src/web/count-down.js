@@ -49,11 +49,11 @@ async function onMessageFromParent(arg) {
 
   if (!data.config.common.CountAllowSkip) {
     console.log("cannot skip");
-    $("#send-button").hide();
+    document.getElementById("send-button").style.display = "none";
   }
 
-  $("#count").text(data.config.common.CountSeconds);
-  $("#message").show();
+  document.getElementById("count").textContent = data.config.common.CountSeconds;
+  document.getElementById("message").style.display = "inline";
 
   Dialog.resizeToContent();
 
@@ -61,7 +61,7 @@ async function onMessageFromParent(arg) {
   const timer = window.setInterval(() => {
     const rest = Math.ceil(data.config.common.CountSeconds - (Date.now() - start) / 1000);
     console.log("rest: ", rest);
-    $("#count").text(rest);
+    document.getElementById("count").textContent = rest;
     if (rest > 0) {
       return;
     }
