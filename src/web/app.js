@@ -625,3 +625,4 @@ async function onOpenSettingDialog(event) {
 window.onOpenSettingDialog = onOpenSettingDialog;
 
 Office.actions.associate("onNewMessageComposeCreated", onNewMessageComposeCreated);
+Office.actions.associate("onAppointmentOrganizer", onAppointmentOrganizer);
