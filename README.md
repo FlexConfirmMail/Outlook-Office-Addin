@@ -30,6 +30,8 @@
   * https://go.dev/doc/install
 * Node.jsおよびnpm
   * https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-installer-to-install-nodejs-and-npm
+* Officeアドインのライブラリを配布するCDNのドメインへのアクセス許可を行う（ネットワーク機器などでアクセスが禁止されている場合のみ）
+  * ドメイン: appsforoffice.microsoft.com
 
 ### アドインの静的サイトファイルのビルド
 
