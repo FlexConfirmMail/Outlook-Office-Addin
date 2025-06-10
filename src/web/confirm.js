@@ -104,7 +104,7 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
     const createdLabels = new Set();
     for (const recipient of recipients) {
       const label = `${recipient.type}: ${recipient.address}`;
-      if (createdLabels.has(label)){
+      if (createdLabels.has(label)) {
         continue;
       }
       appendCheckbox({ container, label });
@@ -118,7 +118,7 @@ function appendMiscCheckboxes(items) {
   const createdLabels = new Set();
   for (const item of items) {
     const label = item.label || item;
-    if (createdLabels.has(label)){
+    if (createdLabels.has(label)) {
       continue;
     }
     appendCheckbox({
@@ -134,7 +134,7 @@ function appendMiscWarningCheckboxes(items) {
   const createdLabels = new Set();
   for (const item of items) {
     const label = item.label || item;
-    if (createdLabels.has(label)){
+    if (createdLabels.has(label)) {
       continue;
     }
     appendCheckbox({
