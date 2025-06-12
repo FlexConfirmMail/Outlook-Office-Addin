@@ -19,10 +19,6 @@ const CONFIRM_ATTACHMENT_TYPES = new Set([
 ]);
 let locale;
 
-Office.initialize = (reason) => {
-  console.debug("Office.initialize reasion = ", reason);
-};
-
 Office.onReady(() => {
   const language = Office.context.displayLanguage;
   document.documentElement.setAttribute("lang", language);
