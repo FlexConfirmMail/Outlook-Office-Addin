@@ -64,6 +64,20 @@ function getCcAsync() {
   });
 }
 
+function getItemIdAsync() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.getItemIdAsync((asyncResult) => {
+        const id = asyncResult.value;
+        resolve(id);
+      });
+    } catch (error) {
+      console.log(`Error while getting itemId: ${error}`);
+      reject(error);
+    }
+  });
+}
+
 function getRequiredAttendeeAsync() {
   return new Promise((resolve, reject) => {
     try {
@@ -589,11 +603,15 @@ async function onNewMessageComposeCreated(event) {
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 async function onAppointmentOrganizer(event) {
-  const [requiredAttendees, optionalAttendees] = await Promise.all([
+  const [id, requiredAttendees, optionalAttendees] = await Promise.all([
+    getItemIdAsync(),
     getRequiredAttendeeAsync(),
     getOptionalAttendeeAsync(),
   ]);
-  if (requiredAttendees.length > 0 || optionalAttendees.length > 0) {
+  // The id is defined if this is an existing appointment.
+  // We need this check for classic Outlook because classic Outlook has
+  // a current user in requiredAttendees even if this is a new appointment.
+  if (id && (requiredAttendees.length > 0 || optionalAttendees.length > 0)) {    
     const originalAttendees = {
       requiredAttendees,
       optionalAttendees,
