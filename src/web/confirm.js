@@ -101,31 +101,48 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
     //In order to escape special chars, adding values with the text function.
     document.getElementById(idForGroupTitle).textContent = key;
     const container = document.getElementById(idForGroup);
+    const createdLabels = new Set();
     for (const recipient of recipients) {
       const label = `${recipient.type}: ${recipient.address}`;
+      if (createdLabels.has(label)) {
+        continue;
+      }
       appendCheckbox({ container, label });
+      createdLabels.add(label);
     }
   }
 }
 
 function appendMiscCheckboxes(items) {
   const container = document.getElementById("attachment-and-others");
+  const createdLabels = new Set();
   for (const item of items) {
+    const label = item.label || item;
+    if (createdLabels.has(label)) {
+      continue;
+    }
     appendCheckbox({
       container,
-      label: item.label || item,
+      label,
     });
+    createdLabels.add(label);
   }
 }
 
 function appendMiscWarningCheckboxes(items) {
   const container = document.getElementById("attachment-and-others");
+  const createdLabels = new Set();
   for (const item of items) {
+    const label = item.label || item;
+    if (createdLabels.has(label)) {
+      continue;
+    }
     appendCheckbox({
       container,
-      label: item.label || item,
+      label,
       warning: true,
     });
+    createdLabels.add(label);
   }
 }
 
