@@ -611,7 +611,7 @@ async function onAppointmentOrganizer(event) {
   // The id is defined if this is an existing appointment.
   // We need this check for classic Outlook because classic Outlook has
   // a current user in requiredAttendees even if this is a new appointment.
-  if (id && (requiredAttendees.length > 0 || optionalAttendees.length > 0)) {    
+  if (id && (requiredAttendees.length > 0 || optionalAttendees.length > 0)) {
     const originalAttendees = {
       requiredAttendees,
       optionalAttendees,
