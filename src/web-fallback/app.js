@@ -26,3 +26,6 @@ async function onOpenSettingDialog(event) {
   event.completed({ allowEvent: true });
 }
 window.onOpenSettingDialog = onOpenSettingDialog;
+
+Office.actions.associate("onNewMessageComposeCreated", onNewMessageComposeCreated);
+Office.actions.associate("onAppointmentOrganizer", onAppointmentOrganizer);
