@@ -25,6 +25,7 @@ fluent-divider {
   padding-left: 20px;
   padding-right: 20px;
   height: 100%;
+  background: var(--neutral-fill-secondary-rest);
 }
 
 .dialog-footer {
@@ -32,7 +33,7 @@ fluent-divider {
   bottom: 0;
   padding: 10px;
   text-align: center;
-  background: transparent;
+  background: var(--neutral-fill-secondary-rest);
 }
 
 .dialog-body {
