@@ -17,4 +17,8 @@ export function resizeToContent() {
   const widthDelta = contentsRect.width - window.innerWidth;
   const heightDelta = contentsRect.height + marginTop + marginBottom - window.innerHeight;
   window.resizeBy(Math.min(0, widthDelta), Math.min(0, heightDelta));
+  document.documentElement.style.width = "100%";
+  document.documentElement.style.height = "100%";
+  document.body.style.width = "100%";
+  document.body.style.height = "100%";
 }
