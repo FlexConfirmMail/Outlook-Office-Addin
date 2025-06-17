@@ -610,8 +610,8 @@ async function onAppointmentOrganizer(event) {
   ]);
 
   if (Office.context.platform == Office.PlatformType.PC) {
-    // On classic Outlook, requiredAttendees has a current user even if 
-    // this is a new appointment, in that case, subsequent processing 
+    // On classic Outlook, requiredAttendees has a current user even if
+    // this is a new appointment, in that case, subsequent processing
     // erroneously determines that there are existing attendees.
     // This function has nothing to do if this is a new appointment
     // because there is no existing attendees. So return if this is a
