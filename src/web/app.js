@@ -604,15 +604,27 @@ async function onNewMessageComposeCreated(event) {
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 async function onAppointmentOrganizer(event) {
-  const [id, requiredAttendees, optionalAttendees] = await Promise.all([
-    getItemIdAsync(),
+  const [requiredAttendees, optionalAttendees] = await Promise.all([
     getRequiredAttendeeAsync(),
     getOptionalAttendeeAsync(),
   ]);
-  // The id is defined if this is an existing appointment.
-  // We need this check for classic Outlook because classic Outlook has
-  // a current user in requiredAttendees even if this is a new appointment.
-  if (id && (requiredAttendees.length > 0 || optionalAttendees.length > 0)) {
+
+  if (Office.context.platform == Office.PlatformType.PC) {
+    // On classic Outlook, requiredAttendees has a current user even if
+    // this is a new appointment, in that case, subsequent processing
+    // erroneously determines that there are existing attendees.
+    // This function has nothing to do if this is a new appointment
+    // because there is no existing attendees. So return if this is a
+    // new appointment.
+    const id = await getItemIdAsync();
+    if (!id) {
+      // On classic Outlook, if the id is not defined, this is a new appointment.
+      event.completed();
+      return;
+    }
+  }
+
+  if (requiredAttendees.length > 0 || optionalAttendees.length > 0) {
     const originalAttendees = {
       requiredAttendees,
       optionalAttendees,
