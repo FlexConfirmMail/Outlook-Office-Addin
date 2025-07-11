@@ -19,6 +19,9 @@
   <IconUrl DefaultValue="https://127.0.0.1:10041/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://127.0.0.1:10041/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://github.com/FlexConfirmMail/Outlook-Office-Addin"/>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
   <Requirements>
     <Sets DefaultMinVersion="1.1">
       <Set Name="Mailbox" />
