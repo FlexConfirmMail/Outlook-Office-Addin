@@ -9,7 +9,7 @@
   "config": {
     "app_to_debug": "outlook",
     "app_type_to_debug": "desktop",
-    "dev_server_port": 3000
+    "dev_server_port": 10041
   },
   "scripts": {
     "build": "webpack --mode production",
@@ -19,12 +19,12 @@
     "lint": "office-addin-lint check --files src/**/*.{js,mjs}",
     "lint:fix": "office-addin-lint fix --files src/**/*.{js,mjs}",
     "prettier": "office-addin-lint prettier --files src/**/*.{js,mjs}",
-    "start": "office-addin-debugging start manifest.xml",
-    "start:desktop": "office-addin-debugging start manifest.xml desktop",
-    "start:web": "office-addin-debugging start manifest.xml web",
-    "stop": "office-addin-debugging stop manifest.xml",
+    "start": "office-addin-debugging start FlexConfirmMail.manifest.xml --document dist",
+    "start:desktop": "office-addin-debugging start FlexConfirmMail.manifest.xml desktop",
+    "start:web": "office-addin-debugging start FlexConfirmMail.manifest.xml web",
+    "stop": "office-addin-debugging stop FlexConfirmMail.manifest.xml",
     "test": "run-tiny-esm-test-runner tests/unit/test-*.mjs",
-    "validate": "office-addin-manifest validate manifest.xml",
+    "validate": "office-addin-manifest validate FlexConfirmMail.manifest.xml",
     "watch": "webpack --mode development --watch",
     "watch:run-test-server": "webpack --mode production --watch --output-path tests/run-test-server/web --watch-options-poll=10000"
   },
