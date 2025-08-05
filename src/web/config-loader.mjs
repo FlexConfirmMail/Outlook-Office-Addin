@@ -304,7 +304,10 @@ export class ConfigLoader {
     if (right.common.SafeBccEnabled != null && !fixedParametersSet.has("SafeBccEnabled")) {
       left.common.SafeBccEnabled = right.common.SafeBccEnabled;
     }
-    if (right.common.RequireCheckSubject != null && !fixedParametersSet.has("RequireCheckSubject")) {
+    if (
+      right.common.RequireCheckSubject != null &&
+      !fixedParametersSet.has("RequireCheckSubject")
+    ) {
       left.common.RequireCheckSubject = right.common.RequireCheckSubject;
     }
     if (right.common.RequireCheckBody != null && !fixedParametersSet.has("RequireCheckBody")) {

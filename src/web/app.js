@@ -87,7 +87,7 @@ function getBodyAsync() {
         { bodyMode: Office.MailboxEnums.BodyMode.Full },
         (asyncResult) => {
           const body = asyncResult.value;
-          console.log(`body: ${body}`)
+          console.log(`body: ${body}`);
           resolve(body);
         }
       );

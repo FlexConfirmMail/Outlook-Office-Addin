@@ -175,7 +175,8 @@ function updateDialogSetting(policy, user) {
   document.getElementById("safeBccEnabled").checked = common.SafeBccEnabled;
   document.getElementById("safeBccEnabled").disabled = fixedParametersSet.has("SafeBccEnabled");
   document.getElementById("requireCheckSubject").checked = common.RequireCheckSubject;
-  document.getElementById("requireCheckSubject").disabled = fixedParametersSet.has("RequireCheckSubject");
+  document.getElementById("requireCheckSubject").disabled =
+    fixedParametersSet.has("RequireCheckSubject");
   document.getElementById("requireCheckBody").checked = common.RequireCheckBody;
   document.getElementById("requireCheckBody").disabled = fixedParametersSet.has("RequireCheckBody");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
