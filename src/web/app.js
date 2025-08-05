@@ -65,6 +65,39 @@ function getCcAsync() {
   });
 }
 
+function getSubjectAsync() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.subject.getAsync((asyncResult) => {
+        const subject = asyncResult.value;
+        resolve(subject);
+      });
+    } catch (error) {
+      console.log(`Error while getting subject: ${error}`);
+      reject(error);
+    }
+  });
+}
+
+function getBodyAsync() {
+  return new Promise((resolve, reject) => {
+    try {
+      Office.context.mailbox.item.body.getAsync(
+        Office.CoercionType.Html,
+        { bodyMode: Office.MailboxEnums.BodyMode.Full },
+        (asyncResult) => {
+          const body = asyncResult.value;
+          console.log(`body: ${body}`)
+          resolve(body);
+        }
+      );
+    } catch (error) {
+      console.log(`Error while getting body: ${error}`);
+      reject(error);
+    }
+  });
+}
+
 function getItemIdAsync() {
   return new Promise((resolve, reject) => {
     try {
@@ -235,10 +268,12 @@ function removeSessionDataAsync(key) {
 }
 
 async function getAllMailData() {
-  const [to, cc, bcc, attachments, config] = await Promise.all([
+  const [to, cc, bcc, subject, body, attachments, config] = await Promise.all([
     getToAsync(),
     getCcAsync(),
     getBccAsync(),
+    getSubjectAsync(),
+    getBodyAsync(),
     getAttachmentsAsync(),
     ConfigLoader.loadEffectiveConfig(),
   ]);
@@ -252,6 +287,8 @@ async function getAllMailData() {
       to,
       cc,
       bcc,
+      subject,
+      body,
       attachments,
     },
     config,

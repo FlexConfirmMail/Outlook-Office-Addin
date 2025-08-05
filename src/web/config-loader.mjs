@@ -10,6 +10,8 @@ export class ConfigLoader {
     CountEnabled: "boolean",
     CountAllowSkip: "boolean",
     SafeBccEnabled: "boolean",
+    RequireCheckSubject: "boolean",
+    RequireCheckBody: "boolean",
     MainSkipIfNoExt: "boolean",
     AppointmentConfirmationEnabled: "boolean",
     SafeNewDomainsEnabled: "boolean",
@@ -242,6 +244,8 @@ export class ConfigLoader {
         CountEnabled: true,
         CountAllowSkip: true,
         SafeBccEnabled: true,
+        RequireCheckSubject: false,
+        RequireCheckBody: false,
         MainSkipIfNoExt: false,
         AppointmentConfirmationEnabled: false,
         SafeNewDomainsEnabled: true,
@@ -299,6 +303,12 @@ export class ConfigLoader {
     }
     if (right.common.SafeBccEnabled != null && !fixedParametersSet.has("SafeBccEnabled")) {
       left.common.SafeBccEnabled = right.common.SafeBccEnabled;
+    }
+    if (right.common.RequireCheckSubject != null && !fixedParametersSet.has("RequireCheckSubject")) {
+      left.common.RequireCheckSubject = right.common.RequireCheckSubject;
+    }
+    if (right.common.RequireCheckBody != null && !fixedParametersSet.has("RequireCheckBody")) {
+      left.common.RequireCheckBody = right.common.RequireCheckBody;
     }
     if (right.common.MainSkipIfNoExt != null && !fixedParametersSet.has("MainSkipIfNoExt")) {
       left.common.MainSkipIfNoExt = right.common.MainSkipIfNoExt;
