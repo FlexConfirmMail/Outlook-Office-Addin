@@ -297,14 +297,15 @@ async function getAllMailData() {
 }
 
 async function getAllAppointmentData() {
-  const [requiredAttendees, optionalAttendees, subject, body, attachments, config] = await Promise.all([
-    getRequiredAttendeeAsync(),
-    getOptionalAttendeeAsync(),
-    getSubjectAsync(),
-    getBodyAsync(),
-    getAttachmentsAsync(),
-    ConfigLoader.loadEffectiveConfig(),
-  ]);
+  const [requiredAttendees, optionalAttendees, subject, body, attachments, config] =
+    await Promise.all([
+      getRequiredAttendeeAsync(),
+      getOptionalAttendeeAsync(),
+      getSubjectAsync(),
+      getBodyAsync(),
+      getAttachmentsAsync(),
+      ConfigLoader.loadEffectiveConfig(),
+    ]);
   let originalAttendees = {};
   const originalAttendeesJson = await getSessionDataAsync(ORIGINAL_ATTENDEES_KEY);
   if (originalAttendeesJson) {
