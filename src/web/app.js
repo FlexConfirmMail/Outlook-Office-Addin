@@ -309,7 +309,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         return openDialog({ url, data, asyncContext, ...params });
 
       case 12011:
-        // Maybe we never reach this case because we specify displayInIframe = true at the 
+        // Maybe we never reach this case because we specify displayInIframe = true at the
         // first time and then displayDialogAsync does not open a new popup dialog.
         console.log("failed due to the browser's popup blocker.");
         if (promptBeforeOpen) {

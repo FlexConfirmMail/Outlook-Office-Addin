@@ -19,7 +19,7 @@ const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
 Office.onReady(() => {
   if (window !== window.parent) {
     // Inframe mode
-    document.documentElement.classList.add('in-frame');
+    document.documentElement.classList.add("in-frame");
   }
   const language = Office.context.displayLanguage;
   l10n = L10n.get(language);

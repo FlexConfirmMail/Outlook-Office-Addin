@@ -16,7 +16,7 @@ let effectiveConfig;
 Office.onReady(() => {
   if (window !== window.parent) {
     // Inframe mode
-    document.documentElement.classList.add('in-frame');
+    document.documentElement.classList.add("in-frame");
   }
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
