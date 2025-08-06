@@ -297,9 +297,11 @@ async function getAllMailData() {
 }
 
 async function getAllAppointmentData() {
-  const [requiredAttendees, optionalAttendees, attachments, config] = await Promise.all([
+  const [requiredAttendees, optionalAttendees, subject, body, attachments, config] = await Promise.all([
     getRequiredAttendeeAsync(),
     getOptionalAttendeeAsync(),
+    getSubjectAsync(),
+    getBodyAsync(),
     getAttachmentsAsync(),
     ConfigLoader.loadEffectiveConfig(),
   ]);
@@ -312,6 +314,8 @@ async function getAllAppointmentData() {
     target: {
       requiredAttendees,
       optionalAttendees,
+      subject,
+      body,
       attachments,
     },
     config,
@@ -333,7 +337,10 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
       resolve
     );
   });
-
+  console.log(Office.context.urls);
+  console.log(asyncContext);
+  console.log("window location");
+  console.log(window.location.href);
   asyncContext = asyncResult.asyncContext;
   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
     console.log(`Failed to open dialog: ${asyncResult.error.code}`);
