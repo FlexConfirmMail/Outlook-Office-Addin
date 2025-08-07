@@ -17,6 +17,10 @@ let attachmentsConfirmation;
 const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
 
 Office.onReady(() => {
+  if (window !== window.parent) {
+    // Inframe mode
+    document.documentElement.classList.add("in-frame");
+  }
   const language = Office.context.displayLanguage;
   l10n = L10n.get(language);
   l10n.ready.then(() => l10n.translateAll());

@@ -289,6 +289,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
       url,
       {
         asyncContext,
+        displayInIframe: !promptBeforeOpen,
         promptBeforeOpen: promptBeforeOpen || false,
         ...params,
       },
@@ -308,6 +309,8 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         return openDialog({ url, data, asyncContext, ...params });
 
       case 12011:
+        // Maybe we never reach this case because we specify displayInIframe = true at the
+        // first time and then displayDialogAsync does not open a new popup dialog.
         console.log("failed due to the browser's popup blocker.");
         if (promptBeforeOpen) {
           break;
@@ -435,7 +438,7 @@ async function tryConfirm(data, asyncContext) {
     data,
     asyncContext,
     height: Math.min(60, charsToPercentage(50, screen.availHeight)),
-    width: Math.min(80, charsToPercentage(45, screen.availWidth)),
+    width: Math.min(80, charsToPercentage(60, screen.availWidth)),
   });
   console.debug("status: ", status);
 
@@ -648,7 +651,7 @@ async function onOpenSettingDialog(event) {
     data,
     asyncContext,
     height: Math.min(80, charsToPercentage(70, screen.availHeight)),
-    width: Math.min(80, charsToPercentage(70, screen.availWidth)),
+    width: Math.min(80, charsToPercentage(80, screen.availWidth)),
   });
   console.debug(`onOpensettingDialog: ${status}`);
   updatedAsyncContext.completed({ allowEvent: true });
