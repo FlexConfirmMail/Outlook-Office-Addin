@@ -20,6 +20,13 @@ export class ConfigLoader {
     FixedParameters: "commaSeparatedValues",
   };
 
+  static unsafeConfigSectionDefs = [
+    "WARNING",
+    "FORBIDDEN"
+  ];
+
+  static defaultUnsafeConfigSection = "WARNING";
+
   static DICTONARY_LINE_SPLITTER = /^([^=]+)=(.*)$/;
 
   static parseValue(paramDefs, key, valueStr) {
@@ -85,6 +92,30 @@ export class ConfigLoader {
       return false;
     }
     return null;
+  }
+
+  // Example: 
+  //   { "WARNING": ["a@example.com"],
+  //     "FORBIDDEN": ["b@example.com"] }
+  static parseUnsafeConfig(str) {
+    const configArray = this.toArray(str);
+    let section = this.defaultUnsafeConfigSection;
+    const result = {};
+    for(const item of configArray) {
+      if (/^\[.*\]$/.test(item)) {
+        const match = item.match(/^\[(.*)\]$/);
+        const newSection = match[1].toUpperCase();
+        if (this.unsafeConfigSectionDefs.includes(newSection)) {
+          section = newSection
+        }
+        continue;
+      }
+      if (!result[section]) {
+        result[section] = [];
+      }
+      result[section].push(item);
+    }
+    return result;
   }
 
   static toArray(str) {

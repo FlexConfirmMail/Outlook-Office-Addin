@@ -158,6 +158,63 @@ export function test_toArray({ str, expected }) {
   );
 }
 
+test_parseUnsafeConfig.parameters = {
+  "default single line": {
+    str: "a@example.com",
+    expected: { "WARNING" : ["a@example.com"] },
+  },
+  "WARNING single line": {
+    str: "[WARNING]\na@example.com",
+    expected: { "WARNING" : ["a@example.com"] },
+  },
+  "warning single line": {
+    str: "[warning]\na@example.com",
+    expected: { "WARNING" : ["a@example.com"] },
+  },
+  "FORBIDDEN single line": {
+    str: "[FORBIDDEN]\na@example.com",
+    expected: { "FORBIDDEN" : ["a@example.com"] },
+  },
+  "multi lines": {
+    str: "[WARNING]\na@example.com\nb@example.com\n[FORBIDDEN]\nc@example.com\nd@example.com",
+    expected: { 
+      "WARNING" : ["a@example.com", "b@example.com"],
+      "FORBIDDEN": ["c@example.com", "d@example.com"]
+    },
+  },
+  "separated section": {
+    str: "[WARNING]\na@example.com\nb@example.com\n[FORBIDDEN]\nc@example.com\nd@example.com\n[WARNING]\ne@example.com",
+    expected: { 
+      "WARNING" : ["a@example.com", "b@example.com", "e@example.com"],
+      "FORBIDDEN": ["c@example.com", "d@example.com"]
+    },
+  },
+  "invalid section": {
+    str: "[INVALID]\na@example.com\nb@example.com",
+    expected: { 
+      "WARNING" : ["a@example.com", "b@example.com"]
+    },
+  },
+  "null to empty": {
+    str: null,
+    expected: {},
+  },
+  "undefined to empty": {
+    str: undefined,
+    expected: {},
+  },
+  "empty string to empty": {
+    str: "",
+    expected: {},
+  },
+}
+export function test_parseUnsafeConfig({ str, expected }) {
+  is(
+    expected,
+    ConfigLoader.parseUnsafeConfig(str)
+  );
+}
+
 test_toDictionaryCommon.parameters = {
   "CountEnabled=True": {
     str: "CountEnabled=True",
