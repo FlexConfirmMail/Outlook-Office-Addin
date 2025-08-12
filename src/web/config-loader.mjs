@@ -195,7 +195,7 @@ export class ConfigLoader {
         this.loadFile("configs/Common.txt"),
       ]);
     const trustedDomains = this.toArray(trustedDomainsString);
-    const unsafeDomains = this.toArray(unsafeDomainsString);
+    const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
@@ -223,7 +223,7 @@ export class ConfigLoader {
     const unsafeFilesString = Office.context.roamingSettings.get("UnsafeFiles")?.trim() ?? "";
     const commonString = Office.context.roamingSettings.get("Common")?.trim() ?? "";
     const trustedDomains = this.toArray(trustedDomainsString);
-    const unsafeDomains = this.toArray(unsafeDomainsString);
+    const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
     const unsafeFiles = this.toArray(unsafeFilesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
@@ -254,7 +254,7 @@ export class ConfigLoader {
         FixedParameters: [],
       },
       trustedDomains: [],
-      unsafeDomains: [],
+      unsafeDomains: {},
       unsafeFiles: [],
       commonString: "",
       trustedDomainsString: "",
@@ -267,13 +267,28 @@ export class ConfigLoader {
     return {
       common: {},
       trustedDomains: [],
-      unsafeDomains: [],
+      unsafeDomains: {},
       unsafeFiles: [],
       commonString: "",
       trustedDomainsString: "",
       unsafeDomainsString: "",
       unsafeFilesString: "",
     };
+  }
+
+  static mergeUnsafeConfig(params, left, right) {
+    const result = {};
+    for(const param of params)
+    {
+      const leftValue = left[param] || [];
+      const rightValue = right[param] || [];
+      const resultValue = leftValue.concat(rightValue);
+      if (resultValue.length == 0) {
+        continue;
+      }
+      result[param] = leftValue.concat(rightValue);
+    }
+    return result;
   }
 
   static merge(left, right) {
@@ -326,8 +341,43 @@ export class ConfigLoader {
       left.trustedDomainsString = left.trustedDomainsString.trim();
     }
     if (!fixedParametersSet.has("UnsafeDomains")) {
-      left.unsafeDomains = left.unsafeDomains.concat(right.unsafeDomains);
-      left.unsafeDomainsString += "\n" + right.unsafeDomainsString;
+      left.unsafeDomains = this.mergeUnsafeConfig(this.unsafeConfigSectionDefs, left.unsafeDomains, right.unsafeDomains);
+      if (left.unsafeDomainsString && right.unsafeDomainsString) {
+        // We must add [WARNING] just before right string.
+        // We can ommit [WARNING] section declaration, so when right ommits [WARNING] section declaration,
+        // the right [WARNING] section may be in the wrong section after merged.
+        // 
+        // If [WARNING] is not added:
+        //   left: 
+        //     [FORBIDDEN]
+        //     a@example.com
+        //   right:
+        //     b@example.com
+        //   merged:
+        //     [FORBIDDEN]
+        //     a@example.com
+        //     b@example.com
+        // 
+        // In this case, b@example.com is expected in [WARNING] but in [FORBIDDEN].
+        //
+        // By adding [WARNING]:
+        //   left: 
+        //     [FORBIDDEN]
+        //     a@example.com
+        //   right:
+        //     b@example.com
+        //   merged:
+        //     [FORBIDDEN]
+        //     a@example.com
+        //     [WARNING]
+        //     b@example.com
+        // 
+        // In this case, b@example.com is in [WARNING] as expected.
+        left.unsafeDomainsString += `\n[${this.defaultUnsafeConfigSection}]\n` + right.unsafeDomainsString;
+      }
+      else {
+        left.unsafeDomainsString += "\n" + right.unsafeDomainsString;
+      }
       left.unsafeDomainsString = left.unsafeDomainsString.trim();
     }
     if (!fixedParametersSet.has("UnsafeFiles")) {
