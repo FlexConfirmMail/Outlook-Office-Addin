@@ -15,6 +15,9 @@
   "confirmation_requiredAttendee": "必須出席者",
   "confirmation_optionalAttendee": "任意出席者",
 
+  "forbidden_messageBeforeForRecipients": "送信が禁止された宛先が含まれています。",
+  "forbidden_messageAfterForRecipients": "宛先を変更してください。",
+
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "変更前の予定の出席者に含まれていなかったドメインの以下の出席者が追加されています。",

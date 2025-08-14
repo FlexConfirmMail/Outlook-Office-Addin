@@ -20,10 +20,7 @@ export class ConfigLoader {
     FixedParameters: "commaSeparatedValues",
   };
 
-  static unsafeConfigSectionDefs = [
-    "WARNING",
-    "FORBIDDEN"
-  ];
+  static unsafeConfigSectionDefs = ["WARNING", "FORBIDDEN"];
 
   static defaultUnsafeConfigSection = "WARNING";
 
@@ -94,19 +91,19 @@ export class ConfigLoader {
     return null;
   }
 
-  // Example: 
+  // Example:
   //   { "WARNING": ["a@example.com"],
   //     "FORBIDDEN": ["b@example.com"] }
   static parseUnsafeConfig(str) {
     const configArray = this.toArray(str);
     let section = this.defaultUnsafeConfigSection;
     const result = {};
-    for(const item of configArray) {
+    for (const item of configArray) {
       if (/^\[.*\]$/.test(item)) {
         const match = item.match(/^\[(.*)\]$/);
         const newSection = match[1].toUpperCase();
         if (this.unsafeConfigSectionDefs.includes(newSection)) {
-          section = newSection
+          section = newSection;
         }
         continue;
       }
@@ -278,8 +275,7 @@ export class ConfigLoader {
 
   static mergeUnsafeConfig(params, left, right) {
     const result = {};
-    for(const param of params)
-    {
+    for (const param of params) {
       const leftValue = left[param] || [];
       const rightValue = right[param] || [];
       const resultValue = leftValue.concat(rightValue);
@@ -341,14 +337,18 @@ export class ConfigLoader {
       left.trustedDomainsString = left.trustedDomainsString.trim();
     }
     if (!fixedParametersSet.has("UnsafeDomains")) {
-      left.unsafeDomains = this.mergeUnsafeConfig(this.unsafeConfigSectionDefs, left.unsafeDomains, right.unsafeDomains);
+      left.unsafeDomains = this.mergeUnsafeConfig(
+        this.unsafeConfigSectionDefs,
+        left.unsafeDomains,
+        right.unsafeDomains
+      );
       if (left.unsafeDomainsString && right.unsafeDomainsString) {
         // We must add [WARNING] just before right string.
         // We can ommit [WARNING] section declaration, so when right ommits [WARNING] section declaration,
         // the right [WARNING] section may be in the wrong section after merged.
-        // 
+        //
         // If [WARNING] is not added:
-        //   left: 
+        //   left:
         //     [FORBIDDEN]
         //     a@example.com
         //   right:
@@ -357,11 +357,11 @@ export class ConfigLoader {
         //     [FORBIDDEN]
         //     a@example.com
         //     b@example.com
-        // 
+        //
         // In this case, b@example.com is expected in [WARNING] but in [FORBIDDEN].
         //
         // By adding [WARNING]:
-        //   left: 
+        //   left:
         //     [FORBIDDEN]
         //     a@example.com
         //   right:
@@ -371,11 +371,11 @@ export class ConfigLoader {
         //     a@example.com
         //     [WARNING]
         //     b@example.com
-        // 
+        //
         // In this case, b@example.com is in [WARNING] as expected.
-        left.unsafeDomainsString += `\n[${this.defaultUnsafeConfigSection}]\n` + right.unsafeDomainsString;
-      }
-      else {
+        left.unsafeDomainsString +=
+          `\n[${this.defaultUnsafeConfigSection}]\n` + right.unsafeDomainsString;
+      } else {
         left.unsafeDomainsString += "\n" + right.unsafeDomainsString;
       }
       left.unsafeDomainsString = left.unsafeDomainsString.trim();
