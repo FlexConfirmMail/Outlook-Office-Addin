@@ -60,7 +60,7 @@ export class RecipientClassifier {
     const untrusted = new Set();
     const unsafeWithDomain = new Set();
     const unsafe = new Set();
-    const forbiddenWithDomain = new Set();
+    const prohibitedWithDomain = new Set();
     const prohibited = new Set();
 
     if (recipients) {
@@ -85,7 +85,7 @@ export class RecipientClassifier {
         }
 
         if (this.$forbiddenPatternsMatchers.domain.test(classifiedRecipient.domain)) {
-          forbiddenWithDomain.add(classifiedRecipient);
+          prohibitedWithDomain.add(classifiedRecipient);
         } else if (this.$forbiddenPatternsMatchers.full.test(classifiedRecipient.address)) {
           prohibited.add(classifiedRecipient);
         }
@@ -96,7 +96,7 @@ export class RecipientClassifier {
       untrusted: Array.from(untrusted),
       unsafeWithDomain: Array.from(unsafeWithDomain),
       unsafe: Array.from(unsafe),
-      forbiddenWithDomain: Array.from(forbiddenWithDomain),
+      prohibitedWithDomain: Array.from(prohibitedWithDomain),
       prohibited: Array.from(prohibited),
     };
   }
@@ -182,16 +182,16 @@ export class RecipientClassifier {
           })),
         ]),
       ],
-      forbiddenWithDomain: [
+      prohibitedWithDomain: [
         ...new Set([
-          ...classifiedTo.forbiddenWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.forbiddenWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.forbiddenWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.forbiddenWithDomain.map((recipient) => ({
+          ...classifiedTo.prohibitedWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.prohibitedWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.prohibitedWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.prohibitedWithDomain.map((recipient) => ({
             ...recipient,
             type: locale.get("confirmation_requiredAttendee"),
           })),
-          ...classifiedOptionalAttendee.forbiddenWithDomain.map((recipient) => ({
+          ...classifiedOptionalAttendee.prohibitedWithDomain.map((recipient) => ({
             ...recipient,
             type: locale.get("confirmation_optionalAttendee"),
           })),

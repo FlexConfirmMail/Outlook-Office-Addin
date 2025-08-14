@@ -425,9 +425,9 @@ async function tryConfirm(data, asyncContext) {
   }
   console.debug("classified: ", data.classified);
 
-  if (data.classified.prohibited.length > 0 || data.classified.forbiddenWithDomain.length > 0) {
+  if (data.classified.prohibited.length > 0 || data.classified.prohibitedWithDomain.length > 0) {
     const { status, asyncContext: updatedAsyncContext } = await openDialog({
-      url: window.location.origin + "/prohibit-to-send.html",
+      url: window.location.origin + "/prohibit.html",
       data,
       asyncContext,
       height: Math.min(40, charsToPercentage(30, screen.availHeight)),
