@@ -15,8 +15,8 @@
   "confirmation_requiredAttendee": "Required Attendee",
   "confirmation_optionalAttendee": "Optional Attendee",
 
-  "forbidden_messageBeforeForRecipients": "There are recipients prohibited to send.",
-  "forbidden_messageAfterForRecipients": "Please change the recipients.",
+  "prohibition_messageBeforeForRecipients": "There are recipients prohibited to send.",
+  "prohibition_messageAfterForRecipients": "Please change the recipients.",
 
   "newlyAddedDomainReconfirmation_caption": "警告！",
   "newlyAddedDomainReconfirmation_messageBefore": "收件人添加了以下原邮件收件人中未包含的域名地址。",
