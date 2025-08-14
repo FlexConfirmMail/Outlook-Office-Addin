@@ -15,7 +15,7 @@
   "confirmation_requiredAttendee": "Required Attendee",
   "confirmation_optionalAttendee": "Optional Attendee",
 
-  "forbidden_messageBeforeForRecipients": "There are recipients forbidden to send.",
+  "forbidden_messageBeforeForRecipients": "There are recipients prohibited to send.",
   "forbidden_messageAfterForRecipients": "Please change the recipients.",
 
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",

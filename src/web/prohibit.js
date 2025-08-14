@@ -44,13 +44,13 @@ async function onMessageFromParent(arg) {
   await l10n.ready;
 
   const targets = new Set();
-  for (const recipient of [...data.classified.forbidden, ...data.classified.forbiddenWithDomain]) {
+  for (const recipient of [...data.classified.prohibited, ...data.classified.forbiddenWithDomain]) {
       targets.add(`${recipient.type}: ${recipient.address}`);
   }
   const messageBefore = l10n.get("forbidden_messageBeforeForRecipients");
   const messageAfter = l10n.get("forbidden_messageAfterForRecipients");;
   
-  const targetElement = document.getElementById("forbidden-list");
+  const targetElement = document.getElementById("prohibited-list");
   for (const target of targets) {
     const itemElement = document.createElement("li");
     const strongElement = document.createElement("strong");
@@ -59,8 +59,8 @@ async function onMessageFromParent(arg) {
     targetElement.appendChild(itemElement);
   }
 
-  document.getElementById("forbidden-message-before").textContent = messageBefore;
-  document.getElementById("forbidden-message-after").textContent = messageAfter;
+  document.getElementById("prohibited-message-before").textContent = messageBefore;
+  document.getElementById("prohibited-message-after").textContent = messageAfter;
 
   document.getElementById("dialog-body").hidden = false;
   Dialog.resizeToContent();

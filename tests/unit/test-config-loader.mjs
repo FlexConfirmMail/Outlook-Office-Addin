@@ -171,22 +171,22 @@ test_parseUnsafeConfig.parameters = {
     str: "[warning]\na@example.com",
     expected: { "WARNING" : ["a@example.com"] },
   },
-  "FORBIDDEN single line": {
-    str: "[FORBIDDEN]\na@example.com",
-    expected: { "FORBIDDEN" : ["a@example.com"] },
+  "PROHIBITED single line": {
+    str: "[PROHIBITED]\na@example.com",
+    expected: { "PROHIBITED" : ["a@example.com"] },
   },
   "multi lines": {
-    str: "[WARNING]\na@example.com\nb@example.com\n[FORBIDDEN]\nc@example.com\nd@example.com",
+    str: "[WARNING]\na@example.com\nb@example.com\n[PROHIBITED]\nc@example.com\nd@example.com",
     expected: { 
       "WARNING" : ["a@example.com", "b@example.com"],
-      "FORBIDDEN": ["c@example.com", "d@example.com"]
+      "PROHIBITED": ["c@example.com", "d@example.com"]
     },
   },
   "separated section": {
-    str: "[WARNING]\na@example.com\nb@example.com\n[FORBIDDEN]\nc@example.com\nd@example.com\n[WARNING]\ne@example.com",
+    str: "[WARNING]\na@example.com\nb@example.com\n[PROHIBITED]\nc@example.com\nd@example.com\n[WARNING]\ne@example.com",
     expected: { 
       "WARNING" : ["a@example.com", "b@example.com", "e@example.com"],
-      "FORBIDDEN": ["c@example.com", "d@example.com"]
+      "PROHIBITED": ["c@example.com", "d@example.com"]
     },
   },
   "invalid section": {

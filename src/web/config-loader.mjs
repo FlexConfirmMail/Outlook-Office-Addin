@@ -20,7 +20,7 @@ export class ConfigLoader {
     FixedParameters: "commaSeparatedValues",
   };
 
-  static unsafeConfigSectionDefs = ["WARNING", "FORBIDDEN"];
+  static unsafeConfigSectionDefs = ["WARNING", "PROHIBITED"];
 
   static defaultUnsafeConfigSection = "WARNING";
 
@@ -93,7 +93,7 @@ export class ConfigLoader {
 
   // Example:
   //   { "WARNING": ["a@example.com"],
-  //     "FORBIDDEN": ["b@example.com"] }
+  //     "PROHIBITED": ["b@example.com"] }
   static parseUnsafeConfig(str) {
     const configArray = this.toArray(str);
     let section = this.defaultUnsafeConfigSection;
@@ -349,25 +349,25 @@ export class ConfigLoader {
         //
         // If [WARNING] is not added:
         //   left:
-        //     [FORBIDDEN]
+        //     [PROHIBITED]
         //     a@example.com
         //   right:
         //     b@example.com
         //   merged:
-        //     [FORBIDDEN]
+        //     [PROHIBITED]
         //     a@example.com
         //     b@example.com
         //
-        // In this case, b@example.com is expected in [WARNING] but in [FORBIDDEN].
+        // In this case, b@example.com is expected in [WARNING] but in [PROHIBITED].
         //
         // By adding [WARNING]:
         //   left:
-        //     [FORBIDDEN]
+        //     [PROHIBITED]
         //     a@example.com
         //   right:
         //     b@example.com
         //   merged:
-        //     [FORBIDDEN]
+        //     [PROHIBITED]
         //     a@example.com
         //     [WARNING]
         //     b@example.com

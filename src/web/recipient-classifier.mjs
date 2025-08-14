@@ -12,7 +12,7 @@ export class RecipientClassifier {
   constructor({ trustedDomains, unsafeDomains } = {}) {
     this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
     this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains["WARNING"] || []);
-    this.$forbiddenPatternsMatchers = this.generateMatchers(unsafeDomains["FORBIDDEN"] || []);
+    this.$forbiddenPatternsMatchers = this.generateMatchers(unsafeDomains["PROHIBITED"] || []);
     this.classify = this.classify.bind(this);
   }
 
@@ -61,7 +61,7 @@ export class RecipientClassifier {
     const unsafeWithDomain = new Set();
     const unsafe = new Set();
     const forbiddenWithDomain = new Set();
-    const forbidden = new Set();
+    const prohibited = new Set();
 
     if (recipients) {
       for (const recipient of recipients) {
@@ -87,7 +87,7 @@ export class RecipientClassifier {
         if (this.$forbiddenPatternsMatchers.domain.test(classifiedRecipient.domain)) {
           forbiddenWithDomain.add(classifiedRecipient);
         } else if (this.$forbiddenPatternsMatchers.full.test(classifiedRecipient.address)) {
-          forbidden.add(classifiedRecipient);
+          prohibited.add(classifiedRecipient);
         }
       }
     }
@@ -97,7 +97,7 @@ export class RecipientClassifier {
       unsafeWithDomain: Array.from(unsafeWithDomain),
       unsafe: Array.from(unsafe),
       forbiddenWithDomain: Array.from(forbiddenWithDomain),
-      forbidden: Array.from(forbidden),
+      prohibited: Array.from(prohibited),
     };
   }
 
@@ -197,16 +197,16 @@ export class RecipientClassifier {
           })),
         ]),
       ],
-      forbidden: [
+      prohibited: [
         ...new Set([
-          ...classifiedTo.forbidden.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.forbidden.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.forbidden.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.forbidden.map((recipient) => ({
+          ...classifiedTo.prohibited.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.prohibited.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.prohibited.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.prohibited.map((recipient) => ({
             ...recipient,
             type: locale.get("confirmation_requiredAttendee"),
           })),
-          ...classifiedOptionalAttendee.forbidden.map((recipient) => ({
+          ...classifiedOptionalAttendee.prohibited.map((recipient) => ({
             ...recipient,
             type: locale.get("confirmation_optionalAttendee"),
           })),
