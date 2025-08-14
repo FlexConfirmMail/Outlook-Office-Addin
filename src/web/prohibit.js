@@ -44,12 +44,15 @@ async function onMessageFromParent(arg) {
   await l10n.ready;
 
   const targets = new Set();
-  for (const recipient of [...data.classified.prohibited, ...data.classified.prohibitedWithDomain]) {
-      targets.add(`${recipient.type}: ${recipient.address}`);
+  for (const recipient of [
+    ...data.classified.prohibited,
+    ...data.classified.prohibitedWithDomain,
+  ]) {
+    targets.add(`${recipient.type}: ${recipient.address}`);
   }
   const messageBefore = l10n.get("prohibition_messageBeforeForRecipients");
-  const messageAfter = l10n.get("prohibition_messageAfterForRecipients");;
-  
+  const messageAfter = l10n.get("prohibition_messageAfterForRecipients");
+
   const targetElement = document.getElementById("prohibited-list");
   for (const target of targets) {
     const itemElement = document.createElement("li");
