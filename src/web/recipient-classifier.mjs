@@ -11,8 +11,8 @@ import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 export class RecipientClassifier {
   constructor({ trustedDomains, unsafeDomains } = {}) {
     this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
-    this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains["WARNING"] || []);
-    this.$forbiddenPatternsMatchers = this.generateMatchers(unsafeDomains["PROHIBITED"] || []);
+    this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains?.["WARNING"] || []);
+    this.$forbiddenPatternsMatchers = this.generateMatchers(unsafeDomains?.["PROHIBITED"] || []);
     this.classify = this.classify.bind(this);
   }
 
