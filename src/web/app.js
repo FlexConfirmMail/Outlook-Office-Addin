@@ -9,6 +9,7 @@ import { L10n } from "./l10n.mjs";
 import { ConfigLoader } from "./config-loader.mjs";
 import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
+import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY = "FCM_OriginalRecipients";
 const ORIGINAL_ATTENDEES_KEY = "FCM_OriginalAttendees";
@@ -397,10 +398,11 @@ function charsToPercentage(chars, maxSize) {
 
 async function tryConfirm(data, asyncContext) {
   const { trustedDomains, unsafeDomains } = data.config;
+  data.classified = {};
   switch (data.itemType) {
     case Office.MailboxEnums.ItemType.Message: {
       const { to, cc, bcc } = data.target;
-      data.classified = RecipientClassifier.classifyAll({
+      data.classified.resipients = RecipientClassifier.classifyAll({
         locale,
         to,
         cc,
@@ -413,7 +415,7 @@ async function tryConfirm(data, asyncContext) {
     case Office.MailboxEnums.ItemType.Appointment:
     default: {
       const { requiredAttendees, optionalAttendees } = data.target;
-      data.classified = RecipientClassifier.classifyAll({
+      data.classified.recipients = RecipientClassifier.classifyAll({
         locale,
         requiredAttendees,
         optionalAttendees,
@@ -441,7 +443,10 @@ async function tryConfirm(data, asyncContext) {
     };
   }
 
-  if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
+  const attachmentsConfirmation = new AttachmentsConfirmation(language);
+  attachmentsConfirmation.init();
+
+  if (data.config.common.MainSkipIfNoExt && data.classified.recipients.untrusted.length == 0) {
     console.log("Skip confirmation: no untrusted recipient");
     return {
       allowed: true,

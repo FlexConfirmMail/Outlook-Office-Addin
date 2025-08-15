@@ -44,7 +44,10 @@ async function onMessageFromParent(arg) {
   await l10n.ready;
 
   const targets = new Set();
-  for (const recipient of [...data.classified.block, ...data.classified.blockWithDomain]) {
+  for (const recipient of [
+    ...data.classified.recipients.prohibited,
+    ...data.classified.recipients.prohibitedWithDomain,
+  ]) {
     targets.add(`${recipient.type}: ${recipient.address}`);
   }
   const messageBefore =

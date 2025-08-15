@@ -193,10 +193,14 @@ async function onMessageFromParent(arg) {
   //     bcc : [...],
   //   },
   //   classified: {
-  //     trusted: [...],
-  //     untrusted: [...],
-  //     unsafeWithDomain: [...],
-  //     unsafe: [...],
+  //     { recipients:
+  //       trusted: [...],
+  //       untrusted: [...],
+  //       unsafeWithDomain: [...],
+  //       unsafe: [...],
+  //       prohibitedWithDomain: [...],
+  //       prohibited: [...],
+  //     }
   //   },
   //   itemType: Office.MailboxEnums.ItemType.Message,
   // }
@@ -209,12 +213,12 @@ async function onMessageFromParent(arg) {
     addedDomainsReconfirmation.loaded,
   ]);
 
-  if (data.classified.trusted.length == 0) {
+  if (data.classified.recipients.trusted.length == 0) {
     document.getElementById("check-all-trusted").disabled = true;
   }
-  const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
+  const groupedByTypeTrusteds = Object.groupBy(data.classified.recipients.trusted, (item) => item.domain);
   appendRecipientCheckboxes(document.getElementById("trusted-domains"), groupedByTypeTrusteds);
-  const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
+  const groupedByTypeUntrusted = Object.groupBy(data.classified.recipients.untrusted, (item) => item.domain);
   appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
 
   safeBccConfirmation.init(data);
@@ -222,12 +226,12 @@ async function onMessageFromParent(arg) {
 
   appendMiscWarningCheckboxes(
     Array.from(
-      new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
+      new Set(data.classified.recipients.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
       (domain) => l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
     )
   );
   appendMiscWarningCheckboxes(
-    data.classified.unsafe.map((recipient) =>
+    data.classified.recipients.unsafe.map((recipient) =>
       l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
     )
   );
