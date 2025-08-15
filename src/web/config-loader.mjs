@@ -194,7 +194,7 @@ export class ConfigLoader {
       ]);
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
-    const unsafeFiles = this.toArray(unsafeFilesString);
+    const unsafeFiles = this.parseUnsafeConfig(unsafeFilesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
       trustedDomains,
@@ -222,7 +222,7 @@ export class ConfigLoader {
     const commonString = Office.context.roamingSettings.get("Common")?.trim() ?? "";
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
-    const unsafeFiles = this.toArray(unsafeFilesString);
+    const unsafeFiles = this.parseUnsafeConfig(unsafeFilesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
       common,
@@ -254,7 +254,7 @@ export class ConfigLoader {
       },
       trustedDomains: [],
       unsafeDomains: {},
-      unsafeFiles: [],
+      unsafeFiles: {},
       commonString: "",
       trustedDomainsString: "",
       unsafeDomainsString: "",
@@ -267,7 +267,7 @@ export class ConfigLoader {
       common: {},
       trustedDomains: [],
       unsafeDomains: {},
-      unsafeFiles: [],
+      unsafeFiles: {},
       commonString: "",
       trustedDomainsString: "",
       unsafeDomainsString: "",
@@ -389,8 +389,17 @@ export class ConfigLoader {
       left.unsafeDomainsString = left.unsafeDomainsString.trim();
     }
     if (!fixedParametersSet.has("UnsafeFiles")) {
-      left.unsafeFiles = left.unsafeFiles.concat(right.unsafeFiles);
-      left.unsafeFilesString += "\n" + right.unsafeFilesString;
+      left.unsafeFiles = this.mergeUnsafeConfig(
+        this.unsafeConfigSectionDefs,
+        left.unsafeFiles,
+        right.unsafeFiles
+      );
+      if (left.unsafeFilesString && right.unsafeFilesString) {
+        left.unsafeFilesString +=
+          `\n[${this.defaultUnsafeConfigSection}]\n` + right.unsafeFilesString;
+      } else {
+        left.unsafeFilesString += "\n" + right.unsafeFilesString;
+      }
       left.unsafeFilesString = left.unsafeFilesString.trim();
     }
     const rightFixedParametersSet = new Set(right.common.FixedParameters ?? []);
