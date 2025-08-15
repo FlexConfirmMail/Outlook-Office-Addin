@@ -37,8 +37,8 @@ export function test_format() {
       ],
       unsafeWithDomain: [],
       unsafe: [],
-      prohibitedWithDomain: [],
-      prohibited: [],
+      blockWithDomain: [],
+      block: [],
     },
     classified
   );
@@ -67,7 +67,7 @@ test_classifyAddresses.parameters = {
     trustedDomains: ['clear-code.com'],
     unsafeDomains: { 
       'WARNING': ['unsafe.example.com'],
-      'PROHIBITED': ['unsafe.example.com'],
+      'BLOCK': ['unsafe.example.com'],
     },
     expected: {
       trusted: [
@@ -101,7 +101,7 @@ test_classifyAddresses.parameters = {
         'unsafe.example.com',
         '*unsafe@example.com',
       ],
-      "PROHIBITED": [
+      "BLOCK": [
         'unsafe.example.com',
         '*unsafe@example.com',
       ],
@@ -118,10 +118,10 @@ test_classifyAddresses.parameters = {
       unsafe: [
         'bbb+unsafe@example.com',
       ],
-      prohibitedWithDomain: [
+      blockWithDomain: [
         'aaa@unsafe.example.com',
       ],
-      prohibited: [
+      block: [
         'bbb+unsafe@example.com',
       ],
     }
@@ -159,7 +159,7 @@ test_classifyAddresses.parameters = {
         'example.com',
         '*c@clear-code.com',
       ],
-      "PROHIBITED": [
+      "BLOCK": [
         'example.com',
         '*c@clear-code.com',
       ],    
@@ -179,10 +179,10 @@ test_classifyAddresses.parameters = {
       unsafe: [
         'ccc@clear-code.com'
       ],
-      prohibitedWithDomain: [
+      blockWithDomain: [
         'zzz@example.com',
       ],
-      prohibited: [
+      block: [
         'ccc@clear-code.com'
       ],
     }
@@ -196,7 +196,7 @@ test_classifyAddresses.parameters = {
     trustedDomains: ['clear-code.com'],
     unsafeDomains: { 
       "WARNING": ['example.com'],
-      "PROHIBITED": ['example.com'],
+      "BLOCK": ['example.com'],
     },
     expected: {
       trusted: [
@@ -209,7 +209,7 @@ test_classifyAddresses.parameters = {
       unsafeWithDomain: [
         'ccc@ExAmPlE.com',
       ],
-      prohibitedWithDomain: [
+      blockWithDomain: [
         'ccc@ExAmPlE.com',
       ],
     }
@@ -276,7 +276,7 @@ test_classifyAddresses.parameters = {
     trustedDomains: ['@clear-code.com'],
     unsafeDomains: { 
       "WARNING": ['@example.com'],
-      "PROHIBITED": ['@example.com'],
+      "BLOCK": ['@example.com'],
      },
     expected: {
       trusted: [
@@ -288,7 +288,7 @@ test_classifyAddresses.parameters = {
       unsafeWithDomain: [
         'bbb@example.com'
       ],
-      prohibitedWithDomain: [
+      blockWithDomain: [
         'bbb@example.com'
       ],
     }
@@ -308,7 +308,7 @@ test_classifyAddresses.parameters = {
         '#example.net',
         '#*a@example.com',
       ],
-      "PROHIBITED": [
+      "BLOCK": [
         '#example.net',
         '#*a@example.com',
       ]
@@ -341,7 +341,7 @@ test_classifyAddresses.parameters = {
         'example.net',
         '-example.net',
       ],
-      "PROHIBITED": [
+      "BLOCK": [
         'example.com',
         '-@example.com',
         'example.net',
@@ -383,7 +383,7 @@ test_classifyAddresses.parameters = {
         '*.example.org',
         '?.example.jp',
       ],
-      "PROHIBITED": [
+      "BLOCK": [
         '*.example.org',
         '?.example.jp',
       ],  
@@ -415,7 +415,7 @@ test_classifyAddresses.parameters = {
         'ccc@XX.example.org',
         'ddd@X.example.jp',
       ],
-      prohibitedWithDomain: [
+      blockWithDomain: [
         'ccc@.example.org',
         'ccc@X.example.org',
         'ccc@XX.example.org',
@@ -438,7 +438,7 @@ test_classifyAddresses.parameters = {
       "WARNING": [
         '*d@example.com',
       ],
-       "PROHIBITED": [
+       "BLOCK": [
         '*d@example.com',
       ],   
     },
@@ -454,7 +454,7 @@ test_classifyAddresses.parameters = {
       unsafe: [
         'ddd@example.com',
       ],
-      prohibited: [
+      block: [
         'ddd@example.com',
       ],
     }
@@ -474,7 +474,7 @@ test_classifyAddresses.parameters = {
         '*.yy@example.com',
         '-*.yy@example.com',
       ],
-      "PROHIBITED": [
+      "BLOCK": [
         '*.yy@example.com',
         '-*.yy@example.com',
       ],    
@@ -501,7 +501,7 @@ test_classifyAddresses.parameters = {
       "WARNING": [
         '*.00@*example.net',
       ],
-      "PROHIBITED": [
+      "BLOCK": [
         '*.00@*example.net',
       ],
     },
@@ -517,7 +517,7 @@ test_classifyAddresses.parameters = {
       unsafe: [
         'ddd.00@bar.example.net',
       ],
-      prohibited: [
+      block: [
         'ddd.00@bar.example.net',
       ],
     }
@@ -527,14 +527,14 @@ export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomai
   const classifier = new RecipientClassifier({ trustedDomains, unsafeDomains });
   const classified = classifier.classify(recipients);
   is(
-    Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [], prohibitedWithDomain: [], prohibited: [] }, expected),
+    Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [], blockWithDomain: [], block: [] }, expected),
     {
       trusted: classified.trusted.map(recipient => recipient.address),
       untrusted: classified.untrusted.map(recipient => recipient.address),
       unsafeWithDomain: classified.unsafeWithDomain.map(recipient => recipient.address),
       unsafe: classified.unsafe.map(recipient => recipient.address),
-      prohibitedWithDomain: classified.prohibitedWithDomain.map(recipient => recipient.address),
-      prohibited: classified.prohibited.map(recipient => recipient.address),
+      blockWithDomain: classified.blockWithDomain.map(recipient => recipient.address),
+      block: classified.block.map(recipient => recipient.address),
     }
   );
 }
@@ -554,7 +554,7 @@ test_classifyAll.parameters = {
       trustedDomains: ['example.com'],
       unsafeDomains: { 
         "WARNING": ['example.net'],
-        "PROHIBITED": ['example.org']
+        "BLOCK": ['example.org']
       },
     },
     expected: {
@@ -581,13 +581,13 @@ test_classifyAll.parameters = {
           type: 'Bcc' },
       ],
       unsafe: [],
-      prohibitedWithDomain: [
+      blockWithDomain: [
         { recipient: 'bbb@example.org',
           address: 'bbb@example.org',
           domain: 'example.org',
           type: 'Cc' }
       ],
-      prohibited: [],
+      block: [],
     }
   },
 }

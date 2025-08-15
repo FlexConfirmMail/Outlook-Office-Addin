@@ -20,7 +20,7 @@ module.exports = async (env, options) => {
       app: ["./src/web/app.js"],
       confirm: ["./src/web/confirm.js"],
       "count-down": ["./src/web/count-down.js"],
-      prohibit: ["./src/web/prohibit.js"],
+      block: ["./src/web/block.js"],
       setting: ["./src/web/setting.js"],
     },
     output: {
@@ -82,9 +82,9 @@ module.exports = async (env, options) => {
         chunks: ["confirm"],
       }),
       new HtmlWebpackPlugin({
-        filename: "prohibit.html",
-        template: "./src/web/prohibit.html",
-        chunks: ["prohibit"],
+        filename: "block.html",
+        template: "./src/web/block.html",
+        chunks: ["block"],
       }),
       new HtmlWebpackPlugin({
         filename: "count-down.html",
