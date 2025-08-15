@@ -44,10 +44,7 @@ async function onMessageFromParent(arg) {
   await l10n.ready;
 
   const targets = new Set();
-  for (const recipient of [
-    ...data.classified.block,
-    ...data.classified.blockWithDomain,
-  ]) {
+  for (const recipient of [...data.classified.block, ...data.classified.blockWithDomain]) {
     targets.add(`${recipient.type}: ${recipient.address}`);
   }
   const messageBefore = l10n.get("block_messageBeforeForRecipients");
