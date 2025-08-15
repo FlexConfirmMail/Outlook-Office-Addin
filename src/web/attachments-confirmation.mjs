@@ -18,17 +18,14 @@ export class AttachmentsConfirmation {
   }
 
   clear() {
+    this.prohibitedAttachments = new Set();
     this.unsafeAttachments = new Set();
     this.attachments = new Set();
   }
 
-  init(data) {
-    this.clear();
-    const attachments = data.target.attachments || [];
-    const unsafeFiles = data.config.unsafeFiles || [];
-
+  generateMatcher(patterns) {
     const uniquePatterns = new Set(
-      (unsafeFiles || []).filter((pattern) => !pattern.startsWith("#")) // reject commented out items
+      (patterns || []).filter((pattern) => !pattern.startsWith("#")) // reject commented out items
     );
     const negativeItems = new Set(
       [...uniquePatterns]
@@ -39,17 +36,31 @@ export class AttachmentsConfirmation {
       uniquePatterns.delete(negativeItem);
       uniquePatterns.delete(`-${negativeItem}`);
     }
-    const unsafeAttachmentMatcher =
-      unsafeFiles.length > 0
+    const matcher =
+      patterns.length > 0
         ? new RegExp(
             Array.from(uniquePatterns, (pattern) => wildcardToRegexp(pattern)).join("|"),
             "i"
           )
         : null;
+    return matcher;
+  }
+
+  init(data) {
+    this.clear();
+    const attachments = data.target.attachments || [];
+    const unsafeFiles = data.config.unsafeFiles || {};
+    const warningFiles = unsafeFiles?.["WARNING"] || [];
+    const prohibitedFiles = unsafeFiles?.["PROHIBITED"] || [];
+    const warningAttachmentMatcher = this.generateMatcher(warningFiles);
+    const prohibitedAttachmentMatcher = this.generateMatcher(prohibitedFiles);
 
     for (const attachment of attachments) {
-      if (unsafeAttachmentMatcher && unsafeAttachmentMatcher.test(attachment.name)) {
+      if (warningAttachmentMatcher && warningAttachmentMatcher.test(attachment.name)) {
         this.unsafeAttachments.add(attachment);
+      }
+      if (prohibitedAttachmentMatcher && prohibitedAttachmentMatcher.test(attachment.name)) {
+        this.prohibitedAttachments.add(attachment);
       }
       this.attachments.add(attachment);
     }

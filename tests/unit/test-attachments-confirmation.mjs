@@ -30,11 +30,12 @@ test_classify.parameters = {
         attachments: [],
       },
       config: {
-        unsafeFiles : [],
+        unsafeFiles : {},
       },
     },
     attachments: [],
     unsafeAttachments: [],
+    prohibitedAttachments: [],
     warnings: [],
     confirmations: [],
   },
@@ -44,13 +45,15 @@ test_classify.parameters = {
         attachments: [],
       },
       config: {
-        unsafeFiles : [
-          "unsafe",
-        ],
+        unsafeFiles : { 
+          "WARNING": [
+            "unsafe",
+        ]},
       },
     },
     attachments: [],
     unsafeAttachments: [],
+    prohibitedAttachments: [],
     warnings: [],
     confirmations: [],
   },
@@ -63,7 +66,7 @@ test_classify.parameters = {
         ],
       },
       config: {
-        unsafeFiles : [],
+        unsafeFiles : {},
       },
     },
     attachments: [
@@ -71,6 +74,7 @@ test_classify.parameters = {
       attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [],
+    prohibitedAttachments: [],
     warnings: [],
     confirmations: [
       "[添付ファイル] Safe.txt",
@@ -86,11 +90,12 @@ test_classify.parameters = {
         ],
       },
       config: {
-        unsafeFiles : [
-          "unsafe",
-          "#safe",
-          "-safe",
-        ],
+        unsafeFiles :  { 
+          "WARNING": [
+            "unsafe",
+            "#safe",
+            "-safe",
+        ]},
       },
     },
     attachments: [
@@ -100,6 +105,7 @@ test_classify.parameters = {
     unsafeAttachments: [
       attachment("Unsafe.txt"),
     ],
+    prohibitedAttachments: [],
     warnings: [
       "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
     ],
@@ -120,11 +126,12 @@ test_classify.parameters = {
         ],
       },
       config: {
-        unsafeFiles : [
-          "unsafe",
-          ".zip",
-          "機*密",
-        ],
+        unsafeFiles :  { 
+          "WARNING":[
+            "unsafe",
+            ".zip",
+            "機*密",
+        ]},
       },
     },
     attachments: [
@@ -140,6 +147,7 @@ test_classify.parameters = {
       attachment("【機密】.txt"),
       attachment("【機 密】.txt"),
     ],
+    prohibitedAttachments: [],
     warnings: [
       "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
       "[警告] 注意が必要なファイル名（Zipped.ZIP）が含まれています。",
@@ -154,11 +162,55 @@ test_classify.parameters = {
       "[添付ファイル] 【機 密】.txt",
     ],
   },
+  WithMultipleProhibitedFiles: {
+    data: {
+      target: {
+        attachments: [
+          attachment("Safe.txt"),
+          attachment("Unsafe.txt"),
+          attachment("Zipped.ZIP"),
+          attachment("【機密】.txt"),
+          attachment("【機 密】.txt"),
+        ],
+      },
+      config: {
+        unsafeFiles :  { 
+          "PROHIBITED":[
+            "unsafe",
+            ".zip",
+            "機*密",
+        ]},
+      },
+    },
+    attachments: [
+      attachment("Safe.txt"),
+      attachment("Unsafe.txt"),
+      attachment("Zipped.ZIP"),
+      attachment("【機密】.txt"),
+      attachment("【機 密】.txt"),
+    ],
+    unsafeAttachments: [],
+    prohibitedAttachments: [
+      attachment("Unsafe.txt"),
+      attachment("Zipped.ZIP"),
+      attachment("【機密】.txt"),
+      attachment("【機 密】.txt"),
+    ],
+    warnings: [],
+    confirmations: [
+      "[添付ファイル] Safe.txt",
+      "[添付ファイル] Unsafe.txt",
+      "[添付ファイル] Zipped.ZIP",
+      "[添付ファイル] 【機密】.txt",
+      "[添付ファイル] 【機 密】.txt",
+    ],
+  },
 };
-export function test_classify({ data, attachments, unsafeAttachments, warnings, confirmations }) {
+export function test_classify({ data, attachments, unsafeAttachments, prohibitedAttachments, warnings, confirmations }) {
   confirmation.init(data);
   is(attachments, [...confirmation.attachments]);
   is(unsafeAttachments, [...confirmation.unsafeAttachments]);
+  is(prohibitedAttachments, [...confirmation.prohibitedAttachments]);
   is(
     warnings.map((label) => ({label})),
     confirmation.warningConfirmationItems
