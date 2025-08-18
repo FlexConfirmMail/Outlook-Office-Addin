@@ -15,7 +15,8 @@
   "confirmation_requiredAttendee": "Required Attendee",
   "confirmation_optionalAttendee": "Optional Attendee",
 
-  "block_messageBeforeForRecipients": "There are recipients forbidden to send.",
+  "block_messageBeforeForMailRecipients": "This mail cannot be sent because its recipients contain forbidden recipients.",
+  "block_messageBeforeForAppointmentRecipients": "This event cannot be sent because its recipients contain forbidden recipients.",
   "block_messageAfterForRecipients": "Please change the recipients.",
 
   "newlyAddedDomainReconfirmation_caption": "警告！",

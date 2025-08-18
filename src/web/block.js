@@ -47,7 +47,9 @@ async function onMessageFromParent(arg) {
   for (const recipient of [...data.classified.block, ...data.classified.blockWithDomain]) {
     targets.add(`${recipient.type}: ${recipient.address}`);
   }
-  const messageBefore = l10n.get("block_messageBeforeForRecipients");
+  const messageBefore = data.itemType == Office.MailboxEnums.ItemType.Message ?
+    l10n.get("block_messageBeforeForMailRecipients"):
+    l10n.get("block_messageBeforeForAppointmentRecipients");
   const messageAfter = l10n.get("block_messageAfterForRecipients");
 
   const targetElement = document.getElementById("block-list");
