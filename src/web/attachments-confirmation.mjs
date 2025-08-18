@@ -5,25 +5,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 Copyright (c) 2025 ClearCode Inc.
 */
-import { L10n } from "./l10n.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class AttachmentsConfirmation {
-  locale = null;
-
-  constructor(language) {
-    this.locale = L10n.get(language);
-    this.ready = this.locale.ready;
-    this.clear();
-  }
-
-  clear() {
-    this.blockAttachments = new Set();
-    this.unsafeAttachments = new Set();
-    this.attachments = new Set();
-  }
-
-  generateMatcher(patterns) {
+  static generateMatcher(patterns) {
     const uniquePatterns = new Set(
       (patterns || []).filter((pattern) => !pattern.startsWith("#")) // reject commented out items
     );
@@ -46,37 +31,31 @@ export class AttachmentsConfirmation {
     return matcher;
   }
 
-  init(data) {
-    this.clear();
+  static classify(data) {
+    const unsafe = new Set();
+    const block = new Set();
     const attachments = data.target.attachments || [];
-    const unsafeFiles = data.config.unsafeFiles || {};
-    const warningFiles = unsafeFiles?.["WARNING"] || [];
-    const blockFiles = unsafeFiles?.["BLOCK"] || [];
-    const warningAttachmentMatcher = this.generateMatcher(warningFiles);
-    const blockAttachmentMatcher = this.generateMatcher(blockFiles);
+    const unsafeFilesConfig = data.config.unsafeFiles || {};
+    const warningFilesConfig = unsafeFilesConfig?.["WARNING"] || [];
+    const blockFilesConfig = unsafeFilesConfig?.["BLOCK"] || [];
+    const warningAttachmentMatcher = this.generateMatcher(warningFilesConfig);
+    const blockAttachmentMatcher = this.generateMatcher(blockFilesConfig);
 
+    const trusted = new Set(attachments);
     for (const attachment of attachments) {
       if (warningAttachmentMatcher && warningAttachmentMatcher.test(attachment.name)) {
-        this.unsafeAttachments.add(attachment);
+        unsafe.add(attachment);
+        trusted.delete(attachment);
       }
       if (blockAttachmentMatcher && blockAttachmentMatcher.test(attachment.name)) {
-        this.blockAttachments.add(attachment);
+        block.add(attachment);
+        trusted.delete(attachment);
       }
-      this.attachments.add(attachment);
     }
-  }
-
-  get warningConfirmationItems() {
-    return Array.from(this.unsafeAttachments, (attachment) => ({
-      label: this.locale.get("confirmation_unsafeAttachmentCheckboxLabel", {
-        name: attachment.name,
-      }),
-    }));
-  }
-
-  get confirmationItems() {
-    return Array.from(this.attachments, (attachment) => ({
-      label: this.locale.get("confirmation_attachmentCheckboxLabel", { name: attachment.name }),
-    }));
+    return {
+      trusted: Array.from(trusted),
+      unsafe: Array.from(unsafe),
+      block: Array.from(block),
+    };
   }
 }

@@ -5,19 +5,9 @@
 */
 'use strict';
 
-import * as L10nUtils from "./l10n.mjs";
-import { L10n } from "../../src/web/l10n.mjs";
 import { AttachmentsConfirmation } from "../../src/web/attachments-confirmation.mjs";
 import { assert } from "tiny-esm-test-runner";
 const { is } = assert;
-
-let confirmation;
-
-export async function setUp() {
-  L10nUtils.clear();
-  confirmation = new AttachmentsConfirmation("ja");
-  await confirmation.ready;
-}
 
 function attachment(name) {
   return { name };
@@ -33,11 +23,9 @@ test_classify.parameters = {
         unsafeFiles : {},
       },
     },
-    attachments: [],
+    trustedAttachments: [],
     unsafeAttachments: [],
     blockAttachments: [],
-    warnings: [],
-    confirmations: [],
   },
   BlankInputWithUnsafeFiles: {
     data: {
@@ -51,11 +39,9 @@ test_classify.parameters = {
         ]},
       },
     },
-    attachments: [],
+    trustedAttachments: [],
     unsafeAttachments: [],
     blockAttachments: [],
-    warnings: [],
-    confirmations: [],
   },
   WithNoUnsafeFiles: {
     data: {
@@ -69,17 +55,12 @@ test_classify.parameters = {
         unsafeFiles : {},
       },
     },
-    attachments: [
+    trustedAttachments: [
       attachment("Safe.txt"),
       attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [],
     blockAttachments: [],
-    warnings: [],
-    confirmations: [
-      "[添付ファイル] Safe.txt",
-      "[添付ファイル] Unsafe.txt",
-    ],
   },
   WithUnsafeFiles: {
     data: {
@@ -98,21 +79,13 @@ test_classify.parameters = {
         ]},
       },
     },
-    attachments: [
+    trustedAttachments: [
       attachment("Safe.txt"),
-      attachment("Unsafe.txt"),
     ],
     unsafeAttachments: [
       attachment("Unsafe.txt"),
     ],
     blockAttachments: [],
-    warnings: [
-      "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
-    ],
-    confirmations: [
-      "[添付ファイル] Safe.txt",
-      "[添付ファイル] Unsafe.txt",
-    ],
   },
   WithMultipleUnsafeFiles: {
     data: {
@@ -134,12 +107,8 @@ test_classify.parameters = {
         ]},
       },
     },
-    attachments: [
+    trustedAttachments: [
       attachment("Safe.txt"),
-      attachment("Unsafe.txt"),
-      attachment("Zipped.ZIP"),
-      attachment("【機密】.txt"),
-      attachment("【機 密】.txt"),
     ],
     unsafeAttachments: [
       attachment("Unsafe.txt"),
@@ -148,19 +117,6 @@ test_classify.parameters = {
       attachment("【機 密】.txt"),
     ],
     blockAttachments: [],
-    warnings: [
-      "[警告] 注意が必要なファイル名（Unsafe.txt）が含まれています。",
-      "[警告] 注意が必要なファイル名（Zipped.ZIP）が含まれています。",
-      "[警告] 注意が必要なファイル名（【機密】.txt）が含まれています。",
-      "[警告] 注意が必要なファイル名（【機 密】.txt）が含まれています。",
-    ],
-    confirmations: [
-      "[添付ファイル] Safe.txt",
-      "[添付ファイル] Unsafe.txt",
-      "[添付ファイル] Zipped.ZIP",
-      "[添付ファイル] 【機密】.txt",
-      "[添付ファイル] 【機 密】.txt",
-    ],
   },
   WithMultipleBlockFiles: {
     data: {
@@ -182,12 +138,8 @@ test_classify.parameters = {
         ]},
       },
     },
-    attachments: [
+    trustedAttachments: [
       attachment("Safe.txt"),
-      attachment("Unsafe.txt"),
-      attachment("Zipped.ZIP"),
-      attachment("【機密】.txt"),
-      attachment("【機 密】.txt"),
     ],
     unsafeAttachments: [],
     blockAttachments: [
@@ -196,27 +148,11 @@ test_classify.parameters = {
       attachment("【機密】.txt"),
       attachment("【機 密】.txt"),
     ],
-    warnings: [],
-    confirmations: [
-      "[添付ファイル] Safe.txt",
-      "[添付ファイル] Unsafe.txt",
-      "[添付ファイル] Zipped.ZIP",
-      "[添付ファイル] 【機密】.txt",
-      "[添付ファイル] 【機 密】.txt",
-    ],
   },
 };
-export function test_classify({ data, attachments, unsafeAttachments, blockAttachments, warnings, confirmations }) {
-  confirmation.init(data);
-  is(attachments, [...confirmation.attachments]);
-  is(unsafeAttachments, [...confirmation.unsafeAttachments]);
-  is(blockAttachments, [...confirmation.blockAttachments]);
-  is(
-    warnings.map((label) => ({label})),
-    confirmation.warningConfirmationItems
-  );
-  is(
-    confirmations.map((label) => ({label})),
-    confirmation.confirmationItems
-  );
+export function test_classify({ data, trustedAttachments, unsafeAttachments, blockAttachments }) {
+  const classified = AttachmentsConfirmation.classify(data);
+  is(trustedAttachments, classified.trusted);
+  is(unsafeAttachments, classified.unsafe);
+  is(blockAttachments, classified.block);
 }

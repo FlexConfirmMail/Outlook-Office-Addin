@@ -14,7 +14,6 @@ import * as Dialog from "./dialog.mjs";
 
 let l10n;
 let safeBccConfirmation;
-let attachmentsConfirmation;
 let reconfirmation;
 let addedDomainsReconfirmation;
 
@@ -27,7 +26,6 @@ Office.onReady(() => {
   l10n = L10n.get(language);
   l10n.ready.then(() => l10n.translateAll());
   safeBccConfirmation = new SafeBccConfirmation(language);
-  attachmentsConfirmation = new AttachmentsConfirmation(language);
   reconfirmation = new Reconfirmation();
   addedDomainsReconfirmation = new AddedDomainsReconfirmation(language);
 
@@ -216,9 +214,15 @@ async function onMessageFromParent(arg) {
   if (data.classified.recipients.trusted.length == 0) {
     document.getElementById("check-all-trusted").disabled = true;
   }
-  const groupedByTypeTrusteds = Object.groupBy(data.classified.recipients.trusted, (item) => item.domain);
+  const groupedByTypeTrusteds = Object.groupBy(
+    data.classified.recipients.trusted,
+    (item) => item.domain
+  );
   appendRecipientCheckboxes(document.getElementById("trusted-domains"), groupedByTypeTrusteds);
-  const groupedByTypeUntrusted = Object.groupBy(data.classified.recipients.untrusted, (item) => item.domain);
+  const groupedByTypeUntrusted = Object.groupBy(
+    data.classified.recipients.untrusted,
+    (item) => item.domain
+  );
   appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
 
   safeBccConfirmation.init(data);
@@ -226,7 +230,11 @@ async function onMessageFromParent(arg) {
 
   appendMiscWarningCheckboxes(
     Array.from(
-      new Set(data.classified.recipients.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
+      new Set(
+        data.classified.recipients.unsafeWithDomain.map((recipient) =>
+          recipient.domain.toLowerCase()
+        )
+      ),
       (domain) => l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
     )
   );
@@ -236,9 +244,15 @@ async function onMessageFromParent(arg) {
     )
   );
 
-  attachmentsConfirmation.init(data);
-  appendMiscWarningCheckboxes(attachmentsConfirmation.warningConfirmationItems);
-  appendMiscCheckboxes(attachmentsConfirmation.confirmationItems);
+  const attachmentWarningLabels = data.classified.attachments.unsafe.map((attachment) =>
+    l10n.get("confirmation_unsafeAttachmentCheckboxLabel", { name: attachment.name })
+  );
+  const attachmentLabels =
+    data.target.attachments?.map((attachment) =>
+      l10n.get("confirmation_attachmentCheckboxLabel", { name: attachment.name })
+    ) || [];
+  appendMiscWarningCheckboxes(attachmentWarningLabels);
+  appendMiscCheckboxes(attachmentLabels);
 
   reconfirmation.initUI(sendStatusToParent);
   addedDomainsReconfirmation.init(data);

@@ -402,7 +402,7 @@ async function tryConfirm(data, asyncContext) {
   switch (data.itemType) {
     case Office.MailboxEnums.ItemType.Message: {
       const { to, cc, bcc } = data.target;
-      data.classified.resipients = RecipientClassifier.classifyAll({
+      data.classified.recipients = RecipientClassifier.classifyAll({
         locale,
         to,
         cc,
@@ -425,9 +425,14 @@ async function tryConfirm(data, asyncContext) {
       break;
     }
   }
+  data.classified.attachments = AttachmentsConfirmation.classify(data);
   console.debug("classified: ", data.classified);
 
-  if (data.classified.recipients.block.length > 0 || data.classified.recipients.blockWithDomain.length > 0) {
+  if (
+    data.classified.recipients.block.length > 0 ||
+    data.classified.recipients.blockWithDomain.length > 0 ||
+    data.classified.attachments.block.length > 0
+  ) {
     const { status, asyncContext: updatedAsyncContext } = await openDialog({
       url: window.location.origin + "/block.html",
       data,
@@ -442,9 +447,6 @@ async function tryConfirm(data, asyncContext) {
       asyncContext,
     };
   }
-
-  const attachmentsConfirmation = new AttachmentsConfirmation(language);
-  attachmentsConfirmation.init();
 
   if (data.config.common.MainSkipIfNoExt && data.classified.recipients.untrusted.length == 0) {
     console.log("Skip confirmation: no untrusted recipient");

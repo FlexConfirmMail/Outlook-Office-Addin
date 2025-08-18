@@ -19,6 +19,9 @@
   "block_messageBeforeForMailRecipients": "送信が禁止された宛先が指定されているため、メールを送信できません。",
   "block_messageBeforeForAppointmentRecipients": "送信が禁止された宛先が指定されているため、予定を送信できません。",
   "block_messageAfterForRecipients": "宛先を変更してください。",
+  "block_messageBeforeForMailAttachments": "送信が禁止されたファイルが添付されているため、メールを送信できません。",
+  "block_messageBeforeForAppointmentAttachments": "送信が禁止されたファイルが添付されているため、予定を送信できません。",
+  "block_messageAfterForAttachments": "添付ファイルを変更してください。",
 
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。",
