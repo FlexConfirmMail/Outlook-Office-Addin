@@ -18,7 +18,7 @@ export class AttachmentsConfirmation {
   }
 
   clear() {
-    this.prohibitedAttachments = new Set();
+    this.blockAttachments = new Set();
     this.unsafeAttachments = new Set();
     this.attachments = new Set();
   }
@@ -51,16 +51,16 @@ export class AttachmentsConfirmation {
     const attachments = data.target.attachments || [];
     const unsafeFiles = data.config.unsafeFiles || {};
     const warningFiles = unsafeFiles?.["WARNING"] || [];
-    const prohibitedFiles = unsafeFiles?.["PROHIBITED"] || [];
+    const blockFiles = unsafeFiles?.["BLOCK"] || [];
     const warningAttachmentMatcher = this.generateMatcher(warningFiles);
-    const prohibitedAttachmentMatcher = this.generateMatcher(prohibitedFiles);
+    const blockAttachmentMatcher = this.generateMatcher(blockFiles);
 
     for (const attachment of attachments) {
       if (warningAttachmentMatcher && warningAttachmentMatcher.test(attachment.name)) {
         this.unsafeAttachments.add(attachment);
       }
-      if (prohibitedAttachmentMatcher && prohibitedAttachmentMatcher.test(attachment.name)) {
-        this.prohibitedAttachments.add(attachment);
+      if (blockAttachmentMatcher && blockAttachmentMatcher.test(attachment.name)) {
+        this.blockAttachments.add(attachment);
       }
       this.attachments.add(attachment);
     }

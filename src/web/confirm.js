@@ -198,8 +198,8 @@ async function onMessageFromParent(arg) {
   //       untrusted: [...],
   //       unsafeWithDomain: [...],
   //       unsafe: [...],
-  //       prohibitedWithDomain: [...],
-  //       prohibited: [...],
+  //       blockWithDomain: [...],
+  //       block: [...],
   //     }
   //   },
   //   itemType: Office.MailboxEnums.ItemType.Message,

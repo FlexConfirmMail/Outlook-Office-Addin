@@ -45,8 +45,8 @@ async function onMessageFromParent(arg) {
 
   const targets = new Set();
   for (const recipient of [
-    ...data.classified.recipients.prohibited,
-    ...data.classified.recipients.prohibitedWithDomain,
+    ...data.classified.recipients.block,
+    ...data.classified.recipients.blockWithDomain,
   ]) {
     targets.add(`${recipient.type}: ${recipient.address}`);
   }
