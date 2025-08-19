@@ -19,8 +19,8 @@
   "newlyAddedDomainReconfirmation_messageBefore": "收件人添加了以下原邮件收件人中未包含的域名地址。",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "There are attendees with domains not included in the attendees of the original appointment.",
   "newlyAddedDomainReconfirmation_messageAfter": "请确认是否要发送此邮件？",
-  "newlyAddedDomainReconfirmation_sendButtonLabel": "发送",
-  "newlyAddedDomainReconfirmation_cancelButtonLabel": "取消",
+  "Reconfirmation_okButtonLabel": "OK",
+  "Reconfirmation_cancelButtonLabel": "取消",
 
   "countDown_messageBefore": "",
   "countDown_messageAfter": "秒后发送",

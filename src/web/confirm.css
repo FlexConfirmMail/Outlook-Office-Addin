@@ -38,6 +38,7 @@ Copyright (c) 2025 ClearCode Inc.
   text-align: center;
 } */
 
+
 fluent-dialog::part(control) {
   color: white;
   background-color: red;
@@ -47,31 +48,59 @@ fluent-dialog::part(control) {
   --dialog-height: fit-content;
 }
 
-fluent-dialog::part(control) .newly-added-domain-content {
+fluent-dialog::part(control) .reconfirmation-content {
   background-color: white;
   background: var(--bg-color) !important;
 }
 
-fluent-dialog .newly-added-domain-content {
+fluent-dialog .reconfirmation-content {
   color: black;
   padding: 2em;
   text-align: left;
 }
 
-fluent-dialog .newly-added-domain-content strong {
+fluent-dialog .reconfirmation-content strong {
   font-size: large;
   font-weight: bold;
 }
 
-#newly-added-domain-address-list {
+.reconfirmation-list {
   margin: 1em 0;
 }
 
-#cancel-new-domain-button {
+#cancel-reconfirmation-button {
   margin-left: 10px;
 }
 
 .new-domain-button-container {
+  margin-top: 20px;
+}
+
+fluent-dialog::part(control) .reconfirmation-content {
+  background-color: white;
+  background: var(--bg-color) !important;
+}
+
+fluent-dialog .reconfirmation-content {
+  color: black;
+  padding: 2em;
+  text-align: left;
+}
+
+fluent-dialog .reconfirmation-content strong {
+  font-size: large;
+  font-weight: bold;
+}
+
+#reconfirmation-list {
+  margin: 1em 0;
+}
+
+#cancel-reconfirmation-button {
+  margin-left: 10px;
+}
+
+.reconfirmation-container {
   margin-top: 20px;
 }
 

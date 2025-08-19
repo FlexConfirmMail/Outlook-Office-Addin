@@ -52,19 +52,16 @@ Copyright (c) 2025 ClearCode Inc.
                 data-l10n-text-content="confirmation_cancelButtonLabel"></fluent-button>
         </div>
     </div>
-    <fluent-dialog id="newly-added-domain-address-dialog" hidden trap-focus modal>
+    <fluent-dialog id="reconfirmation-dialog" hidden trap-focus modal>
         <h2 data-l10n-text-content="newlyAddedDomainReconfirmation_caption"></h2>
-        <div class="newly-added-domain-container">
-            <fluent-card id="newly-added-domains-card" class="newly-added-domain-content">
-                <p id="newly-added-domains-message-before"></p>
-                <ul id="newly-added-domain-address-list"></ul>
-                <p data-l10n-text-content="newlyAddedDomainReconfirmation_messageAfter"></p>
+        <div class="reconfirmation-container">
+            <fluent-card id="reconfirmations-card" class="reconfirmation-content">
             </fluent-card>
             <div class="new-domain-button-container">
-                <fluent-button id="send-new-domain-button" onclick="onSendNewDomain()"
-                    data-l10n-text-content="newlyAddedDomainReconfirmation_sendButtonLabel"></fluent-button>
-                <fluent-button id="cancel-new-domain-button" onclick="onCancelNewDomain()"
-                    data-l10n-text-content="newlyAddedDomainReconfirmation_cancelButtonLabel"></fluent-button>
+                <fluent-button id="ok-reconfirmation-button" onclick="onOkReconfirmation()"
+                    data-l10n-text-content="Reconfirmation_okButtonLabel"></fluent-button>
+                <fluent-button id="cancel-reconfirmation-button" onclick="onCancelReconfirmation()"
+                    data-l10n-text-content="Reconfirmation_cancelButtonLabel"></fluent-button>
             </div>
         </div>
     </fluent-dialog>

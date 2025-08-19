@@ -5,10 +5,20 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 Copyright (c) 2025 ClearCode Inc.
 */
+import { L10n } from "./l10n.mjs";
+
 export class AddedDomainsReconfirmation {
   needToConfirm = false;
   newDomainAddresses = new Set();
   initialized = false;
+  locale = "jp";
+  ready = null;
+  itemType = Office.MailboxEnums.ItemType.Message;
+
+  constructor(language) {
+    this.locale = L10n.get(language);
+    this.ready = this.locale.ready;
+  }
 
   init(data) {
     if (this.initialized) {
@@ -21,6 +31,7 @@ export class AddedDomainsReconfirmation {
     if (!data.originalRecipients) {
       return;
     }
+    this.itemType = data.itemType;
     const originalToDomains = data.originalRecipients.to?.map((_) => _.domain) ?? [];
     const originalCcDomains = data.originalRecipients.cc?.map((_) => _.domain) ?? [];
     const originalBccDomains = data.originalRecipients.bcc?.map((_) => _.domain) ?? [];
@@ -62,26 +73,29 @@ export class AddedDomainsReconfirmation {
     }
   }
 
-  initUI(sendStatusToParent) {
-    const targetElement = document.getElementById("newly-added-domain-address-list");
+  generateReconfirmationContentElement() {
+    const messageBeforeElement = document.createElement("p");
+    const listElement = document.createElement("ul");
+    listElement.classList.add("reconfirmation-list");
+    const messageAfterElement = document.createElement("p");
     for (const address of this.newDomainAddresses) {
       const itemElement = document.createElement("li");
       const strongElement = document.createElement("strong");
       strongElement.textContent = address;
       itemElement.appendChild(strongElement);
-      targetElement.appendChild(itemElement);
+      listElement.appendChild(itemElement);
     }
-
-    window.onSendNewDomain = () => {
-      document.getElementById("newly-added-domain-address-dialog").hidden = true;
-      sendStatusToParent("ok");
-    };
-    window.onCancelNewDomain = () => {
-      document.getElementById("newly-added-domain-address-dialog").hidden = true;
-    };
-  }
-
-  show() {
-    document.getElementById("newly-added-domain-address-dialog").hidden = false;
+    messageBeforeElement.textContent =
+      this.itemType === Office.MailboxEnums.ItemType.Message
+        ? this.locale.get("newlyAddedDomainReconfirmation_messageBefore")
+        : this.locale.get("newlyAddedDomainReconfirmation_messageBeforeForAppointment");
+    messageAfterElement.textContent = this.locale.get(
+      "newlyAddedDomainReconfirmation_messageAfter"
+    );
+    const contentElement = document.createElement("div");
+    contentElement.appendChild(messageBeforeElement);
+    contentElement.appendChild(listElement);
+    contentElement.appendChild(messageAfterElement);
+    return contentElement;
   }
 }

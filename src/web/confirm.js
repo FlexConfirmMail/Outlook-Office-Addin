@@ -7,14 +7,16 @@ Copyright (c) 2025 ClearCode Inc.
 */
 import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
-import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
+import { Reconfirmation } from "./reconfirmation.mjs";
 import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
+import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import * as Dialog from "./dialog.mjs";
 
 let l10n;
 let safeBccConfirmation;
 let attachmentsConfirmation;
-const addedDomainsReconfirmation = new AddedDomainsReconfirmation();
+let reconfirmation;
+let addedDomainsReconfirmation;
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -26,6 +28,8 @@ Office.onReady(() => {
   l10n.ready.then(() => l10n.translateAll());
   safeBccConfirmation = new SafeBccConfirmation(language);
   attachmentsConfirmation = new AttachmentsConfirmation(language);
+  reconfirmation = new Reconfirmation(language);
+  addedDomainsReconfirmation = new AddedDomainsReconfirmation(language);
 
   document.documentElement.setAttribute("lang", language);
 
@@ -65,8 +69,8 @@ window.onCheckAllTrusted = () => {
 };
 
 window.onSend = () => {
-  if (addedDomainsReconfirmation.needToConfirm) {
-    addedDomainsReconfirmation.show();
+  if (reconfirmation.needToConfirm) {
+    reconfirmation.show();
   } else {
     sendStatusToParent("ok");
   }
@@ -198,7 +202,12 @@ async function onMessageFromParent(arg) {
   // }
 
   console.log(data);
-  await Promise.all([l10n.ready, safeBccConfirmation.loaded, attachmentsConfirmation.loaded]);
+  await Promise.all([
+    l10n.ready,
+    safeBccConfirmation.loaded,
+    attachmentsConfirmation.loaded,
+    addedDomainsReconfirmation.loaded,
+  ]);
 
   if (data.classified.trusted.length == 0) {
     document.getElementById("check-all-trusted").disabled = true;
@@ -208,7 +217,7 @@ async function onMessageFromParent(arg) {
   const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
   appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
 
-  safeBccConfirmation.init(data);
+  await safeBccConfirmation.init(data);
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
 
   appendMiscWarningCheckboxes(
@@ -223,19 +232,16 @@ async function onMessageFromParent(arg) {
     )
   );
 
-  Dialog.resizeToContent();
-
-  addedDomainsReconfirmation.init(data);
-  addedDomainsReconfirmation.initUI(sendStatusToParent);
-
   attachmentsConfirmation.init(data);
   appendMiscWarningCheckboxes(attachmentsConfirmation.warningConfirmationItems);
   appendMiscCheckboxes(attachmentsConfirmation.confirmationItems);
 
-  const newlyAddedDomainsBeforeMessage =
-    data.itemType === Office.MailboxEnums.ItemType.Message
-      ? l10n.get("newlyAddedDomainReconfirmation_messageBefore")
-      : l10n.get("newlyAddedDomainReconfirmation_messageBeforeForAppointment");
-  document.getElementById("newly-added-domains-message-before").textContent =
-    newlyAddedDomainsBeforeMessage;
+  reconfirmation.initUI(sendStatusToParent);
+  addedDomainsReconfirmation.init(data);
+  if (addedDomainsReconfirmation.needToConfirm) {
+    const content = addedDomainsReconfirmation.generateReconfirmationContentElement();
+    reconfirmation.appendContent(content);
+  }
+
+  Dialog.resizeToContent();
 }
