@@ -11,6 +11,7 @@
 | CountSeconds | 数値 | 送信までのカウントダウン秒数 ||
 | SafeBccEnabled | 真偽値 | To/CCに一定数以上のドメインが含まれている場合に警告する ||
 | SafeBccThreshold | 数値 | SafeBccEnabledで警告対象となるドメインの数 ||
+| SafeBccReconfirmationThreshold | 数値 | SafeBccEnabledで再警告対象となるドメインの数 ||
 | MainSkipIfNoExt | 真偽値 | 宛先が社内のみの場合は確認をスキップする ||
 | AppointmentConfirmationEnabled | 真偽値 | 予定表で予定を送信する場合にも警告する ||
 | SafeNewDomainsEnabled | 真偽値 | 返信の宛先に今まで含まれていなかったドメインのアドレスが追加された場合に警告する ||

@@ -15,6 +15,7 @@ export class ConfigLoader {
     SafeNewDomainsEnabled: "boolean",
     CountSeconds: "number",
     SafeBccThreshold: "number",
+    SafeBccReconfirmationThreshold: "number",
     DelayDeliveryEnabled: "boolean",
     DelayDeliverySeconds: "number",
     FixedParameters: "commaSeparatedValues",
@@ -246,6 +247,7 @@ export class ConfigLoader {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
+        SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 60,
         FixedParameters: [],
@@ -318,6 +320,9 @@ export class ConfigLoader {
     }
     if (right.common.SafeBccThreshold != null && !fixedParametersSet.has("SafeBccThreshold")) {
       left.common.SafeBccThreshold = right.common.SafeBccThreshold;
+    }
+    if (right.common.SafeBccReconfirmationThreshold != null && !fixedParametersSet.has("SafeBccReconfirmationThreshold")) {
+      left.common.SafeBccReconfirmationThreshold = right.common.SafeBccReconfirmationThreshold;
     }
     if (
       right.common.DelayDeliveryEnabled != null &&

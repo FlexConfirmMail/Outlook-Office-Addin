@@ -53,6 +53,7 @@
   "setting_configAppointmentConfirmationEnabled": "Enable confirmation on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "当To/Cc包含许多域时发出警告",
   "setting_configSafeBccThreshold": "警告的阈值:",
+  "setting_configSafeBccReconfirmationThreshold": "Re-warn if To/Cc fields contain",
   "setting_configSafeNewDomainsEnabled": "当回复的收件人地址中新增了与现有收件人域名不同的地址时，系统将警告确认",
   "setting_configTrustedDomains": "信任域，地址",
   "setting_configUnsafeDomains": "不安全域，地址",
