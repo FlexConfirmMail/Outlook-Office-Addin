@@ -242,6 +242,9 @@ async function onMessageFromParent(arg) {
     const content = addedDomainsReconfirmation.generateReconfirmationContentElement();
     reconfirmation.appendContent(content);
   }
-
+  if (safeBccConfirmation.needToReconfirm) {
+    const content = safeBccConfirmation.generateReconfirmationContentElement();
+    reconfirmation.appendContent(content);
+  }
   Dialog.resizeToContent();
 }

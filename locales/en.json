@@ -22,7 +22,9 @@
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "There are attendees with domains not included in the attendees of the original appointment.",
-  "newlyAddedDomainReconfirmation_messageAfter": "Do you really want to send this message?",
+  "Reconfirmation_safeBccReconfirmationThresholdWarning": "[Warn] To/Cc fields contain no less than ${threshold} domains.",
+  "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "[Warn] Attendee fields contain no less than ${threshold} domains.",
+  "Reconfirmation_confirmToSend": "Do you really want to send this message?",
   "Reconfirmation_okButtonLabel": "OK",
   "Reconfirmation_cancelButtonLabel": "Cancel",
 

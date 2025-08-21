@@ -188,8 +188,11 @@ function updateDialogSetting(policy, user) {
   document.getElementById("countSeconds").disabled = fixedParametersSet.has("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
   document.getElementById("safeBccThreshold").disabled = fixedParametersSet.has("SafeBccThreshold");
-  document.getElementById("safeBccReconfirmationThreshold").value = common.SafeBccReconfirmationThreshold;
-  document.getElementById("safeBccReconfirmationThreshold").disabled = fixedParametersSet.has("SafeBccReconfirmationThreshold");
+  document.getElementById("safeBccReconfirmationThreshold").value =
+    common.SafeBccReconfirmationThreshold;
+  document.getElementById("safeBccReconfirmationThreshold").disabled = fixedParametersSet.has(
+    "SafeBccReconfirmationThreshold"
+  );
   document.getElementById("delayDeliveryEnabled").checked = common.DelayDeliveryEnabled;
   document.getElementById("delayDeliveryEnabled").disabled =
     fixedParametersSet.has("DelayDeliveryEnabled");
@@ -224,7 +227,9 @@ function serializeCommonConfigs() {
   const countSeconds = document.getElementById("countSeconds").value;
   const safeBccEnabled = document.getElementById("safeBccEnabled").checked;
   const safeBccThreshold = document.getElementById("safeBccThreshold").value;
-  const safeBccReconfirmationThreshold = document.getElementById("safeBccReconfirmationThreshold").value;
+  const safeBccReconfirmationThreshold = document.getElementById(
+    "safeBccReconfirmationThreshold"
+  ).value;
   const safeNewDomainsEnabled = document.getElementById("safeNewDomainsEnabled").checked;
   const mainSkipIfNoExt = document.getElementById("mainSkipIfNoExt").checked;
   const appointmentConfirmationEnabled = document.getElementById(
@@ -238,7 +243,10 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("CountAllowSkip", countAllowSkip);
   commonConfigString += serializeCommonConfig("SafeBccEnabled", safeBccEnabled);
   commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
-  commonConfigString += serializeCommonConfig("SafeBccReconfirmationThreshold", safeBccReconfirmationThreshold);
+  commonConfigString += serializeCommonConfig(
+    "SafeBccReconfirmationThreshold",
+    safeBccReconfirmationThreshold
+  );
   commonConfigString += serializeCommonConfig("SafeNewDomainsEnabled", safeNewDomainsEnabled);
   commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
   commonConfigString += serializeCommonConfig(

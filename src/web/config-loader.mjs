@@ -321,7 +321,10 @@ export class ConfigLoader {
     if (right.common.SafeBccThreshold != null && !fixedParametersSet.has("SafeBccThreshold")) {
       left.common.SafeBccThreshold = right.common.SafeBccThreshold;
     }
-    if (right.common.SafeBccReconfirmationThreshold != null && !fixedParametersSet.has("SafeBccReconfirmationThreshold")) {
+    if (
+      right.common.SafeBccReconfirmationThreshold != null &&
+      !fixedParametersSet.has("SafeBccReconfirmationThreshold")
+    ) {
       left.common.SafeBccReconfirmationThreshold = right.common.SafeBccReconfirmationThreshold;
     }
     if (
