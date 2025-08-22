@@ -8,13 +8,11 @@ Copyright (c) 2025 ClearCode Inc.
 import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { Reconfirmation } from "./reconfirmation.mjs";
-import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import * as Dialog from "./dialog.mjs";
 
 let l10n;
 let safeBccConfirmation;
-let attachmentsConfirmation;
 let reconfirmation;
 let addedDomainsReconfirmation;
 
@@ -27,7 +25,6 @@ Office.onReady(() => {
   l10n = L10n.get(language);
   l10n.ready.then(() => l10n.translateAll());
   safeBccConfirmation = new SafeBccConfirmation(language);
-  attachmentsConfirmation = new AttachmentsConfirmation(language);
   reconfirmation = new Reconfirmation();
   addedDomainsReconfirmation = new AddedDomainsReconfirmation(language);
 
@@ -193,28 +190,33 @@ async function onMessageFromParent(arg) {
   //     bcc : [...],
   //   },
   //   classified: {
-  //     trusted: [...],
-  //     untrusted: [...],
-  //     unsafeWithDomain: [...],
-  //     unsafe: [...],
+  //     { recipients:
+  //       trusted: [...],
+  //       untrusted: [...],
+  //       unsafeWithDomain: [...],
+  //       unsafe: [...],
+  //       blockWithDomain: [...],
+  //       block: [...],
+  //     }
   //   },
   //   itemType: Office.MailboxEnums.ItemType.Message,
   // }
 
   console.log(data);
-  await Promise.all([
-    l10n.ready,
-    safeBccConfirmation.loaded,
-    attachmentsConfirmation.loaded,
-    addedDomainsReconfirmation.loaded,
-  ]);
+  await Promise.all([l10n.ready, safeBccConfirmation.loaded, addedDomainsReconfirmation.loaded]);
 
-  if (data.classified.trusted.length == 0) {
+  if (data.classified.recipients.trusted.length == 0) {
     document.getElementById("check-all-trusted").disabled = true;
   }
-  const groupedByTypeTrusteds = Object.groupBy(data.classified.trusted, (item) => item.domain);
+  const groupedByTypeTrusteds = Object.groupBy(
+    data.classified.recipients.trusted,
+    (item) => item.domain
+  );
   appendRecipientCheckboxes(document.getElementById("trusted-domains"), groupedByTypeTrusteds);
-  const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
+  const groupedByTypeUntrusted = Object.groupBy(
+    data.classified.recipients.untrusted,
+    (item) => item.domain
+  );
   appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
 
   safeBccConfirmation.init(data);
@@ -222,19 +224,29 @@ async function onMessageFromParent(arg) {
 
   appendMiscWarningCheckboxes(
     Array.from(
-      new Set(data.classified.unsafeWithDomain.map((recipient) => recipient.domain.toLowerCase())),
+      new Set(
+        data.classified.recipients.unsafeWithDomain.map((recipient) =>
+          recipient.domain.toLowerCase()
+        )
+      ),
       (domain) => l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
     )
   );
   appendMiscWarningCheckboxes(
-    data.classified.unsafe.map((recipient) =>
+    data.classified.recipients.unsafe.map((recipient) =>
       l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
     )
   );
 
-  attachmentsConfirmation.init(data);
-  appendMiscWarningCheckboxes(attachmentsConfirmation.warningConfirmationItems);
-  appendMiscCheckboxes(attachmentsConfirmation.confirmationItems);
+  const attachmentWarningLabels = data.classified.attachments.unsafe.map((attachment) =>
+    l10n.get("confirmation_unsafeAttachmentCheckboxLabel", { name: attachment.name })
+  );
+  const attachmentLabels =
+    data.target.attachments?.map((attachment) =>
+      l10n.get("confirmation_attachmentCheckboxLabel", { name: attachment.name })
+    ) || [];
+  appendMiscWarningCheckboxes(attachmentWarningLabels);
+  appendMiscCheckboxes(attachmentLabels);
 
   reconfirmation.initUI(sendStatusToParent);
   addedDomainsReconfirmation.init(data);

@@ -18,6 +18,9 @@
   "block_messageBeforeForMailRecipients": "This mail cannot be sent because its recipients contain forbidden recipients.",
   "block_messageBeforeForAppointmentRecipients": "This event cannot be sent because its recipients contain forbidden recipients.",
   "block_messageAfterForRecipients": "Please change the recipients.",
+  "block_messageBeforeForMailAttachments": "The mail cannot be sent because its attachments contains forbidden files.",
+  "block_messageBeforeForAppointmentAttachments": "The appointment cannot be sent because its attachments contains forbidden files.",
+  "block_messageAfterForAttachments": "Please change the attachments.",
 
   "newlyAddedDomainReconfirmation_caption": "警告！",
   "newlyAddedDomainReconfirmation_messageBefore": "收件人添加了以下原邮件收件人中未包含的域名地址。",

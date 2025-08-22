@@ -9,6 +9,7 @@ import { L10n } from "./l10n.mjs";
 import * as Dialog from "./dialog.mjs";
 
 let l10n;
+const warningContents = [];
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -35,8 +36,34 @@ function sendStatusToParent(status) {
 }
 
 window.onOK = () => {
-  sendStatusToParent("ok");
+  if (warningContents.length > 0) {
+    showNextWarning();
+  } else {
+    sendStatusToParent("ok");
+  }
 };
+
+function showNextWarning() {
+  if (warningContents.length == 0) {
+    return;
+  }
+  const content = warningContents.shift();
+  const dialogBody = document.getElementById("dialog-body");
+  dialogBody.hidden = true;
+  const targetElement = document.getElementById("block-list");
+  targetElement.innerHTML = "";
+  for (const target of content.targets) {
+    const itemElement = document.createElement("li");
+    const strongElement = document.createElement("strong");
+    strongElement.textContent = target;
+    itemElement.appendChild(strongElement);
+    targetElement.appendChild(itemElement);
+  }
+  document.getElementById("block-message-before").textContent = content.messageBefore;
+  document.getElementById("block-message-after").textContent = content.messageAfter;
+  Dialog.resizeToContent();
+  dialogBody.hidden = false;
+}
 
 async function onMessageFromParent(arg) {
   const data = JSON.parse(arg.message);
@@ -44,27 +71,31 @@ async function onMessageFromParent(arg) {
   await l10n.ready;
 
   const targets = new Set();
-  for (const recipient of [...data.classified.block, ...data.classified.blockWithDomain]) {
-    targets.add(`${recipient.type}: ${recipient.address}`);
+  const recipients = [
+    ...data.classified.recipients.block,
+    ...data.classified.recipients.blockWithDomain,
+  ];
+  const attachments = data.classified.attachments.block;
+  if (recipients.length > 0) {
+    for (const recipient of recipients) {
+      targets.add(`${recipient.type}: ${recipient.address}`);
+    }
+    const messageBefore =
+      data.itemType == Office.MailboxEnums.ItemType.Message
+        ? l10n.get("block_messageBeforeForMailRecipients")
+        : l10n.get("block_messageBeforeForAppointmentRecipients");
+    const messageAfter = l10n.get("block_messageAfterForRecipients");
+    warningContents.push({ targets, messageBefore, messageAfter });
   }
-  const messageBefore =
-    data.itemType == Office.MailboxEnums.ItemType.Message
-      ? l10n.get("block_messageBeforeForMailRecipients")
-      : l10n.get("block_messageBeforeForAppointmentRecipients");
-  const messageAfter = l10n.get("block_messageAfterForRecipients");
-
-  const targetElement = document.getElementById("block-list");
-  for (const target of targets) {
-    const itemElement = document.createElement("li");
-    const strongElement = document.createElement("strong");
-    strongElement.textContent = target;
-    itemElement.appendChild(strongElement);
-    targetElement.appendChild(itemElement);
+  if (attachments.length > 0) {
+    const targets = attachments.map((attachment) => attachment.name);
+    const messageBefore =
+      data.itemType == Office.MailboxEnums.ItemType.Message
+        ? l10n.get("block_messageBeforeForMailAttachments")
+        : l10n.get("block_messageBeforeForAppointmentAttachments");
+    const messageAfter = l10n.get("block_messageAfterForAttachments");
+    warningContents.push({ targets, messageBefore, messageAfter });
   }
 
-  document.getElementById("block-message-before").textContent = messageBefore;
-  document.getElementById("block-message-after").textContent = messageAfter;
-
-  document.getElementById("dialog-body").hidden = false;
-  Dialog.resizeToContent();
+  showNextWarning();
 }
