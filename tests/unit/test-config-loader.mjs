@@ -158,6 +158,63 @@ export function test_toArray({ str, expected }) {
   );
 }
 
+test_parseUnsafeConfig.parameters = {
+  "default single line": {
+    str: "a@example.com",
+    expected: { "WARNING" : ["a@example.com"] },
+  },
+  "WARNING single line": {
+    str: "[WARNING]\na@example.com",
+    expected: { "WARNING" : ["a@example.com"] },
+  },
+  "warning single line": {
+    str: "[warning]\na@example.com",
+    expected: { "WARNING" : ["a@example.com"] },
+  },
+  "BLOCK single line": {
+    str: "[BLOCK]\na@example.com",
+    expected: { "BLOCK" : ["a@example.com"] },
+  },
+  "multi lines": {
+    str: "[WARNING]\na@example.com\nb@example.com\n[BLOCK]\nc@example.com\nd@example.com",
+    expected: { 
+      "WARNING" : ["a@example.com", "b@example.com"],
+      "BLOCK": ["c@example.com", "d@example.com"]
+    },
+  },
+  "separated section": {
+    str: "[WARNING]\na@example.com\nb@example.com\n[BLOCK]\nc@example.com\nd@example.com\n[WARNING]\ne@example.com",
+    expected: { 
+      "WARNING" : ["a@example.com", "b@example.com", "e@example.com"],
+      "BLOCK": ["c@example.com", "d@example.com"]
+    },
+  },
+  "invalid section": {
+    str: "[INVALID]\na@example.com\nb@example.com",
+    expected: { 
+      "WARNING" : ["a@example.com", "b@example.com"]
+    },
+  },
+  "null to empty": {
+    str: null,
+    expected: {},
+  },
+  "undefined to empty": {
+    str: undefined,
+    expected: {},
+  },
+  "empty string to empty": {
+    str: "",
+    expected: {},
+  },
+}
+export function test_parseUnsafeConfig({ str, expected }) {
+  is(
+    expected,
+    ConfigLoader.parseUnsafeConfig(str)
+  );
+}
+
 test_toDictionaryCommon.parameters = {
   "CountEnabled=True": {
     str: "CountEnabled=True",
@@ -298,7 +355,7 @@ export function test_createDefaultConfig() {
         FixedParameters: [],
       },
       trustedDomains: [],
-      unsafeDomains: [],
+      unsafeDomains: {},
       unsafeFiles: [],
       commonString: "",
       trustedDomainsString: "",
@@ -314,7 +371,7 @@ export function test_createEmptyConfig() {
     {
       common: {},
       trustedDomains: [],
-      unsafeDomains: [],
+      unsafeDomains: {},
       unsafeFiles: [],
       commonString: "",
       trustedDomainsString: "",
@@ -330,7 +387,7 @@ test_merge.parameters = {
     left: {
       common: {},
       trustedDomains: [],
-      unsafeDomains: [],
+      unsafeDomains: {},
       unsafeFiles: [],
       commonString: "",
       trustedDomainsString: "",
@@ -352,7 +409,7 @@ test_merge.parameters = {
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
-      unsafeDomains: ["unsafeDomain"],
+      unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: ["unsafeFile"],
       commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
@@ -374,7 +431,7 @@ test_merge.parameters = {
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
-      unsafeDomains: ["unsafeDomain"],
+      unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: ["unsafeFile"],
       commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
@@ -398,7 +455,7 @@ test_merge.parameters = {
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
-      unsafeDomains: ["unsafeDomain"],
+      unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: ["unsafeFile"],
       commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
@@ -408,7 +465,7 @@ test_merge.parameters = {
     right: {
       common: {},
       trustedDomains: [],
-      unsafeDomains: [],
+      unsafeDomains: {},
       unsafeFiles: [],
       commonString: "",
       trustedDomainsString: "",
@@ -430,7 +487,7 @@ test_merge.parameters = {
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
-      unsafeDomains: ["unsafeDomain"],
+      unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: ["unsafeFile"],
       commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
@@ -454,7 +511,7 @@ test_merge.parameters = {
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain_left"],
-      unsafeDomains: ["unsafeDomain_left"],
+      unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: ["unsafeFile_left"],
       commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain_left",
@@ -476,7 +533,7 @@ test_merge.parameters = {
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
-      unsafeDomains: ["unsafeDomain_right"],
+      unsafeDomains: { "WARNING": ["unsafeDomain_right"] },
       unsafeFiles: ["unsafeFile_right"],
       commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nMainSkipIfNoExt = false\nAppointmentConfirmationEnabled = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
@@ -498,11 +555,11 @@ test_merge.parameters = {
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
-      unsafeDomains: ["unsafeDomain_left", "unsafeDomain_right"],
+      unsafeDomains: { "WARNING": ["unsafeDomain_left", "unsafeDomain_right"] },
       unsafeFiles: ["unsafeFile_left", "unsafeFile_right"],
       commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nMainSkipIfNoExt = false\nAppointmentConfirmationEnabled = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
-      unsafeDomainsString: "unsafeDomain_left\nunsafeDomain_right",
+      unsafeDomainsString: "unsafeDomain_left\n[WARNING]\nunsafeDomain_right",
       unsafeFilesString: "unsafeFile_left\nunsafeFile_right",
     },
   },
@@ -536,7 +593,7 @@ test_merge.parameters = {
         ],
       },
       trustedDomains: ["trustedDomain_left"],
-      unsafeDomains: ["unsafeDomain_left"],
+      unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: ["unsafeFile_left"],
       commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60\nFixedParameters = CountEnabled,CountAllowSkip,SafeBccEnabled,MainSkipIfNoExt,AppointmentConfirmationEnabled,SafeNewDomainsEnabled,CountSeconds,SafeBccThreshold,DelayDeliveryEnabled,DelayDeliverySeconds,TrustedDomains,UnsafeDomains,UnsafeFiles",
       trustedDomainsString: "trustedDomain_left",
@@ -558,7 +615,7 @@ test_merge.parameters = {
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
-      unsafeDomains: ["unsafeDomain_right"],
+      unsafeDomains: { "WARNING": ["unsafeDomain_right"] },
       unsafeFiles: ["unsafeFile_right"],
       commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nMainSkipIfNoExt = false\nAppointmentConfirmationEnabled = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
@@ -594,7 +651,7 @@ test_merge.parameters = {
         ],
       },
       trustedDomains: ["trustedDomain_left"],
-      unsafeDomains: ["unsafeDomain_left"],
+      unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: ["unsafeFile_left"],
       commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60\nFixedParameters = CountEnabled,CountAllowSkip,SafeBccEnabled,MainSkipIfNoExt,AppointmentConfirmationEnabled,SafeNewDomainsEnabled,CountSeconds,SafeBccThreshold,DelayDeliveryEnabled,DelayDeliverySeconds,TrustedDomains,UnsafeDomains,UnsafeFiles",
       trustedDomainsString: "trustedDomain_left",

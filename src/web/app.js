@@ -425,6 +425,22 @@ async function tryConfirm(data, asyncContext) {
   }
   console.debug("classified: ", data.classified);
 
+  if (data.classified.block.length > 0 || data.classified.blockWithDomain.length > 0) {
+    const { status, asyncContext: updatedAsyncContext } = await openDialog({
+      url: window.location.origin + "/block.html",
+      data,
+      asyncContext,
+      height: Math.min(40, charsToPercentage(30, screen.availHeight)),
+      width: Math.min(80, charsToPercentage(60, screen.availWidth)),
+    });
+    console.debug("status: ", status);
+    asyncContext = updatedAsyncContext;
+    return {
+      allowed: false,
+      asyncContext,
+    };
+  }
+
   if (data.config.common.MainSkipIfNoExt && data.classified.untrusted.length == 0) {
     console.log("Skip confirmation: no untrusted recipient");
     return {

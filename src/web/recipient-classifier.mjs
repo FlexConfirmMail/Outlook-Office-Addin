@@ -11,7 +11,8 @@ import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 export class RecipientClassifier {
   constructor({ trustedDomains, unsafeDomains } = {}) {
     this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
-    this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains);
+    this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains?.["WARNING"] || []);
+    this.$blockPatternsMatchers = this.generateMatchers(unsafeDomains?.["BLOCK"] || []);
     this.classify = this.classify.bind(this);
   }
 
@@ -59,6 +60,8 @@ export class RecipientClassifier {
     const untrusted = new Set();
     const unsafeWithDomain = new Set();
     const unsafe = new Set();
+    const blockWithDomain = new Set();
+    const block = new Set();
 
     if (recipients) {
       for (const recipient of recipients) {
@@ -80,6 +83,12 @@ export class RecipientClassifier {
         } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
           unsafe.add(classifiedRecipient);
         }
+
+        if (this.$blockPatternsMatchers.domain.test(classifiedRecipient.domain)) {
+          blockWithDomain.add(classifiedRecipient);
+        } else if (this.$blockPatternsMatchers.full.test(classifiedRecipient.address)) {
+          block.add(classifiedRecipient);
+        }
       }
     }
     return {
@@ -87,6 +96,8 @@ export class RecipientClassifier {
       untrusted: Array.from(untrusted),
       unsafeWithDomain: Array.from(unsafeWithDomain),
       unsafe: Array.from(unsafe),
+      blockWithDomain: Array.from(blockWithDomain),
+      block: Array.from(block),
     };
   }
 
@@ -166,6 +177,36 @@ export class RecipientClassifier {
             type: locale.get("confirmation_requiredAttendee"),
           })),
           ...classifiedOptionalAttendee.unsafe.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
+        ]),
+      ],
+      blockWithDomain: [
+        ...new Set([
+          ...classifiedTo.blockWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.blockWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.blockWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.blockWithDomain.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.blockWithDomain.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
+        ]),
+      ],
+      block: [
+        ...new Set([
+          ...classifiedTo.block.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.block.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.block.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.block.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.block.map((recipient) => ({
             ...recipient,
             type: locale.get("confirmation_optionalAttendee"),
           })),

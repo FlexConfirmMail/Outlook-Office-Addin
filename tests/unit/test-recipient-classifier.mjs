@@ -37,6 +37,8 @@ export function test_format() {
       ],
       unsafeWithDomain: [],
       unsafe: [],
+      blockWithDomain: [],
+      block: [],
     },
     classified
   );
@@ -49,7 +51,7 @@ test_classifyAddresses.parameters = {
       'bbb@example.com'
     ],
     trustedDomains: [],
-    unsafeDomains: [],
+    unsafeDomains: {},
     expected: {
       untrusted: [
         'aaa@example.com',
@@ -63,7 +65,10 @@ test_classifyAddresses.parameters = {
       'bbb@clear-code.com'
     ],
     trustedDomains: ['clear-code.com'],
-    unsafeDomains: ['unsafe.example.com'],
+    unsafeDomains: { 
+      'WARNING': ['unsafe.example.com'],
+      'BLOCK': ['unsafe.example.com'],
+    },
     expected: {
       trusted: [
         'aaa@clear-code.com',
@@ -77,7 +82,7 @@ test_classifyAddresses.parameters = {
       'bbb@example.com'
     ],
     trustedDomains: ['clear-code.com'],
-    unsafeDomains: [],
+    unsafeDomains: {},
     expected: {
       untrusted: [
         'aaa@example.com',
@@ -91,10 +96,16 @@ test_classifyAddresses.parameters = {
       'bbb+unsafe@example.com',
     ],
     trustedDomains: [],
-    unsafeDomains: [
-      'unsafe.example.com',
-      '*unsafe@example.com',
-    ],
+    unsafeDomains: { 
+      "WARNING": [
+        'unsafe.example.com',
+        '*unsafe@example.com',
+      ],
+      "BLOCK": [
+        'unsafe.example.com',
+        '*unsafe@example.com',
+      ],
+    },
     expected: {
       trusted: [],
       untrusted: [
@@ -107,6 +118,12 @@ test_classifyAddresses.parameters = {
       unsafe: [
         'bbb+unsafe@example.com',
       ],
+      blockWithDomain: [
+        'aaa@unsafe.example.com',
+      ],
+      block: [
+        'bbb+unsafe@example.com',
+      ],
     }
   },
   'mixed recipients must be classified to trusted and untrusted': {
@@ -117,7 +134,7 @@ test_classifyAddresses.parameters = {
       'ccc@clear-code.com'
     ],
     trustedDomains: ['clear-code.com'],
-    unsafeDomains: [],
+    unsafeDomains: {},
     expected: {
       trusted: [
         'aaa@clear-code.com',
@@ -137,10 +154,16 @@ test_classifyAddresses.parameters = {
       'ccc@clear-code.com'
     ],
     trustedDomains: ['clear-code.com'],
-    unsafeDomains: [
-      'example.com',
-      '*c@clear-code.com',
-    ],
+    unsafeDomains: { 
+      "WARNING": [
+        'example.com',
+        '*c@clear-code.com',
+      ],
+      "BLOCK": [
+        'example.com',
+        '*c@clear-code.com',
+      ],    
+    },
     expected: {
       trusted: [
         'aaa@clear-code.com',
@@ -156,6 +179,12 @@ test_classifyAddresses.parameters = {
       unsafe: [
         'ccc@clear-code.com'
       ],
+      blockWithDomain: [
+        'zzz@example.com',
+      ],
+      block: [
+        'ccc@clear-code.com'
+      ],
     }
   },
   'difference of cases in domains must be ignored': {
@@ -165,7 +194,10 @@ test_classifyAddresses.parameters = {
       'ccc@ExAmPlE.com',
     ],
     trustedDomains: ['clear-code.com'],
-    unsafeDomains: ['example.com'],
+    unsafeDomains: { 
+      "WARNING": ['example.com'],
+      "BLOCK": ['example.com'],
+    },
     expected: {
       trusted: [
         'aaa@CLEAR-code.com',
@@ -175,6 +207,9 @@ test_classifyAddresses.parameters = {
         'ccc@ExAmPlE.com',
       ],
       unsafeWithDomain: [
+        'ccc@ExAmPlE.com',
+      ],
+      blockWithDomain: [
         'ccc@ExAmPlE.com',
       ],
     }
@@ -188,7 +223,7 @@ test_classifyAddresses.parameters = {
       'address-like-nick@example.com <ddd@clear-code.com>'
     ],
     trustedDomains: ['clear-code.com'],
-    unsafeDomains: [],
+    unsafeDomains: {},
     expected: {
       trusted: [
         'aaa@clear-code.com',
@@ -207,7 +242,7 @@ test_classifyAddresses.parameters = {
       'bbb@un.clear-code.com'
     ],
     trustedDomains: ['clear-code.com'],
-    unsafeDomains: [],
+    unsafeDomains: {},
     expected: {
       trusted: [
         'aaa@clear-code.com'
@@ -223,7 +258,7 @@ test_classifyAddresses.parameters = {
       'bbb@un.clear-code.com'
     ],
     trustedDomains: ['un.clear-code.com'],
-    unsafeDomains: [],
+    unsafeDomains: {},
     expected: {
       trusted: [
         'bbb@un.clear-code.com'
@@ -239,7 +274,10 @@ test_classifyAddresses.parameters = {
       'bbb@example.com'
     ],
     trustedDomains: ['@clear-code.com'],
-    unsafeDomains: ['@example.com'],
+    unsafeDomains: { 
+      "WARNING": ['@example.com'],
+      "BLOCK": ['@example.com'],
+     },
     expected: {
       trusted: [
         'aaa@clear-code.com'
@@ -248,6 +286,9 @@ test_classifyAddresses.parameters = {
         'bbb@example.com'
       ],
       unsafeWithDomain: [
+        'bbb@example.com'
+      ],
+      blockWithDomain: [
         'bbb@example.com'
       ],
     }
@@ -262,10 +303,16 @@ test_classifyAddresses.parameters = {
       'example.com',
       '#example.net',
     ],
-    unsafeDomains: [
-      '#example.net',
-      '#*a@example.com',
-    ],
+    unsafeDomains: {
+      "WARNING": [
+        '#example.net',
+        '#*a@example.com',
+      ],
+      "BLOCK": [
+        '#example.net',
+        '#*a@example.com',
+      ]
+    },
     expected: {
       trusted: [
         'aaa@example.com',
@@ -287,12 +334,20 @@ test_classifyAddresses.parameters = {
       'example.net',
       '-example.net',
     ],
-    unsafeDomains: [
-      'example.com',
-      '-@example.com',
-      'example.net',
-      '-example.net',
-    ],
+    unsafeDomains: { 
+      "WARNING": [
+        'example.com',
+        '-@example.com',
+        'example.net',
+        '-example.net',
+      ],
+      "BLOCK": [
+        'example.com',
+        '-@example.com',
+        'example.net',
+        '-example.net',
+      ],  
+    },
     expected: {
       untrusted: [
         'aaa@example.com',
@@ -323,10 +378,16 @@ test_classifyAddresses.parameters = {
       '*.example.com',
       '?.example.net',
     ],
-    unsafeDomains: [
-      '*.example.org',
-      '?.example.jp',
-    ],
+    unsafeDomains: { 
+      "WARNING": [
+        '*.example.org',
+        '?.example.jp',
+      ],
+      "BLOCK": [
+        '*.example.org',
+        '?.example.jp',
+      ],  
+    },
     expected: {
       trusted: [
         'aaa@.example.com',
@@ -354,6 +415,12 @@ test_classifyAddresses.parameters = {
         'ccc@XX.example.org',
         'ddd@X.example.jp',
       ],
+      blockWithDomain: [
+        'ccc@.example.org',
+        'ccc@X.example.org',
+        'ccc@XX.example.org',
+        'ddd@X.example.jp',
+      ],
     }
   },
   'support local part': {
@@ -367,9 +434,14 @@ test_classifyAddresses.parameters = {
       '*.xx@example.com',
       '*.yy@example.com',
     ],
-    unsafeDomains: [
-      '*d@example.com',
-    ],
+    unsafeDomains: { 
+      "WARNING": [
+        '*d@example.com',
+      ],
+       "BLOCK": [
+        '*d@example.com',
+      ],   
+    },
     expected: {
       trusted: [
         'aaa.xx@example.com',
@@ -380,6 +452,9 @@ test_classifyAddresses.parameters = {
         'ddd@example.com',
       ],
       unsafe: [
+        'ddd@example.com',
+      ],
+      block: [
         'ddd@example.com',
       ],
     }
@@ -394,10 +469,16 @@ test_classifyAddresses.parameters = {
       '*.xx@example.com',
       '-*.xx@example.com',
     ],
-    unsafeDomains: [
-      '*.yy@example.com',
-      '-*.yy@example.com',
-    ],
+    unsafeDomains: { 
+      "WARNING": [
+        '*.yy@example.com',
+        '-*.yy@example.com',
+      ],
+      "BLOCK": [
+        '*.yy@example.com',
+        '-*.yy@example.com',
+      ],    
+    },
     expected: {
       untrusted: [
         'aaa.xx@example.com',
@@ -416,9 +497,14 @@ test_classifyAddresses.parameters = {
     trustedDomains: [
       '*.xx@*example.com',
     ],
-    unsafeDomains: [
-      '*.00@*example.net',
-    ],
+    unsafeDomains: { 
+      "WARNING": [
+        '*.00@*example.net',
+      ],
+      "BLOCK": [
+        '*.00@*example.net',
+      ],
+    },
     expected: {
       trusted: [
         'aaa.xx@foo.example.com',
@@ -431,6 +517,9 @@ test_classifyAddresses.parameters = {
       unsafe: [
         'ddd.00@bar.example.net',
       ],
+      block: [
+        'ddd.00@bar.example.net',
+      ],
     }
   },
 };
@@ -438,12 +527,14 @@ export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomai
   const classifier = new RecipientClassifier({ trustedDomains, unsafeDomains });
   const classified = classifier.classify(recipients);
   is(
-    Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [] }, expected),
+    Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [], blockWithDomain: [], block: [] }, expected),
     {
       trusted: classified.trusted.map(recipient => recipient.address),
       untrusted: classified.untrusted.map(recipient => recipient.address),
       unsafeWithDomain: classified.unsafeWithDomain.map(recipient => recipient.address),
       unsafe: classified.unsafe.map(recipient => recipient.address),
+      blockWithDomain: classified.blockWithDomain.map(recipient => recipient.address),
+      block: classified.block.map(recipient => recipient.address),
     }
   );
 }
@@ -461,7 +552,10 @@ test_classifyAll.parameters = {
         'ccc@example.net',
       ],
       trustedDomains: ['example.com'],
-      unsafeDomains: ['example.net'],
+      unsafeDomains: { 
+        "WARNING": ['example.net'],
+        "BLOCK": ['example.org']
+      },
     },
     expected: {
       trusted: [
@@ -487,6 +581,13 @@ test_classifyAll.parameters = {
           type: 'Bcc' },
       ],
       unsafe: [],
+      blockWithDomain: [
+        { recipient: 'bbb@example.org',
+          address: 'bbb@example.org',
+          domain: 'example.org',
+          type: 'Cc' }
+      ],
+      block: [],
     }
   },
 }

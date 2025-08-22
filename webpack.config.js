@@ -20,6 +20,7 @@ module.exports = async (env, options) => {
       app: ["./src/web/app.js"],
       confirm: ["./src/web/confirm.js"],
       "count-down": ["./src/web/count-down.js"],
+      block: ["./src/web/block.js"],
       setting: ["./src/web/setting.js"],
     },
     output: {
@@ -79,6 +80,11 @@ module.exports = async (env, options) => {
         filename: "confirm.html",
         template: "./src/web/confirm.html",
         chunks: ["confirm"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "block.html",
+        template: "./src/web/block.html",
+        chunks: ["block"],
       }),
       new HtmlWebpackPlugin({
         filename: "count-down.html",
