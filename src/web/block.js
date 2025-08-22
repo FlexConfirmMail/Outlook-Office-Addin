@@ -9,7 +9,7 @@ import { L10n } from "./l10n.mjs";
 import * as Dialog from "./dialog.mjs";
 
 let l10n;
-const warningObjects = [];
+const warningContents = [];
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -36,7 +36,7 @@ function sendStatusToParent(status) {
 }
 
 window.onOK = () => {
-  if (warningObjects.length > 0) {
+  if (warningContents.length > 0) {
     showNextWarning();
   } else {
     sendStatusToParent("ok");
@@ -44,23 +44,23 @@ window.onOK = () => {
 };
 
 function showNextWarning() {
-  if (warningObjects.length == 0) {
+  if (warningContents.length == 0) {
     return;
   }
-  const warning = warningObjects.shift();
+  const content = warningContents.shift();
   const dialogBody = document.getElementById("dialog-body");
   dialogBody.hidden = true;
   const targetElement = document.getElementById("block-list");
   targetElement.innerHTML = "";
-  for (const target of warning.targets) {
+  for (const target of content.targets) {
     const itemElement = document.createElement("li");
     const strongElement = document.createElement("strong");
     strongElement.textContent = target;
     itemElement.appendChild(strongElement);
     targetElement.appendChild(itemElement);
   }
-  document.getElementById("block-message-before").textContent = warning.messageBefore;
-  document.getElementById("block-message-after").textContent = warning.messageAfter;
+  document.getElementById("block-message-before").textContent = content.messageBefore;
+  document.getElementById("block-message-after").textContent = content.messageAfter;
   Dialog.resizeToContent();
   dialogBody.hidden = false;
 }
@@ -80,9 +80,12 @@ async function onMessageFromParent(arg) {
     for (const recipient of recipients) {
       targets.add(`${recipient.type}: ${recipient.address}`);
     }
-    const messageBefore = l10n.get("block_messageBeforeForRecipients");
+    const messageBefore = 
+      data.itemType == Office.MailboxEnums.ItemType.Message
+        ? l10n.get("block_messageBeforeForMailRecipients")
+        : l10n.get("block_messageBeforeForAppointmentRecipients");
     const messageAfter = l10n.get("block_messageAfterForRecipients");
-    warningObjects.push({ targets, messageBefore, messageAfter });
+    warningContents.push({ targets, messageBefore, messageAfter });
   }
   if (attachments.length > 0) {
     const targets = attachments.map((attachment) => attachment.name);
@@ -91,7 +94,7 @@ async function onMessageFromParent(arg) {
         ? l10n.get("block_messageBeforeForMailAttachments")
         : l10n.get("block_messageBeforeForAppointmentAttachments");
     const messageAfter = l10n.get("block_messageAfterForAttachments");
-    warningObjects.push({ targets, messageBefore, messageAfter });
+    warningContents.push({ targets, messageBefore, messageAfter });
   }
 
   showNextWarning();

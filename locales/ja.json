@@ -15,7 +15,6 @@
   "confirmation_requiredAttendee": "必須出席者",
   "confirmation_optionalAttendee": "任意出席者",
 
-  "block_messageBeforeForRecipients": "送信が禁止された宛先が含まれています。",
   "block_messageBeforeForMailRecipients": "送信が禁止された宛先が指定されているため、メールを送信できません。",
   "block_messageBeforeForAppointmentRecipients": "送信が禁止された宛先が指定されているため、予定を送信できません。",
   "block_messageAfterForRecipients": "宛先を変更してください。",
