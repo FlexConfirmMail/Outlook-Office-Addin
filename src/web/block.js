@@ -80,7 +80,7 @@ async function onMessageFromParent(arg) {
     for (const recipient of recipients) {
       targets.add(`${recipient.type}: ${recipient.address}`);
     }
-    const messageBefore = 
+    const messageBefore =
       data.itemType == Office.MailboxEnums.ItemType.Message
         ? l10n.get("block_messageBeforeForMailRecipients")
         : l10n.get("block_messageBeforeForAppointmentRecipients");

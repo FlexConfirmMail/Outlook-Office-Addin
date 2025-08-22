@@ -8,7 +8,6 @@ Copyright (c) 2025 ClearCode Inc.
 import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { Reconfirmation } from "./reconfirmation.mjs";
-import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import * as Dialog from "./dialog.mjs";
 
@@ -204,12 +203,7 @@ async function onMessageFromParent(arg) {
   // }
 
   console.log(data);
-  await Promise.all([
-    l10n.ready,
-    safeBccConfirmation.loaded,
-    attachmentsConfirmation.loaded,
-    addedDomainsReconfirmation.loaded,
-  ]);
+  await Promise.all([l10n.ready, safeBccConfirmation.loaded, addedDomainsReconfirmation.loaded]);
 
   if (data.classified.recipients.trusted.length == 0) {
     document.getElementById("check-all-trusted").disabled = true;
