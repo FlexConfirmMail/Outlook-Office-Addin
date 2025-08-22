@@ -20,6 +20,23 @@ Copyright (c) 2025 ClearCode Inc.
   margin-bottom: 10px;
 }
 
+.check-target.title {
+  margin-left: 0px;
+  margin-bottom: -1em;
+}
+
+fluent-card {
+  height: auto;
+}
+
+#mail-subject-card fluent-checkbox::part(label) {
+  font-size: initial;
+}
+
+#mail-body-card fluent-checkbox::part(label) {
+  font-size: initial;
+}
+
 #untrusted-domains fluent-checkbox::part(label) {
   color: red;
 }
@@ -133,4 +150,10 @@ fluent-card {
   flex-flow: column;
   justify-content: flex-start;
   overflow: auto;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }

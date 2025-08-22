@@ -219,6 +219,24 @@ async function onMessageFromParent(arg) {
   );
   appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
 
+  if (data.config.common.RequireCheckSubject) {
+    const mailSubject = document.getElementById("mail-subject");
+    mailSubject.textContent = data.target.subject;
+    document.getElementById("mail-subject-checkbox").checked = false;
+    document.getElementById("mail-subject-card").hidden = false;
+  }
+
+  if (data.config.common.RequireCheckBody) {
+    const mailBody = document.getElementById("mail-body");
+    const shadow = mailBody.attachShadow({ mode: "closed" });
+    const preElement = document.createElement("pre");
+    shadow.appendChild(preElement);
+    const sanitizedBody = DOMPurify.sanitize(data.target.body);
+    preElement.insertAdjacentHTML("beforeend", sanitizedBody);
+    document.getElementById("mail-body-checkbox").checked = false;
+    document.getElementById("mail-body-card").hidden = false;
+  }
+
   safeBccConfirmation.init(data);
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
 
