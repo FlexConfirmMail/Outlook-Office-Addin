@@ -338,10 +338,6 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
       resolve
     );
   });
-  console.log(Office.context.urls);
-  console.log(asyncContext);
-  console.log("window location");
-  console.log(window.location.href);
   asyncContext = asyncResult.asyncContext;
   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
     console.log(`Failed to open dialog: ${asyncResult.error.code}`);
