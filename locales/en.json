@@ -23,8 +23,8 @@
   "newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "There are attendees with domains not included in the attendees of the original appointment.",
   "newlyAddedDomainReconfirmation_messageAfter": "Do you really want to send this message?",
-  "newlyAddedDomainReconfirmation_sendButtonLabel": "Send",
-  "newlyAddedDomainReconfirmation_cancelButtonLabel": "Cancel",
+  "Reconfirmation_okButtonLabel": "OK",
+  "Reconfirmation_cancelButtonLabel": "Cancel",
 
   "countDown_messageBefore": "",
   "countDown_messageAfter": "seconds to send",

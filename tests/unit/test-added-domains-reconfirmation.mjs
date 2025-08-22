@@ -5,10 +5,19 @@
 */
 'use strict';
 
+import * as L10nUtils from "./l10n.mjs";
 import { AddedDomainsReconfirmation } from "../../src/web/added-domains-reconfirmation.mjs";
 import * as RecipientParser from "../../src/web/recipient-parser.mjs";
 import { assert } from 'tiny-esm-test-runner';
 const { ok, ng, is } = assert;
+
+let reconfirmation;
+
+export async function setUp() {
+  L10nUtils.clear();
+  reconfirmation = new AddedDomainsReconfirmation("ja");
+  await reconfirmation.ready;
+}
 
 function toTarget(address) {
   return { 
@@ -188,7 +197,6 @@ test_shouldReconfirm.parameters = {
   },
 };
 export function test_shouldReconfirm({ data, domains }) {
-  const reconfirmation = new AddedDomainsReconfirmation();
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
   ok(reconfirmation.needToConfirm);
@@ -318,7 +326,6 @@ test_shouldNotReconfirm.parameters = {
   },
 };
 export function test_shouldNotReconfirm(data) {
-  const reconfirmation = new AddedDomainsReconfirmation();
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
   ng(reconfirmation.needToConfirm);
