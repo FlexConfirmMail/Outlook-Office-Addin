@@ -20,7 +20,7 @@ export class Reconfirmation {
 
   initUI(sendStatusToParent) {
     window.onOkReconfirmation = () => {
-      if (this.currentContensIndex < this.confirmContents.length) {
+      if (this.currentContensIndex <= this.confirmContents.length) {
         this.showNextContent();
         return;
       }

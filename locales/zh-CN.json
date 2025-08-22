@@ -22,7 +22,9 @@
   "newlyAddedDomainReconfirmation_caption": "警告！",
   "newlyAddedDomainReconfirmation_messageBefore": "收件人添加了以下原邮件收件人中未包含的域名地址。",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "There are attendees with domains not included in the attendees of the original appointment.",
-  "newlyAddedDomainReconfirmation_messageAfter": "请确认是否要发送此邮件？",
+  "Reconfirmation_safeBccReconfirmationThresholdWarning": "To/Cc 包含${threshold}个以上的域。",
+  "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "Attendees 包含${threshold}个以上的域。",
+  "Reconfirmation_confirmToSend": "请确认是否要发送此邮件？",
   "Reconfirmation_okButtonLabel": "OK",
   "Reconfirmation_cancelButtonLabel": "取消",
 
@@ -53,6 +55,7 @@
   "setting_configAppointmentConfirmationEnabled": "Enable confirmation on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "当To/Cc包含许多域时发出警告",
   "setting_configSafeBccThreshold": "警告的阈值:",
+  "setting_configSafeBccReconfirmationThreshold": "Re-warn if To/Cc fields contain",
   "setting_configSafeNewDomainsEnabled": "当回复的收件人地址中新增了与现有收件人域名不同的地址时，系统将警告确认",
   "setting_configTrustedDomains": "信任域，地址",
   "setting_configUnsafeDomains": "不安全域，地址",

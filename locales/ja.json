@@ -23,7 +23,9 @@
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "変更前の予定の出席者に含まれていなかったドメインの以下の出席者が追加されています。",
-  "newlyAddedDomainReconfirmation_messageAfter": "送信してよろしいですか？",
+  "Reconfirmation_safeBccReconfirmationThresholdWarning": "To・Ccに${threshold}件以上のドメインが含まれています。",
+  "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "出席者に${threshold}件以上のドメインが含まれています。",
+  "Reconfirmation_confirmToSend": "送信してよろしいですか？",
   "Reconfirmation_okButtonLabel": "OK",
   "Reconfirmation_cancelButtonLabel": "キャンセル",
 

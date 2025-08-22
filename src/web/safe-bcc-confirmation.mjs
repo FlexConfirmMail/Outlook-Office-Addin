@@ -17,8 +17,10 @@ export class SafeBccConfirmation {
   }
 
   clear() {
-    this.shouldConfirm = false;
+    this.needToConfirm = false;
+    this.needToReconfirm = false;
     this.threshold = 0;
+    this.reconfirmationThreshold = 0;
     this.itemType = Office.MailboxEnums.ItemType.Message;
   }
 
@@ -28,21 +30,44 @@ export class SafeBccConfirmation {
       return;
     }
     this.threshold = data.config.common.SafeBccThreshold;
-    if (this.threshold < 1) {
-      return;
-    }
+    this.reconfirmationThreshold = data.config.common.SafeBccReconfirmationThreshold;
     const to = data.target.to ?? [];
     const cc = data.target.cc ?? [];
     const requiredAttendees = data.target.requiredAttendees ?? [];
     const optionalAttendees = data.target.optionalAttendees ?? [];
     const recipients = [...to, ...cc, ...requiredAttendees, ...optionalAttendees];
     const domains = new Set(recipients.map((recipient) => recipient.domain));
-    this.shouldConfirm = domains.size >= this.threshold;
+    if (this.threshold >= 1) {
+      this.needToConfirm = domains.size >= this.threshold;
+    }
+    if (this.reconfirmationThreshold >= 1) {
+      this.needToReconfirm = domains.size >= this.reconfirmationThreshold;
+    }
     this.itemType = data.itemType;
   }
 
+  generateReconfirmationContentElement() {
+    const strongElement = document.createElement("strong");
+    strongElement.textContent =
+      this.itemType === Office.MailboxEnums.ItemType.Message
+        ? this.locale.get("Reconfirmation_safeBccReconfirmationThresholdWarning", {
+            threshold: this.reconfirmationThreshold,
+          })
+        : this.locale.get("Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning", {
+            threshold: this.reconfirmationThreshold,
+          });
+    const messageAfterElement = document.createElement("p");
+    messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
+    const contentElement = document.createElement("div");
+    const messageBodyElement = document.createElement("p");
+    messageBodyElement.appendChild(strongElement);
+    contentElement.appendChild(messageBodyElement);
+    contentElement.appendChild(messageAfterElement);
+    return contentElement;
+  }
+
   get warningConfirmationItems() {
-    if (!this.shouldConfirm) {
+    if (!this.needToConfirm) {
       return [];
     }
 

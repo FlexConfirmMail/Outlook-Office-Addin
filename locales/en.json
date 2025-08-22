@@ -22,7 +22,9 @@
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "There are attendees with domains not included in the attendees of the original appointment.",
-  "newlyAddedDomainReconfirmation_messageAfter": "Do you really want to send this message?",
+  "Reconfirmation_safeBccReconfirmationThresholdWarning": "[Warn] To/Cc fields contain no less than ${threshold} domains.",
+  "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "[Warn] Attendee fields contain no less than ${threshold} domains.",
+  "Reconfirmation_confirmToSend": "Do you really want to send this message?",
   "Reconfirmation_okButtonLabel": "OK",
   "Reconfirmation_cancelButtonLabel": "Cancel",
 
@@ -53,6 +55,7 @@
   "setting_configAppointmentConfirmationEnabled": "Enable confirmation on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "Enable \"too many domains in To/Cc fields\" warnings",
   "setting_configSafeBccThreshold": "Warn if To/Cc fields contain",
+  "setting_configSafeBccReconfirmationThreshold": "Re-warn if To/Cc fields contain",
   "setting_configSafeNewDomainsEnabled": "Confirm when any recipients with domains different from any existing recipients are added",
   "setting_configTrustedDomains": "Trusted Domains and Addresses",
   "setting_configUnsafeDomains": "Unsafe Domains and Addresses",

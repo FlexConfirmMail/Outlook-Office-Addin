@@ -33,6 +33,7 @@
     "@microsoft/office-js": "^1.1.110",
     "bootstrap": "^5.3.6",
     "core-js": "^3.42.0",
+    "jsdom": "^26.1.0",
     "regenerator-runtime": "^0.14.1"
   },
   "devDependencies": {

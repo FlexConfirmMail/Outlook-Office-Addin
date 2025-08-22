@@ -89,9 +89,7 @@ export class AddedDomainsReconfirmation {
       this.itemType === Office.MailboxEnums.ItemType.Message
         ? this.locale.get("newlyAddedDomainReconfirmation_messageBefore")
         : this.locale.get("newlyAddedDomainReconfirmation_messageBeforeForAppointment");
-    messageAfterElement.textContent = this.locale.get(
-      "newlyAddedDomainReconfirmation_messageAfter"
-    );
+    messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
     const contentElement = document.createElement("div");
     contentElement.appendChild(messageBeforeElement);
     contentElement.appendChild(listElement);
