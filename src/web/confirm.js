@@ -217,7 +217,7 @@ async function onMessageFromParent(arg) {
   const groupedByTypeUntrusted = Object.groupBy(data.classified.untrusted, (item) => item.domain);
   appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
 
-  await safeBccConfirmation.init(data);
+  safeBccConfirmation.init(data);
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
 
   appendMiscWarningCheckboxes(
