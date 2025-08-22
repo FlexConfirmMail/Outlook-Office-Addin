@@ -9,7 +9,7 @@ import { L10n } from "./l10n.mjs";
 import { ConfigLoader } from "./config-loader.mjs";
 import * as RecipientParser from "./recipient-parser.mjs";
 import { RecipientClassifier } from "./recipient-classifier.mjs";
-import { AttachmentsConfirmation } from "./attachments-confirmation.mjs";
+import { AttachmentClassifier } from "./attachment-classifier.mjs";
 
 const ORIGINAL_RECIPIENTS_KEY = "FCM_OriginalRecipients";
 const ORIGINAL_ATTENDEES_KEY = "FCM_OriginalAttendees";
@@ -425,7 +425,7 @@ async function tryConfirm(data, asyncContext) {
       break;
     }
   }
-  data.classified.attachments = AttachmentsConfirmation.classify(data);
+  data.classified.attachments = AttachmentClassifier.classify(data);
   console.debug("classified: ", data.classified);
 
   if (

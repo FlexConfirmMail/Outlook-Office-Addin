@@ -5,7 +5,7 @@
 */
 'use strict';
 
-import { AttachmentsConfirmation } from "../../src/web/attachments-confirmation.mjs";
+import { AttachmentClassifier } from "../../src/web/attachment-classifier.mjs";
 import { assert } from "tiny-esm-test-runner";
 const { is } = assert;
 
@@ -151,7 +151,7 @@ test_classify.parameters = {
   },
 };
 export function test_classify({ data, trustedAttachments, unsafeAttachments, blockAttachments }) {
-  const classified = AttachmentsConfirmation.classify(data);
+  const classified = AttachmentClassifier.classify(data);
   is(trustedAttachments, classified.trusted);
   is(unsafeAttachments, classified.unsafe);
   is(blockAttachments, classified.block);

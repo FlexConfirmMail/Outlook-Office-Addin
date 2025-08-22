@@ -7,7 +7,7 @@ Copyright (c) 2025 ClearCode Inc.
 */
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
-export class AttachmentsConfirmation {
+export class AttachmentClassifier {
   static generateMatcher(patterns) {
     const uniquePatterns = new Set(
       (patterns || []).filter((pattern) => !pattern.startsWith("#")) // reject commented out items
