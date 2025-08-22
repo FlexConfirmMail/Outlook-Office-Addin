@@ -28,7 +28,7 @@ Office.onReady(() => {
   l10n.ready.then(() => l10n.translateAll());
   safeBccConfirmation = new SafeBccConfirmation(language);
   attachmentsConfirmation = new AttachmentsConfirmation(language);
-  reconfirmation = new Reconfirmation(language);
+  reconfirmation = new Reconfirmation();
   addedDomainsReconfirmation = new AddedDomainsReconfirmation(language);
 
   document.documentElement.setAttribute("lang", language);
