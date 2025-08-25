@@ -7,8 +7,9 @@ Copyright (c) 2025 ClearCode Inc.
 */
 import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
-import { Reconfirmation } from "./reconfirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
+import { Reconfirmation } from "./reconfirmation.mjs";
+import { ConfirmData } from "./confirm-data.mjs";
 import { UnsafeDomainsReconfirmation } from "./unsafe-domains-reconfirmation.mjs";
 import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation.mjs";
 import * as Dialog from "./dialog.mjs";
@@ -176,42 +177,9 @@ function appendCheckbox({ container, id, label, warning }) {
 }
 
 async function onMessageFromParent(arg) {
-  const data = JSON.parse(arg.message);
-
-  // The data scheme:
-  // data = {
-  //   target: {
-  //     to : [{emailAddress:"mail@example.com"}, ...],
-  //     cc : [...],
-  //     bcc : [...],
-  //     requiredAttendees : [...],
-  //     optionalAttendees : [...],
-  //     attachments: [{name:"...",size:0,isInline:false}, ...],
-  //   },
-  //   config: {
-  //     trustedDomains : ["example.com", ...],
-  //     unsafeDomains : [...],
-  //     unsafeFiles : [...],
-  //   },
-  //   originalRecipients: {
-  //     to : [...],
-  //     cc : [...],
-  //     bcc : [...],
-  //   },
-  //   classified: {
-  //     { recipients:
-  //       trusted: [...],
-  //       untrusted: [...],
-  //       unsafeWithDomain: [...],
-  //       unsafe: [...],
-  //       blockWithDomain: [...],
-  //       block: [...],
-  //     }
-  //   },
-  //   itemType: Office.MailboxEnums.ItemType.Message,
-  // }
-
-  console.log(data);
+  const receivedData = JSON.parse(arg.message);
+  console.log(receivedData);
+  const data = new ConfirmData(receivedData);
   await Promise.all([
     l10n.ready,
     safeBccConfirmation.loaded,
