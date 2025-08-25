@@ -13,6 +13,7 @@ export class RecipientClassifier {
     this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
     this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains?.["WARNING"] || []);
     this.$blockPatternsMatchers = this.generateMatchers(unsafeDomains?.["BLOCK"] || []);
+    this.$rewarningPatternsMatchers = this.generateMatchers(unsafeDomains?.["REWARNING"] || []);
     this.classify = this.classify.bind(this);
   }
 
@@ -62,6 +63,8 @@ export class RecipientClassifier {
     const unsafe = new Set();
     const blockWithDomain = new Set();
     const block = new Set();
+    const rewarningWithDomain = new Set();
+    const rewarning = new Set();
 
     if (recipients) {
       for (const recipient of recipients) {
@@ -89,6 +92,12 @@ export class RecipientClassifier {
         } else if (this.$blockPatternsMatchers.full.test(classifiedRecipient.address)) {
           block.add(classifiedRecipient);
         }
+
+        if (this.$rewarningPatternsMatchers.domain.test(classifiedRecipient.domain)) {
+          rewarningWithDomain.add(classifiedRecipient);
+        } else if (this.$rewarningPatternsMatchers.full.test(classifiedRecipient.address)) {
+          rewarning.add(classifiedRecipient);
+        }
       }
     }
     return {
@@ -98,6 +107,8 @@ export class RecipientClassifier {
       unsafe: Array.from(unsafe),
       blockWithDomain: Array.from(blockWithDomain),
       block: Array.from(block),
+      rewarningWithDomain: Array.from(rewarningWithDomain),
+      rewarning: Array.from(rewarning),
     };
   }
 
@@ -207,6 +218,36 @@ export class RecipientClassifier {
             type: locale.get("confirmation_requiredAttendee"),
           })),
           ...classifiedOptionalAttendee.block.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
+        ]),
+      ],
+      rewarningWithDomain: [
+        ...new Set([
+          ...classifiedTo.rewarningWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.rewarningWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.rewarningWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.rewarningWithDomain.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.rewarningWithDomain.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
+        ]),
+      ],
+      rewarning: [
+        ...new Set([
+          ...classifiedTo.rewarning.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.rewarning.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.rewarning.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.rewarning.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.rewarning.map((recipient) => ({
             ...recipient,
             type: locale.get("confirmation_optionalAttendee"),
           })),
