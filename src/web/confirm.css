@@ -105,6 +105,7 @@ fluent-dialog .reconfirmation-content strong {
 }
 
 fluent-card {
+  height: auto;
   margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 10px;
