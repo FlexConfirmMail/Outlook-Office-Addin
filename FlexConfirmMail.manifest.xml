@@ -7,7 +7,7 @@
   xsi:type="MailApp">
 
   <Id>20ecd0b2-4157-492b-8d0b-475b729f48eb</Id>
-  <Version>1.0.0.0</Version>
+  <Version>1.0.1.0</Version>
   <ProviderName>ClearCode</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="FlexConfirmMail"/>
