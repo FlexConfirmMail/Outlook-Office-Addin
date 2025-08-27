@@ -13,19 +13,19 @@ export class SafeBccConfirmation {
   constructor(language) {
     this.locale = L10n.get(language);
     this.ready = this.locale.ready;
-    this.clear();
-  }
-
-  clear() {
     this.needToConfirm = false;
     this.needToReconfirm = false;
     this.threshold = 0;
     this.reconfirmationThreshold = 0;
     this.itemType = Office.MailboxEnums.ItemType.Message;
+    this.initialized = false;
   }
 
   init(data) {
-    this.clear();
+    if (this.initialized) {
+      return;
+    }
+    this.initialized = true;
     if (!data.config.common.SafeBccEnabled) {
       return;
     }
