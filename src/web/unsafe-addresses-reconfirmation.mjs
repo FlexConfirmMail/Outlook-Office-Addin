@@ -43,8 +43,7 @@ export class UnsafeAddressesReconfirmation {
       itemElement.appendChild(strongElement);
       listElement.appendChild(itemElement);
     }
-    messageBeforeElement.textContent =
-      this.itemType === this.locale.get("Reconfirmation_unsafeAddresses");
+    messageBeforeElement.textContent = this.locale.get("Reconfirmation_unsafeAddresses");
     messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
     const contentElement = document.createElement("div");
     contentElement.appendChild(messageBeforeElement);
