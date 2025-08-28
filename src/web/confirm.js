@@ -10,11 +10,13 @@ import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { Reconfirmation } from "./reconfirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import * as Dialog from "./dialog.mjs";
+import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
 
 let l10n;
 let safeBccConfirmation;
 let reconfirmation;
 let addedDomainsReconfirmation;
+let unsafeFilesReconfirmation;
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -27,6 +29,7 @@ Office.onReady(() => {
   safeBccConfirmation = new SafeBccConfirmation(language);
   reconfirmation = new Reconfirmation();
   addedDomainsReconfirmation = new AddedDomainsReconfirmation(language);
+  unsafeFilesReconfirmation = new UnsafeFilesReconfirmation(language);
 
   document.documentElement.setAttribute("lang", language);
 
@@ -203,7 +206,12 @@ async function onMessageFromParent(arg) {
   // }
 
   console.log(data);
-  await Promise.all([l10n.ready, safeBccConfirmation.loaded, addedDomainsReconfirmation.loaded]);
+  await Promise.all([
+    l10n.ready,
+    safeBccConfirmation.loaded,
+    addedDomainsReconfirmation.loaded,
+    unsafeFilesReconfirmation.loaded,
+  ]);
 
   if (data.classified.recipients.trusted.length == 0) {
     document.getElementById("check-all-trusted").disabled = true;
@@ -249,7 +257,11 @@ async function onMessageFromParent(arg) {
   appendMiscCheckboxes(attachmentLabels);
 
   reconfirmation.initUI(sendStatusToParent);
-  for (const reconfirmationChecker of [addedDomainsReconfirmation, safeBccConfirmation]) {
+  for (const reconfirmationChecker of [
+    addedDomainsReconfirmation,
+    unsafeFilesReconfirmation,
+    safeBccConfirmation,
+  ]) {
     reconfirmationChecker.init(data);
     if (!reconfirmationChecker.needToReconfirm) {
       continue;
