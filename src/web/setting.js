@@ -33,15 +33,12 @@ Office.onReady(() => {
 });
 
 function toPolocyUnsafeConfigString(unsafeConfig) {
-  if (!unsafeConfig) 
-  {
+  if (!unsafeConfig) {
     return "";
   }
   let lines = [];
-  for (const sectionName of ConfigLoader.unsafeConfigSectionDefs)
-  {
-    if (unsafeConfig[sectionName] && unsafeConfig[sectionName].length > 0) 
-    {
+  for (const sectionName of ConfigLoader.unsafeConfigSectionDefs) {
+    if (unsafeConfig[sectionName] && unsafeConfig[sectionName].length > 0) {
       lines.push(`[${sectionName}]`);
       lines = lines.concat(unsafeConfig[sectionName]);
     }
@@ -84,7 +81,7 @@ function serializeTrustedDomains() {
 }
 
 function createDisplayUnsafeDomains() {
-    const policyUnsafeDomainsString = toPolocyUnsafeConfigString(policyConfig.unsafeDomains);
+  const policyUnsafeDomainsString = toPolocyUnsafeConfigString(policyConfig.unsafeDomains);
   if (policyUnsafeDomainsString) {
     let userUnsafeDomainsString = userConfig.unsafeDomainsString?.trim() ?? "";
     if (!userUnsafeDomainsString) {
