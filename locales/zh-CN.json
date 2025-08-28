@@ -27,8 +27,6 @@
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "There are attendees with domains not included in the attendees of the original appointment.",
   "Reconfirmation_safeBccReconfirmationThresholdWarning": "To/Cc 包含${threshold}个以上的域。",
   "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "Attendees 包含${threshold}个以上的域。",
-  "Reconfirmation_unsafeDomains": "The following unsafe domains found in the recipient list.",
-  "Reconfirmation_unsafeAddresses": "The following unsafe addresses found in the recipient list.",
   "Reconfirmation_unsafeFiles": "The following unsafe files found in the attachment list.",
   "Reconfirmation_confirmToSend": "请确认是否要发送此邮件？",
   "Reconfirmation_okButtonLabel": "OK",
