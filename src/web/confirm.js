@@ -251,8 +251,6 @@ async function onMessageFromParent(arg) {
   reconfirmation.initUI(sendStatusToParent);
   for (const reconfirmationChecker of [
     addedDomainsReconfirmation,
-    unsafeDomainsReconfirmation,
-    unsafeAddressesReconfirmation,
     safeBccConfirmation,
   ]) {
     reconfirmationChecker.init(data);
