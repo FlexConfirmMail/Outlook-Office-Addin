@@ -249,13 +249,12 @@ async function onMessageFromParent(arg) {
   appendMiscCheckboxes(attachmentLabels);
 
   reconfirmation.initUI(sendStatusToParent);
-  addedDomainsReconfirmation.init(data);
-  if (addedDomainsReconfirmation.needToConfirm) {
-    const content = addedDomainsReconfirmation.generateReconfirmationContentElement();
-    reconfirmation.appendContent(content);
-  }
-  if (safeBccConfirmation.needToReconfirm) {
-    const content = safeBccConfirmation.generateReconfirmationContentElement();
+  for (const reconfirmationChecker of [addedDomainsReconfirmation, safeBccConfirmation]) {
+    reconfirmationChecker.init(data);
+    if (!reconfirmationChecker.needToReconfirm) {
+      continue;
+    }
+    const content = reconfirmationChecker.generateReconfirmationContentElement();
     reconfirmation.appendContent(content);
   }
   Dialog.resizeToContent();

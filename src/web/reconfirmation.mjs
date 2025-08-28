@@ -20,32 +20,32 @@ export class Reconfirmation {
 
   initUI(sendStatusToParent) {
     window.onOkReconfirmation = () => {
-      if (this.currentContensIndex <= this.confirmContents.length) {
-        this.showNextContent();
+      if (this.showNextContent()) {
         return;
       }
       document.getElementById("reconfirmation-dialog").hidden = true;
       sendStatusToParent("ok");
     };
     window.onCancelReconfirmation = () => {
-      this.currentContensIndex = -1;
+      this.currentContensIndex = 0;
       document.getElementById("reconfirmation-dialog").hidden = true;
     };
   }
 
   showNextContent() {
-    this.currentContensIndex += 1;
-    if (this.currentContensIndex < 0 || this.currentContensIndex >= this.confirmContents.length) {
-      return;
+    if (this.currentContensIndex >= this.confirmContents.length) {
+      return false;
     }
     const content = this.confirmContents[this.currentContensIndex];
     const targetElement = document.getElementById("reconfirmations-card");
     targetElement.innerHTML = "";
     targetElement.appendChild(content);
+    this.currentContensIndex += 1;
+    return true;
   }
 
   show() {
-    this.currentContensIndex = -1;
+    this.currentContensIndex = 0;
     this.showNextContent();
     document.getElementById("reconfirmation-dialog").hidden = false;
   }
