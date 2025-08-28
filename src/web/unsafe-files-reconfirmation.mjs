@@ -25,7 +25,7 @@ export class UnsafeFilesReconfirmation {
     }
     this.initialized = true;
     this.rewarningFiles = new Set(
-      data.classified.attachments.rewarning.map((file) => file.name)
+      data.classified.attachments.rewarning.map((attachment) => attachment.name)
     );
     this.needToReconfirm = this.rewarningFiles.size > 0;
   }
