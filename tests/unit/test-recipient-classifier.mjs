@@ -575,6 +575,10 @@ test_classifyAll.parameters = {
           type: 'Bcc' },
       ],
       unsafeWithDomain: [
+        { recipient: 'bbb@example.org',
+          address: 'bbb@example.org',
+          domain: 'example.org',
+          type: 'Cc' },
         { recipient: 'ccc@example.net',
           address: 'ccc@example.net',
           domain: 'example.net',
