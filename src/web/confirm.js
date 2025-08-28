@@ -249,10 +249,7 @@ async function onMessageFromParent(arg) {
   appendMiscCheckboxes(attachmentLabels);
 
   reconfirmation.initUI(sendStatusToParent);
-  for (const reconfirmationChecker of [
-    addedDomainsReconfirmation,
-    safeBccConfirmation,
-  ]) {
+  for (const reconfirmationChecker of [addedDomainsReconfirmation, safeBccConfirmation]) {
     reconfirmationChecker.init(data);
     if (!reconfirmationChecker.needToReconfirm) {
       continue;
