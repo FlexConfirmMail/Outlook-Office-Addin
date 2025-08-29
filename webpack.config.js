@@ -74,6 +74,10 @@ module.exports = async (env, options) => {
             from: "node_modules/@fluentui/web-components/dist/web-components.min.js",
             to: "lib/fluentui/web-components/web-components.min.js",
           },
+          {
+            from: "node_modules/dompurify/dist/purify.min.js",
+            to: "lib/dompurify/purify.min.js",
+          },
         ],
       }),
       new HtmlWebpackPlugin({

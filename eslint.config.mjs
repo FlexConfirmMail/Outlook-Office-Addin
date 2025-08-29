@@ -21,6 +21,7 @@ export default defineConfig([
             ...globals.browser,
             Office: "readonly",
             $: "readonly",
+            DOMPurify: "readonly"
         },
     },
 
