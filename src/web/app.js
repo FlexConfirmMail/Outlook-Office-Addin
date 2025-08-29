@@ -306,7 +306,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         console.log(
           "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
         );
-        await sleepAsync(1000);
+        await sleepAsync(200);
         return openDialog({ url, data, asyncContext, ...params });
 
       case 12011:
