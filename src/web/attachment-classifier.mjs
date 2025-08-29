@@ -34,12 +34,15 @@ export class AttachmentClassifier {
   static classify(data) {
     const unsafe = new Set();
     const block = new Set();
+    const rewarning = new Set();
     const attachments = data.target.attachments || [];
     const unsafeFilesConfig = data.config.unsafeFiles || {};
     const warningFilesConfig = unsafeFilesConfig?.["WARNING"] || [];
     const blockFilesConfig = unsafeFilesConfig?.["BLOCK"] || [];
+    const rewarningFilesConfig = unsafeFilesConfig?.["REWARNING"] || [];
     const warningAttachmentMatcher = this.generateMatcher(warningFilesConfig);
     const blockAttachmentMatcher = this.generateMatcher(blockFilesConfig);
+    const rewarningAttachmentMatcher = this.generateMatcher(rewarningFilesConfig);
 
     const trusted = new Set(attachments);
     for (const attachment of attachments) {
@@ -51,11 +54,17 @@ export class AttachmentClassifier {
         block.add(attachment);
         trusted.delete(attachment);
       }
+      if (rewarningAttachmentMatcher && rewarningAttachmentMatcher.test(attachment.name)) {
+        unsafe.add(attachment);
+        rewarning.add(attachment);
+        trusted.delete(attachment);
+      }
     }
     return {
       trusted: Array.from(trusted),
       unsafe: Array.from(unsafe),
       block: Array.from(block),
+      rewarning: Array.from(rewarning),
     };
   }
 }
