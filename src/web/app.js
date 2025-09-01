@@ -260,11 +260,14 @@ async function tryCountDown(data, asyncContext) {
 
 async function onItemSend(event) {
   let asyncContext = event;
-  const data = await ConfirmData.getCurrentDataAsync(
-    Office.context.mailbox.item.itemType,
-    locale
-  );
+  const data = await ConfirmData.getCurrentDataAsync(Office.context.mailbox.item.itemType, locale);
   console.debug(data);
+
+  if (data.shouldSkipAll()) {
+    asyncContext.completed({ allowEvent: true });
+    return;
+  }
+
   {
     const { allowed, asyncContext: updatedAsyncContext } = await tryConfirm(data, asyncContext);
     if (!allowed) {

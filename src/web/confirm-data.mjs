@@ -111,6 +111,14 @@ export class ConfirmData {
     );
   }
 
+  shouldSkipAll() {
+    const appointmentConfirmationEnabled =
+      this.config.common?.AppointmentConfirmationEnabled ?? false;
+    return (
+      this.itemType === Office.MailboxEnums.ItemType.Appointment && !appointmentConfirmationEnabled
+    );
+  }
+
   static async getCurrentDataAsync(itemType, locale) {
     const messageData =
       itemType == Office.MailboxEnums.ItemType.Message
