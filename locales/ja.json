@@ -29,6 +29,7 @@
   "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "出席者に${threshold}件以上のドメインが含まれています。",
   "Reconfirmation_unsafeDomains": "注意が必要な以下のドメインが含まれています。",
   "Reconfirmation_unsafeAddresses": "注意が必要な以下の宛先が含まれています。",
+  "Reconfirmation_unsafeFiles": "注意が必要な以下のファイルが含まれています。",
   "Reconfirmation_confirmToSend": "送信してよろしいですか？",
   "Reconfirmation_okButtonLabel": "OK",
   "Reconfirmation_cancelButtonLabel": "キャンセル",

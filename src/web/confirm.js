@@ -12,6 +12,7 @@ import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
 import { UnsafeDomainsReconfirmation } from "./unsafe-domains-reconfirmation.mjs";
 import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation.mjs";
 import * as Dialog from "./dialog.mjs";
+import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
 
 let l10n;
 let safeBccConfirmation;
@@ -19,6 +20,7 @@ let reconfirmation;
 let addedDomainsReconfirmation;
 let unsafeDomainsReconfirmation;
 let unsafeAddressesReconfirmation;
+let unsafeFilesReconfirmation;
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -33,6 +35,7 @@ Office.onReady(() => {
   addedDomainsReconfirmation = new AddedDomainsReconfirmation(language);
   unsafeDomainsReconfirmation = new UnsafeDomainsReconfirmation(language);
   unsafeAddressesReconfirmation = new UnsafeAddressesReconfirmation(language);
+  unsafeFilesReconfirmation = new UnsafeFilesReconfirmation(language);
 
   document.documentElement.setAttribute("lang", language);
 
@@ -215,6 +218,7 @@ async function onMessageFromParent(arg) {
     addedDomainsReconfirmation.loaded,
     unsafeDomainsReconfirmation.loaded,
     unsafeAddressesReconfirmation.loaded,
+    unsafeFilesReconfirmation.loaded,
   ]);
 
   if (data.classified.recipients.trusted.length == 0) {
@@ -265,6 +269,7 @@ async function onMessageFromParent(arg) {
     addedDomainsReconfirmation,
     unsafeDomainsReconfirmation,
     unsafeAddressesReconfirmation,
+    unsafeFilesReconfirmation,
     safeBccConfirmation,
   ]) {
     reconfirmationChecker.init(data);
