@@ -251,7 +251,7 @@ export class OfficeDataAccessHelper {
     });
   }
 
-  async setOriginalRecipientsSessionDataAsync(itemType, value) {
+  static async setOriginalRecipientsSessionDataAsync(itemType, value) {
     const key =
       itemType == Office.MailboxEnums.ItemType.Message
         ? OfficeDataAccessHelper.ORIGINAL_RECIPIENTS_KEY
@@ -259,7 +259,7 @@ export class OfficeDataAccessHelper {
     await OfficeDataAccessHelper.setSessionDataAsync(key, value);
   }
 
-  async removeOriginalRecipientsSessionDataAsync(itemType) {
+  static async removeOriginalRecipientsSessionDataAsync(itemType) {
     const key =
       itemType == Office.MailboxEnums.ItemType.Message
         ? OfficeDataAccessHelper.ORIGINAL_RECIPIENTS_KEY
