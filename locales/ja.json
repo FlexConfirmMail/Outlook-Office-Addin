@@ -2,6 +2,8 @@
   "confirmation_trustedCaption": "登録済みドメインのメールアドレス",
   "confirmation_trustedCheckAllButtonLabel": "一括チェック",
   "confirmation_untrustedCaption": "外部ドメインのメールアドレス",
+  "confirmation_subjectCaption": "件名",
+  "confirmation_bodyCaption": "本文",
   "confirmation_miscCaption": "添付ファイル/その他の警告",
   "confirmation_sendButtonLabel": "送信",
   "confirmation_cancelButtonLabel": "キャンセル",
@@ -74,5 +76,7 @@
   "setting_cancel": "キャンセル",
   "setting_configDelayDeliveryTime": "遅延送信設定",
   "setting_delayDeliveryEnabled": "遅延送信を有効化する",
-  "setting_delayDeliverySeconds": "送信までの遅延秒数:"
+  "setting_delayDeliverySeconds": "送信までの遅延秒数:",
+  "setting_requireCheckSubject": "件名の確認を求める",
+  "setting_requireCheckBody": "メール本文の確認を求める"
 }

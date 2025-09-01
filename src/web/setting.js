@@ -188,6 +188,11 @@ function updateDialogSetting(policy, user) {
   document.getElementById("countAllowSkip").disabled = fixedParametersSet.has("CountAllowSkip");
   document.getElementById("safeBccEnabled").checked = common.SafeBccEnabled;
   document.getElementById("safeBccEnabled").disabled = fixedParametersSet.has("SafeBccEnabled");
+  document.getElementById("requireCheckSubject").checked = common.RequireCheckSubject;
+  document.getElementById("requireCheckSubject").disabled =
+    fixedParametersSet.has("RequireCheckSubject");
+  document.getElementById("requireCheckBody").checked = common.RequireCheckBody;
+  document.getElementById("requireCheckBody").disabled = fixedParametersSet.has("RequireCheckBody");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
   document.getElementById("mainSkipIfNoExt").disabled = fixedParametersSet.has("MainSkipIfNoExt");
   document.getElementById("AppointmentConfirmationEnabled").checked =
@@ -245,6 +250,8 @@ function serializeCommonConfigs() {
     "safeBccReconfirmationThreshold"
   ).value;
   const safeNewDomainsEnabled = document.getElementById("safeNewDomainsEnabled").checked;
+  const requireCheckSubject = document.getElementById("requireCheckSubject").checked;
+  const requireCheckBody = document.getElementById("requireCheckBody").checked;
   const mainSkipIfNoExt = document.getElementById("mainSkipIfNoExt").checked;
   const appointmentConfirmationEnabled = document.getElementById(
     "AppointmentConfirmationEnabled"
@@ -262,6 +269,8 @@ function serializeCommonConfigs() {
     safeBccReconfirmationThreshold
   );
   commonConfigString += serializeCommonConfig("SafeNewDomainsEnabled", safeNewDomainsEnabled);
+  commonConfigString += serializeCommonConfig("RequireCheckSubject", requireCheckSubject);
+  commonConfigString += serializeCommonConfig("RequireCheckBody", requireCheckBody);
   commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
   commonConfigString += serializeCommonConfig(
     "AppointmentConfirmationEnabled",

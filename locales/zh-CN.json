@@ -2,6 +2,8 @@
   "confirmation_trustedCaption": "信任域，地址",
   "confirmation_trustedCheckAllButtonLabel": "勾选所有",
   "confirmation_untrustedCaption": "外部目的地",
+  "confirmation_subjectCaption": "主题",
+  "confirmation_bodyCaption": "正文",
   "confirmation_miscCaption": "附件 / 警告",
   "confirmation_sendButtonLabel": "发送",
   "confirmation_cancelButtonLabel": "取消",
@@ -74,5 +76,7 @@
   "setting_cancel": "取消",
   "setting_configDelayDeliveryTime": "Delay delivery",
   "setting_delayDeliveryEnabled": "Enable delay delivery",
-  "setting_delayDeliverySeconds": "Delay delivery a message by (in seconds)"
+  "setting_delayDeliverySeconds": "Delay delivery a message by (in seconds)",
+  "setting_requireCheckSubject": "要求确认主题",
+  "setting_requireCheckBody": "要求确认电子邮件的文本"
 }

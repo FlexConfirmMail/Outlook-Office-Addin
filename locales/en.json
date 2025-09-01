@@ -2,6 +2,8 @@
   "confirmation_trustedCaption": "Internal Recipients",
   "confirmation_trustedCheckAllButtonLabel": "Check all",
   "confirmation_untrustedCaption": "External Recipients",
+  "confirmation_subjectCaption": "Subject",
+  "confirmation_bodyCaption": "Body",
   "confirmation_miscCaption": "Attachments / Warnings",
   "confirmation_sendButtonLabel": "Send",
   "confirmation_cancelButtonLabel": "Cancel",
@@ -74,5 +76,7 @@
   "setting_cancel": "Cancel",
   "setting_configDelayDeliveryTime": "Delay delivery",
   "setting_delayDeliveryEnabled": "Enable delay delivery",
-  "setting_delayDeliverySeconds": "Delay delivery a message by (in seconds)"
+  "setting_delayDeliverySeconds": "Delay delivery a message by (in seconds)",
+  "setting_requireCheckSubject": "Require check the subject",
+  "setting_requireCheckBody": "Require to check the message body"
 }
