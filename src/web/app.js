@@ -23,38 +23,6 @@ function sleepAsync(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-
-function getSubjectAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.subject.getAsync((asyncResult) => {
-        const subject = asyncResult.value;
-        resolve(subject);
-      });
-    } catch (error) {
-      console.log(`Error while getting subject: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getBodyAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.body.getAsync(
-        Office.CoercionType.Html,
-        { bodyMode: Office.MailboxEnums.BodyMode.Full },
-        (asyncResult) => {
-          const body = asyncResult.value;
-          resolve(body);
-        }
-      );
-    } catch (error) {
-      console.log(`Error while getting body: ${error}`);
-      reject(error);
-    }
-  });
-}
 async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params }) {
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
