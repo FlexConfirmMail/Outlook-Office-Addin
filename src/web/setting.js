@@ -32,6 +32,20 @@ Office.onReady(() => {
   sendStatusToParent("ready");
 });
 
+function toPolocyUnsafeConfigString(unsafeConfig) {
+  if (!unsafeConfig) {
+    return "";
+  }
+  let lines = [];
+  for (const sectionName of ConfigLoader.unsafeConfigSectionDefs) {
+    if (unsafeConfig[sectionName] && unsafeConfig[sectionName].length > 0) {
+      lines.push(`[${sectionName}]`);
+      lines = lines.concat(unsafeConfig[sectionName]);
+    }
+  }
+  return lines.join("\n# ");
+}
+
 function createDisplayTrustedDomains() {
   if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
     const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
@@ -67,8 +81,8 @@ function serializeTrustedDomains() {
 }
 
 function createDisplayUnsafeDomains() {
-  if (policyConfig.unsafeDomains && policyConfig.unsafeDomains.length > 0) {
-    const policyUnsafeDomainsString = policyConfig.unsafeDomains?.join("\n# ") ?? "";
+  const policyUnsafeDomainsString = toPolocyUnsafeConfigString(policyConfig.unsafeDomains);
+  if (policyUnsafeDomainsString) {
     let userUnsafeDomainsString = userConfig.unsafeDomainsString?.trim() ?? "";
     if (!userUnsafeDomainsString) {
       userUnsafeDomainsString = l10n.get("setting_unsafeDomainsExample");
@@ -86,11 +100,11 @@ function createDisplayUnsafeDomains() {
 
 function serializeUnsafeDomains() {
   let unsafeDomainsString = document.getElementById("unsafeDomainsTextArea").value ?? "";
-  if (policyConfig.unsafeDomains && policyConfig.unsafeDomains.length > 0) {
-    const policyDomainsString = policyConfig.unsafeDomains?.join("\n# ") ?? "";
+  const policyUnsafeDomainsString = toPolocyUnsafeConfigString(policyConfig.unsafeDomains);
+  if (policyUnsafeDomainsString) {
     const template = l10n
       .get("setting_unsafeDomainsPolicy", {
-        policy: policyDomainsString,
+        policy: policyUnsafeDomainsString,
         user: "",
       })
       .trim();
@@ -101,8 +115,8 @@ function serializeUnsafeDomains() {
 }
 
 function createDisplayUnsafeFiles() {
-  if (policyConfig.unsafeFiles && policyConfig.unsafeFiles.length > 0) {
-    const policyUnsafeFilesString = policyConfig.unsafeFiles?.join("\n# ") ?? "";
+  const policyUnsafeFilesString = toPolocyUnsafeConfigString(policyConfig.unsafeFiles);
+  if (policyUnsafeFilesString) {
     let userUnsafeFilesString = userConfig.unsafeFilesString?.trim() ?? "";
     if (!userUnsafeFilesString) {
       userUnsafeFilesString = l10n.get("setting_unsafeFilesExample");
@@ -119,9 +133,9 @@ function createDisplayUnsafeFiles() {
 }
 
 function serializeUnsafeFiles() {
+  const policyUnsafeFilesString = toPolocyUnsafeConfigString(policyConfig.unsafeFiles);
   let unsafeFilesString = document.getElementById("unsafeFilesTextArea").value ?? "";
-  if (policyConfig.unsafeFiles && policyConfig.unsafeFiles.length > 0) {
-    const policyUnsafeFilesString = policyConfig.unsafeFiles?.join("\n# ") ?? "";
+  if (policyUnsafeFilesString) {
     const template = l10n
       .get("setting_unsafeFilesPolicy", {
         policy: policyUnsafeFilesString,

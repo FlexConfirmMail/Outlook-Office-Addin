@@ -9,6 +9,8 @@ import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { Reconfirmation } from "./reconfirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
+import { UnsafeDomainsReconfirmation } from "./unsafe-domains-reconfirmation.mjs";
+import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation.mjs";
 import * as Dialog from "./dialog.mjs";
 import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
 
@@ -16,6 +18,8 @@ let l10n;
 let safeBccConfirmation;
 let reconfirmation;
 let addedDomainsReconfirmation;
+let unsafeDomainsReconfirmation;
+let unsafeAddressesReconfirmation;
 let unsafeFilesReconfirmation;
 
 Office.onReady(() => {
@@ -29,6 +33,8 @@ Office.onReady(() => {
   safeBccConfirmation = new SafeBccConfirmation(language);
   reconfirmation = new Reconfirmation();
   addedDomainsReconfirmation = new AddedDomainsReconfirmation(language);
+  unsafeDomainsReconfirmation = new UnsafeDomainsReconfirmation(language);
+  unsafeAddressesReconfirmation = new UnsafeAddressesReconfirmation(language);
   unsafeFilesReconfirmation = new UnsafeFilesReconfirmation(language);
 
   document.documentElement.setAttribute("lang", language);
@@ -210,6 +216,8 @@ async function onMessageFromParent(arg) {
     l10n.ready,
     safeBccConfirmation.loaded,
     addedDomainsReconfirmation.loaded,
+    unsafeDomainsReconfirmation.loaded,
+    unsafeAddressesReconfirmation.loaded,
     unsafeFilesReconfirmation.loaded,
   ]);
 
@@ -259,6 +267,8 @@ async function onMessageFromParent(arg) {
   reconfirmation.initUI(sendStatusToParent);
   for (const reconfirmationChecker of [
     addedDomainsReconfirmation,
+    unsafeDomainsReconfirmation,
+    unsafeAddressesReconfirmation,
     unsafeFilesReconfirmation,
     safeBccConfirmation,
   ]) {
