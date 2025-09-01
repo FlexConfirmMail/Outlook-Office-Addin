@@ -111,7 +111,7 @@ export class ConfirmData {
     );
   }
 
-  static async generateNewDataAsync(itemType, locale) {
+  static async getCurrentDataAsync(itemType, locale) {
     const messageData =
       itemType == Office.MailboxEnums.ItemType.Message
         ? await OfficeDataAccessHelper.getAllMailData()
