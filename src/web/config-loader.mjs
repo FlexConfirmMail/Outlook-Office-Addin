@@ -21,7 +21,7 @@ export class ConfigLoader {
     FixedParameters: "commaSeparatedValues",
   };
 
-  static unsafeConfigSectionDefs = ["WARNING", "BLOCK"];
+  static unsafeConfigSectionDefs = ["WARNING", "BLOCK", "REWARNING"];
 
   static defaultUnsafeConfigSection = "WARNING";
 
