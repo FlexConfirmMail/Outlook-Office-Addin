@@ -228,11 +228,8 @@ async function onMessageFromParent(arg) {
 
   if (data.config.common.RequireCheckBody) {
     const mailBody = document.getElementById("mail-body");
-    const shadow = mailBody.attachShadow({ mode: "closed" });
-    const preElement = document.createElement("pre");
-    shadow.appendChild(preElement);
     const sanitizedBody = DOMPurify.sanitize(data.target.body);
-    preElement.insertAdjacentHTML("beforeend", sanitizedBody);
+    mailBody.insertAdjacentHTML("beforeend", sanitizedBody);
     document.getElementById("mail-body-checkbox").checked = false;
     document.getElementById("mail-body-card").hidden = false;
   }
