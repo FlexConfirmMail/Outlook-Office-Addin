@@ -8,7 +8,7 @@ Copyright (c) 2025 ClearCode Inc.
 import { L10n } from "./l10n.mjs";
 
 export class AddedDomainsReconfirmation {
-  needToConfirm = false;
+  needToReconfirm = false;
   newDomainAddresses = new Set();
   initialized = false;
   locale = "jp";
@@ -67,10 +67,7 @@ export class AddedDomainsReconfirmation {
       }
       this.newDomainAddresses.add(recipient.address);
     }
-    this.needToConfirm = this.newDomainAddresses.size > 0;
-    if (!this.needToConfirm) {
-      return;
-    }
+    this.needToReconfirm = this.newDomainAddresses.size > 0;
   }
 
   generateReconfirmationContentElement() {
