@@ -137,7 +137,7 @@ function charsToPercentage(chars, maxSize) {
 async function tryConfirm(data, asyncContext) {
   console.debug("classified: ", data.classified);
 
-  if (data.shouldBlock()) {
+  if (data.blockSending) {
     const { status, asyncContext: updatedAsyncContext } = await openDialog({
       url: window.location.origin + "/block.html",
       data,
@@ -153,7 +153,7 @@ async function tryConfirm(data, asyncContext) {
     };
   }
 
-  if (data.shouldSkipConfirm()) {
+  if (data.skipConfirm) {
     console.log("Skip confirmation: no untrusted recipient");
     return {
       allowed: true,
@@ -231,7 +231,7 @@ async function onItemSend(event) {
   const data = await ConfirmData.getCurrentDataAsync(Office.context.mailbox.item.itemType, locale);
   console.debug(data);
 
-  if (data.shouldSkipAll()) {
+  if (data.skipAll) {
     asyncContext.completed({ allowEvent: true });
     return;
   }
@@ -258,7 +258,7 @@ async function onItemSend(event) {
 
   console.debug("granted: continue to send");
 
-  if (data.shouldDelayDelivery()) {
+  if (data.delayDelivery) {
     const currentSetting = await OfficeDataAccessHelper.getDelayDeliveryTime();
     if (currentSetting == 0) {
       const currentTime = new Date().getTime();

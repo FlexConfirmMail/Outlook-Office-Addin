@@ -92,7 +92,7 @@ export class ConfirmData {
     this.classified.attachments = AttachmentClassifier.classify(this);
   }
 
-  shouldBlock() {
+  get blockSending() {
     return (
       this.classified.recipients.block.length > 0 ||
       this.classified.recipients.blockWithDomain.length > 0 ||
@@ -100,18 +100,18 @@ export class ConfirmData {
     );
   }
 
-  shouldSkipConfirm() {
+  get skipConfirm() {
     return this.config.common.MainSkipIfNoExt && this.classified.recipients.untrusted.length == 0;
   }
 
-  shouldDelayDelivery() {
+  get delayDelivery() {
     return (
       this.itemType === Office.MailboxEnums.ItemType.Message &&
       this.config.common?.DelayDeliveryEnabled
     );
   }
 
-  shouldSkipAll() {
+  get skipAll() {
     const appointmentConfirmationEnabled =
       this.config.common?.AppointmentConfirmationEnabled ?? false;
     return (
