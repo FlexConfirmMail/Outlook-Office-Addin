@@ -8,12 +8,12 @@ Copyright (c) 2025 ClearCode Inc.
 import { L10n } from "./l10n.mjs";
 import { SafeBccConfirmation } from "./safe-bcc-confirmation.mjs";
 import { AddedDomainsReconfirmation } from "./added-domains-reconfirmation.mjs";
-import { Reconfirmation } from "./reconfirmation.mjs";
 import { ConfirmData } from "./confirm-data.mjs";
+import { Reconfirmation } from "./reconfirmation.mjs";
 import { UnsafeDomainsReconfirmation } from "./unsafe-domains-reconfirmation.mjs";
 import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation.mjs";
-import * as Dialog from "./dialog.mjs";
 import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
+import * as Dialog from "./dialog.mjs";
 
 let l10n;
 let safeBccConfirmation;
