@@ -199,7 +199,7 @@ test_shouldReconfirm.parameters = {
 export function test_shouldReconfirm({ data, domains }) {
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
-  ok(reconfirmation.needToConfirm);
+  ok(reconfirmation.needToReconfirm);
   is(new Set(domains), reconfirmation.newDomainAddresses);
 }
 
@@ -328,6 +328,6 @@ test_shouldNotReconfirm.parameters = {
 export function test_shouldNotReconfirm(data) {
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
-  ng(reconfirmation.needToConfirm);
+  ng(reconfirmation.needToReconfirm);
   is(new Set(), reconfirmation.newDomainAddresses);
 }
