@@ -445,7 +445,19 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nRequireCheckSubject = true\nRequireCheckBody = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      commonString:
+        "CountEnabled = true\n" +
+        "CountAllowSkip = true\n" +
+        "SafeBccEnabled = true\n" +
+        "RequireCheckSubject = true\n" +
+        "RequireCheckBody = true\n" +
+        "MainSkipIfNoExt = true\n" +
+        "AppointmentConfirmationEnabled = true\n" +
+        "SafeNewDomainsEnabled = true\n" +
+        "CountSeconds = 3\n" +
+        "SafeBccThreshold = 4\n" +
+        "DelayDeliveryEnabled = true\n" +
+        "DelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -470,7 +482,20 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nRequireCheckSubject = true\nRequireCheckBody = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nSafeBccReconfirmationThreshold = 0\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      commonString:
+        "CountEnabled = true\n" +
+        "CountAllowSkip = true\n" +
+        "SafeBccEnabled = true\n" +
+        "RequireCheckSubject = true\n" +
+        "RequireCheckBody = true\n" +
+        "MainSkipIfNoExt = true\n" +
+        "AppointmentConfirmationEnabled = true\n" +
+        "SafeNewDomainsEnabled = true\n" +
+        "CountSeconds = 3\n" +
+        "SafeBccThreshold = 4\n" +
+        "SafeBccReconfirmationThreshold = 0\n" +
+        "DelayDeliveryEnabled = true\n" +
+        "DelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -497,7 +522,20 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nRequireCheckSubject = true\nRequireCheckBody = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nSafeBccReconfirmationThreshold = 0\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      commonString: 
+        "CountEnabled = true\n" +
+        "CountAllowSkip = true\n" +
+        "SafeBccEnabled = true\n" +
+        "RequireCheckSubject = true\n" +
+        "RequireCheckBody = true\n" +
+        "MainSkipIfNoExt = true\n" +
+        "AppointmentConfirmationEnabled = true\n" +
+        "SafeNewDomainsEnabled = true\n" +
+        "CountSeconds = 3\n" +
+        "SafeBccThreshold = 4\n" +
+        "SafeBccReconfirmationThreshold = 0\n" +
+        "DelayDeliveryEnabled = true\n" +
+        "DelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -532,7 +570,20 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nRequireCheckSubject = true\nRequireCheckBody = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nSafeBccReconfirmationThreshold = 0\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      commonString: 
+        "CountEnabled = true\n" +
+        "CountAllowSkip = true\n" +
+        "SafeBccEnabled = true\n" +
+        "RequireCheckSubject = true\n" +
+        "RequireCheckBody = true\n" +
+        "MainSkipIfNoExt = true\n" +
+        "AppointmentConfirmationEnabled = true\n" +
+        "SafeNewDomainsEnabled = true\n" +
+        "CountSeconds = 3\n" +
+        "SafeBccThreshold = 4\n" +
+        "SafeBccReconfirmationThreshold = 0\n" +
+        "DelayDeliveryEnabled = true\n" +
+        "DelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -559,7 +610,19 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left"] },
-      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nRequireCheckSubject = true\nRequireCheckBody = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60",
+      commonString: 
+        "CountEnabled = true\n" +
+        "CountAllowSkip = true\n" +
+        "SafeBccEnabled = true\n" +
+        "RequireCheckSubject = true\n" +
+        "RequireCheckBody = true\n" +
+        "MainSkipIfNoExt = true\n" +
+        "AppointmentConfirmationEnabled = true\n" +
+        "SafeNewDomainsEnabled = true\n" +
+        "CountSeconds = 3\n" +
+        "SafeBccThreshold = 4\n" +
+        "DelayDeliveryEnabled = true\n" +
+        "DelayDeliverySeconds = 60",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
@@ -584,7 +647,21 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_right"],
       unsafeDomains: { "WARNING": ["unsafeDomain_right"] },
       unsafeFiles: { "WARNING": ["unsafeFile_right"] },
-      commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nRequireCheckSubject = false\nRequireCheckBody = false\nMainSkipIfNoExt = false\nAppointmentConfirmationEnabled = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nSafeBccReconfirmationThreshold = 1\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
+      commonString: 
+        "CountEnabled = false\n" +
+        "CountAllowSkip = false\n" +
+        "SafeBccEnabled = false\n" +
+        "RequireCheckSubject = false\n" +
+        "RequireCheckBody = false\n" +
+        "MainSkipIfNoExt = false\n" +
+        "AppointmentConfirmationEnabled = false\n" +
+        "SafeNewDomainsEnabled = false\n" +
+        "CountSeconds = 2\n" +
+        "SafeBccThreshold = 2\n" +
+        "SafeBccReconfirmationThreshold = 1\n" +
+        "DelayDeliveryEnabled = false\n" +
+        "DelayDeliverySeconds = 10\n" +
+        "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
       unsafeFilesString: "unsafeFile_right",
@@ -609,7 +686,21 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left", "unsafeDomain_right"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left", "unsafeFile_right"] },
-      commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nRequireCheckSubject = false\nRequireCheckBody = false\nMainSkipIfNoExt = false\nAppointmentConfirmationEnabled = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nSafeBccReconfirmationThreshold = 1\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
+      commonString: 
+        "CountEnabled = false\n" +
+        "CountAllowSkip = false\n" +
+        "SafeBccEnabled = false\n" +
+        "RequireCheckSubject = false\n" +
+        "RequireCheckBody = false\n" +
+        "MainSkipIfNoExt = false\n" +
+        "AppointmentConfirmationEnabled = false\n" +
+        "SafeNewDomainsEnabled = false\n" +
+        "CountSeconds = 2\n" +
+        "SafeBccThreshold = 2\n" +
+        "SafeBccReconfirmationThreshold = 1\n" +
+        "DelayDeliveryEnabled = false\n" +
+        "DelayDeliverySeconds = 10\n" +
+        "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
       unsafeDomainsString: "unsafeDomain_left\n[WARNING]\nunsafeDomain_right",
       unsafeFilesString: "unsafeFile_left\n[WARNING]\nunsafeFile_right",
@@ -653,7 +744,35 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left"] },
-      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nRequireCheckSubject = true\nRequireCheckBody = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nSafeBccReconfirmationThreshold = 0\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60\nFixedParameters = CountEnabled,CountAllowSkip,SafeBccEnabled,MainSkipIfNoExt,AppointmentConfirmationEnabled,SafeNewDomainsEnabled,CountSeconds,SafeBccThreshold,SafeBccReconfirmationThreshold,DelayDeliveryEnabled,DelayDeliverySeconds,TrustedDomains,UnsafeDomains,UnsafeFiles",
+      commonString: 
+        "CountEnabled = true\n" +
+        "CountAllowSkip = true\n" +
+        "SafeBccEnabled = true\n" +
+        "RequireCheckSubject = true\n" +
+        "RequireCheckBody = true\n" +
+        "MainSkipIfNoExt = true\n" +
+        "AppointmentConfirmationEnabled = true\n" +
+        "SafeNewDomainsEnabled = true\n" +
+        "CountSeconds = 3\n" +
+        "SafeBccThreshold = 4\n" +
+        "SafeBccReconfirmationThreshold = 0\n" +
+        "DelayDeliveryEnabled = true\n" +
+        "DelayDeliverySeconds = 60\n" +
+        "FixedParameters = " + 
+            "CountEnabled," +
+            "CountAllowSkip," +
+            "SafeBccEnabled," +
+            "MainSkipIfNoExt," +
+            "AppointmentConfirmationEnabled," +
+            "SafeNewDomainsEnabled," +
+            "CountSeconds," +
+            "SafeBccThreshold," +
+            "SafeBccReconfirmationThreshold," +
+            "DelayDeliveryEnabled," +
+            "DelayDeliverySeconds," +
+            "TrustedDomains," +
+            "UnsafeDomains," +
+            "UnsafeFiles",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
@@ -678,7 +797,21 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_right"],
       unsafeDomains: { "WARNING": ["unsafeDomain_right"] },
       unsafeFiles: { "WARNING": ["unsafeFile_right"] },
-      commonString: "CountEnabled = false\nCountAllowSkip = false\nSafeBccEnabled = false\nRequireCheckSubject = false\nRequireCheckBody = false\nMainSkipIfNoExt = false\nAppointmentConfirmationEnabled = false\nSafeNewDomainsEnabled = false\nCountSeconds = 2\nSafeBccThreshold = 2\nSafeBccReconfirmationThreshold = 1\nDelayDeliveryEnabled = false\nDelayDeliverySeconds = 10\nFixedParameters = CountSeconds",
+      commonString: 
+        "CountEnabled = false\n" +
+        "CountAllowSkip = false\n" +
+        "SafeBccEnabled = false\n" +
+        "RequireCheckSubject = false\n" +
+        "RequireCheckBody = false\n" +
+        "MainSkipIfNoExt = false\n" +
+        "AppointmentConfirmationEnabled = false\n" +
+        "SafeNewDomainsEnabled = false\n" +
+        "CountSeconds = 2\n" +
+        "SafeBccThreshold = 2\n" +
+        "SafeBccReconfirmationThreshold = 1\n" +
+        "DelayDeliveryEnabled = false\n" +
+        "DelayDeliverySeconds = 10\n" +
+        "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
       unsafeFilesString: "unsafeFile_right",
@@ -720,7 +853,37 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left"] },
-      commonString: "CountEnabled = true\nCountAllowSkip = true\nSafeBccEnabled = true\nRequireCheckSubject = true\nRequireCheckBody = true\nMainSkipIfNoExt = true\nAppointmentConfirmationEnabled = true\nSafeNewDomainsEnabled = true\nCountSeconds = 3\nSafeBccThreshold = 4\nSafeBccReconfirmationThreshold = 0\nDelayDeliveryEnabled = true\nDelayDeliverySeconds = 60\nFixedParameters = CountEnabled,CountAllowSkip,SafeBccEnabled,RequireCheckSubject,RequireCheckBody,MainSkipIfNoExt,AppointmentConfirmationEnabled,SafeNewDomainsEnabled,CountSeconds,SafeBccThreshold,SafeBccReconfirmationThreshold,DelayDeliveryEnabled,DelayDeliverySeconds,TrustedDomains,UnsafeDomains,UnsafeFiles",
+      commonString: 
+        "CountEnabled = true\n" +
+        "CountAllowSkip = true\n" +
+        "SafeBccEnabled = true\n" +
+        "RequireCheckSubject = true\n" +
+        "RequireCheckBody = true\n" +
+        "MainSkipIfNoExt = true\n" +
+        "AppointmentConfirmationEnabled = true\n" +
+        "SafeNewDomainsEnabled = true\n" +
+        "CountSeconds = 3\n" +
+        "SafeBccThreshold = 4\n" +
+        "SafeBccReconfirmationThreshold = 0\n" +
+        "DelayDeliveryEnabled = true\n" +
+        "DelayDeliverySeconds = 60\n" +
+        "FixedParameters = " + 
+          "CountEnabled," +
+          "CountAllowSkip," +
+          "SafeBccEnabled," +
+          "RequireCheckSubject," +
+          "RequireCheckBody," +
+          "MainSkipIfNoExt," +
+          "AppointmentConfirmationEnabled," +
+          "SafeNewDomainsEnabled," +
+          "CountSeconds," +
+          "SafeBccThreshold," +
+          "SafeBccReconfirmationThreshold," +
+          "DelayDeliveryEnabled," +
+          "DelayDeliverySeconds," +
+          "TrustedDomains," +
+          "UnsafeDomains," +
+          "UnsafeFiles",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
