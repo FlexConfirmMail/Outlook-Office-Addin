@@ -383,6 +383,8 @@ export function test_createDefaultConfig() {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: false,
+        ConvertBccThreshold: 2,
         FixedParameters: [],
       },
       trustedDomains: [],
@@ -440,6 +442,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: true,
+        ConvertBccThreshold: 3,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -457,7 +461,9 @@ test_merge.parameters = {
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
         "DelayDeliveryEnabled = true\n" +
-        "DelayDeliverySeconds = 60",
+        "DelayDeliverySeconds = 60\n" +
+        "ConvertBccEnabled = true\n" +
+        "ConvertBccThreshold = 3",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -477,6 +483,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: true,
+        ConvertBccThreshold: 3,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -495,7 +503,9 @@ test_merge.parameters = {
         "SafeBccThreshold = 4\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
-        "DelayDeliverySeconds = 60",
+        "DelayDeliverySeconds = 60\n" +
+        "ConvertBccEnabled = true\n" +
+        "ConvertBccThreshold = 3",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -517,6 +527,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: true,
+        ConvertBccThreshold: 3,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -535,7 +547,9 @@ test_merge.parameters = {
         "SafeBccThreshold = 4\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
-        "DelayDeliverySeconds = 60",
+        "DelayDeliverySeconds = 60\n" +
+        "ConvertBccEnabled = true\n" +
+        "ConvertBccThreshold = 3",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -565,6 +579,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: true,
+        ConvertBccThreshold: 3,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -583,7 +599,9 @@ test_merge.parameters = {
         "SafeBccThreshold = 4\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
-        "DelayDeliverySeconds = 60",
+        "DelayDeliverySeconds = 60\n" +
+        "ConvertBccEnabled = true\n" +
+        "ConvertBccThreshold = 3",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -605,6 +623,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: true,
+        ConvertBccThreshold: 4,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain_left"],
@@ -622,7 +642,9 @@ test_merge.parameters = {
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
         "DelayDeliveryEnabled = true\n" +
-        "DelayDeliverySeconds = 60",
+        "DelayDeliverySeconds = 60\n" +
+        "ConvertBccEnabled = true\n" +
+        "ConvertBccThreshold = 4",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
@@ -642,6 +664,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 1,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 10,
+        ConvertBccEnabled: false,
+        ConvertBccThreshold: 2,
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
@@ -661,6 +685,8 @@ test_merge.parameters = {
         "SafeBccReconfirmationThreshold = 1\n" +
         "DelayDeliveryEnabled = false\n" +
         "DelayDeliverySeconds = 10\n" +
+        "ConvertBccEnabled = false\n" +
+        "ConvertBccThreshold = 2\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
@@ -681,6 +707,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 1,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 10,
+        ConvertBccEnabled: false,
+        ConvertBccThreshold: 2,
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
@@ -700,6 +728,8 @@ test_merge.parameters = {
         "SafeBccReconfirmationThreshold = 1\n" +
         "DelayDeliveryEnabled = false\n" +
         "DelayDeliverySeconds = 10\n" +
+        "ConvertBccEnabled = false\n" +
+        "ConvertBccThreshold = 2\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
       unsafeDomainsString: "unsafeDomain_left\n[WARNING]\nunsafeDomain_right",
@@ -722,6 +752,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: true,
+        ConvertBccThreshold: 3,
         FixedParameters: [
           "CountEnabled",
           "CountAllowSkip",
@@ -736,6 +768,8 @@ test_merge.parameters = {
           "SafeBccReconfirmationThreshold",
           "DelayDeliveryEnabled",
           "DelayDeliverySeconds",
+          "ConvertBccEnabled",
+          "ConvertBccThreshold",
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles"
@@ -758,6 +792,8 @@ test_merge.parameters = {
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
+        "ConvertBccEnabled = true\n" +
+        "ConvertBccThreshold = 3\n" +
         "FixedParameters = " + 
             "CountEnabled," +
             "CountAllowSkip," +
@@ -770,6 +806,8 @@ test_merge.parameters = {
             "SafeBccReconfirmationThreshold," +
             "DelayDeliveryEnabled," +
             "DelayDeliverySeconds," +
+            "ConvertBccEnabled," +
+            "ConvertBccThreshold," +
             "TrustedDomains," +
             "UnsafeDomains," +
             "UnsafeFiles",
@@ -792,6 +830,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 1,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 10,
+        ConvertBccEnabled: false,
+        ConvertBccThreshold: 2,
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
@@ -811,6 +851,8 @@ test_merge.parameters = {
         "SafeBccReconfirmationThreshold = 1\n" +
         "DelayDeliveryEnabled = false\n" +
         "DelayDeliverySeconds = 10\n" +
+        "ConvertBccEnabled = false\n" +
+        "ConvertBccThreshold = 2\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
@@ -831,6 +873,8 @@ test_merge.parameters = {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
+        ConvertBccEnabled: true,
+        ConvertBccThreshold: 3,
         FixedParameters: [
           "CountEnabled",
           "CountAllowSkip",
@@ -845,6 +889,8 @@ test_merge.parameters = {
           "SafeBccReconfirmationThreshold",
           "DelayDeliveryEnabled",
           "DelayDeliverySeconds",
+          "ConvertBccEnabled",
+          "ConvertBccThreshold",
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
@@ -867,6 +913,8 @@ test_merge.parameters = {
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
+        "ConvertBccEnabled = true\n" +
+        "ConvertBccThreshold = 3\n" +
         "FixedParameters = " + 
           "CountEnabled," +
           "CountAllowSkip," +
@@ -881,6 +929,8 @@ test_merge.parameters = {
           "SafeBccReconfirmationThreshold," +
           "DelayDeliveryEnabled," +
           "DelayDeliverySeconds," +
+          "ConvertBccEnabled," +
+          "ConvertBccThreshold," +
           "TrustedDomains," +
           "UnsafeDomains," +
           "UnsafeFiles",
