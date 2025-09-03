@@ -7,17 +7,9 @@ Copyright (c) 2025 ClearCode Inc.
 */
 import { L10n } from "./l10n.mjs";
 import { ConfigLoader } from "./config-loader.mjs";
-import * as RecipientParser from "./recipient-parser.mjs";
-import { RecipientClassifier } from "./recipient-classifier.mjs";
-import { AttachmentClassifier } from "./attachment-classifier.mjs";
+import { ConfirmData } from "./confirm-data.mjs";
+import { OfficeDataAccessHelper } from "./office-data-access-helper.mjs";
 
-const ORIGINAL_RECIPIENTS_KEY = "FCM_OriginalRecipients";
-const ORIGINAL_ATTENDEES_KEY = "FCM_OriginalAttendees";
-const CONFIRM_ATTACHMENT_TYPES = new Set([
-  // Office.MailboxEnums are not accessible before initialized.
-  "cloud", // Office.MailboxEnums.AttachmentType.Cloud,
-  "file", // Office.MailboxEnums.AttachmentType.File,
-]);
 let locale;
 
 Office.onReady(() => {
@@ -29,300 +21,6 @@ Office.onReady(() => {
 
 function sleepAsync(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function getBccAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.bcc.getAsync((asyncResult) => {
-        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-          ...officeAddonRecipient,
-          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-        }));
-        resolve(recipients);
-      });
-    } catch (error) {
-      console.log(`Error while getting Bcc: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getCcAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.cc.getAsync((asyncResult) => {
-        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-          ...officeAddonRecipient,
-          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-        }));
-        resolve(recipients);
-      });
-    } catch (error) {
-      console.log(`Error while getting Cc: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getSubjectAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.subject.getAsync((asyncResult) => {
-        const subject = asyncResult.value;
-        resolve(subject);
-      });
-    } catch (error) {
-      console.log(`Error while getting subject: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getBodyAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.body.getAsync(
-        Office.CoercionType.Html,
-        { bodyMode: Office.MailboxEnums.BodyMode.Full },
-        (asyncResult) => {
-          const body = asyncResult.value;
-          resolve(body);
-        }
-      );
-    } catch (error) {
-      console.log(`Error while getting body: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getItemIdAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.getItemIdAsync((asyncResult) => {
-        const id = asyncResult.value;
-        resolve(id);
-      });
-    } catch (error) {
-      console.log(`Error while getting itemId: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getRequiredAttendeeAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.requiredAttendees.getAsync((asyncResult) => {
-        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-          ...officeAddonRecipient,
-          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-        }));
-        resolve(recipients);
-      });
-    } catch (error) {
-      console.log(`Error while getting required attendees: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getOptionalAttendeeAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.optionalAttendees.getAsync((asyncResult) => {
-        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-          ...officeAddonRecipient,
-          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-        }));
-        resolve(recipients);
-      });
-    } catch (error) {
-      console.log(`Error while getting optional attendees: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getToAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.to.getAsync((asyncResult) => {
-        const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-          ...officeAddonRecipient,
-          ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-        }));
-        resolve(recipients);
-      });
-    } catch (error) {
-      console.log(`Error while getting To: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getSessionDataAsync(key) {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.sessionData.getAsync(key, (asyncResult) => {
-        if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-          resolve(asyncResult.value);
-        } else {
-          console.debug(`Error while getting SessionData [${key}]: ${asyncResult.error.message}`);
-          // Regards no value
-          resolve("");
-        }
-      });
-    } catch (error) {
-      console.log(`Error while getting SessionData [${key}]: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getAttachmentsAsync() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.getAttachmentsAsync((asyncResult) => {
-        const attachments = asyncResult.value;
-        const maybeFiles = attachments.filter((attachment) =>
-          CONFIRM_ATTACHMENT_TYPES.has(attachment.attachmentType)
-        );
-        resolve(maybeFiles);
-      });
-    } catch (error) {
-      console.log(`Error while getting attachments: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function getDelayDeliveryTime() {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.delayDeliveryTime.getAsync((asyncResult) => {
-        const value = asyncResult.value;
-        resolve(value);
-      });
-    } catch (error) {
-      console.log(`Error while getting DelayDeliveryTime: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function setDelayDeliveryTimeAsync(deliveryTime) {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.delayDeliveryTime.setAsync(deliveryTime, (asyncResult) => {
-        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          console.log(asyncResult.error.message);
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      });
-    } catch (error) {
-      console.log(`Error while setting DelayDeliveryTime: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function setSessionDataAsync(key, value) {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.sessionData.setAsync(key, value, (asyncResult) => {
-        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          console.log(asyncResult.error.message);
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      });
-    } catch (error) {
-      console.log(`Error while setting SessionData: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-function removeSessionDataAsync(key) {
-  return new Promise((resolve, reject) => {
-    try {
-      Office.context.mailbox.item.sessionData.removeAsync(key, (asyncResult) => {
-        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-          console.log(asyncResult.error.message);
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      });
-    } catch (error) {
-      console.log(`Error while removing SessionData: ${error}`);
-      reject(error);
-    }
-  });
-}
-
-async function getAllMailData() {
-  const [to, cc, bcc, subject, body, attachments, config] = await Promise.all([
-    getToAsync(),
-    getCcAsync(),
-    getBccAsync(),
-    getSubjectAsync(),
-    getBodyAsync(),
-    getAttachmentsAsync(),
-    ConfigLoader.loadEffectiveConfig(),
-  ]);
-  let originalRecipients = {};
-  const originalRecipientsJson = await getSessionDataAsync(ORIGINAL_RECIPIENTS_KEY);
-  if (originalRecipientsJson) {
-    originalRecipients = JSON.parse(originalRecipientsJson);
-  }
-  return {
-    target: {
-      to,
-      cc,
-      bcc,
-      subject,
-      body,
-      attachments,
-    },
-    config,
-    originalRecipients,
-    itemType: Office.MailboxEnums.ItemType.Message,
-  };
-}
-
-async function getAllAppointmentData() {
-  const [requiredAttendees, optionalAttendees, subject, body, attachments, config] =
-    await Promise.all([
-      getRequiredAttendeeAsync(),
-      getOptionalAttendeeAsync(),
-      getSubjectAsync(),
-      getBodyAsync(),
-      getAttachmentsAsync(),
-      ConfigLoader.loadEffectiveConfig(),
-    ]);
-  let originalAttendees = {};
-  const originalAttendeesJson = await getSessionDataAsync(ORIGINAL_ATTENDEES_KEY);
-  if (originalAttendeesJson) {
-    originalAttendees = JSON.parse(originalAttendeesJson);
-  }
-  return {
-    target: {
-      requiredAttendees,
-      optionalAttendees,
-      subject,
-      body,
-      attachments,
-    },
-    config,
-    originalRecipients: originalAttendees,
-    itemType: Office.MailboxEnums.ItemType.Appointment,
-  };
 }
 
 async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params }) {
@@ -437,42 +135,9 @@ function charsToPercentage(chars, maxSize) {
 }
 
 async function tryConfirm(data, asyncContext) {
-  const { trustedDomains, unsafeDomains } = data.config;
-  data.classified = {};
-  switch (data.itemType) {
-    case Office.MailboxEnums.ItemType.Message: {
-      const { to, cc, bcc } = data.target;
-      data.classified.recipients = RecipientClassifier.classifyAll({
-        locale,
-        to,
-        cc,
-        bcc,
-        trustedDomains,
-        unsafeDomains,
-      });
-      break;
-    }
-    case Office.MailboxEnums.ItemType.Appointment:
-    default: {
-      const { requiredAttendees, optionalAttendees } = data.target;
-      data.classified.recipients = RecipientClassifier.classifyAll({
-        locale,
-        requiredAttendees,
-        optionalAttendees,
-        trustedDomains,
-        unsafeDomains,
-      });
-      break;
-    }
-  }
-  data.classified.attachments = AttachmentClassifier.classify(data);
   console.debug("classified: ", data.classified);
 
-  if (
-    data.classified.recipients.block.length > 0 ||
-    data.classified.recipients.blockWithDomain.length > 0 ||
-    data.classified.attachments.block.length > 0
-  ) {
+  if (data.blockSending) {
     const { status, asyncContext: updatedAsyncContext } = await openDialog({
       url: window.location.origin + "/block.html",
       data,
@@ -488,7 +153,7 @@ async function tryConfirm(data, asyncContext) {
     };
   }
 
-  if (data.config.common.MainSkipIfNoExt && data.classified.recipients.untrusted.length == 0) {
+  if (data.skipConfirm) {
     console.log("Skip confirmation: no untrusted recipient");
     return {
       allowed: true,
@@ -561,53 +226,12 @@ async function tryCountDown(data, asyncContext) {
   };
 }
 
-async function onMailSend(event) {
+async function onItemSend(event) {
   let asyncContext = event;
-  const data = await getAllMailData();
+  const data = await ConfirmData.getCurrentDataAsync(Office.context.mailbox.item.itemType, locale);
   console.debug(data);
-  {
-    const { allowed, asyncContext: updatedAsyncContext } = await tryConfirm(data, asyncContext);
-    if (!allowed) {
-      console.debug("canceled by confirmation");
-      asyncContext.completed({ allowEvent: false });
-      return;
-    }
-    asyncContext = updatedAsyncContext;
-  }
 
-  {
-    const { allowed, asyncContext: updatedAsyncContext } = await tryCountDown(data, asyncContext);
-    if (!allowed) {
-      console.debug("canceled by countdown");
-      asyncContext.completed({ allowEvent: false });
-      return;
-    }
-    asyncContext = updatedAsyncContext;
-  }
-
-  console.debug("granted: continue to send");
-
-  if (data.config.common?.DelayDeliveryEnabled) {
-    const currentSetting = await getDelayDeliveryTime();
-    if (currentSetting == 0) {
-      const currentTime = new Date().getTime();
-      const delayDeliverySeconds = data.config.common?.DelayDeliverySeconds ?? 60;
-      const delayInMilliseconds = delayDeliverySeconds * 1000;
-      const deliveryTime = new Date(currentTime + delayInMilliseconds);
-      await setDelayDeliveryTimeAsync(deliveryTime);
-    }
-  }
-  if (data.originalRecipients) {
-    await removeSessionDataAsync(ORIGINAL_RECIPIENTS_KEY);
-  }
-  asyncContext.completed({ allowEvent: true });
-}
-
-async function onAppointmentSend(event) {
-  let asyncContext = event;
-  const data = await getAllAppointmentData();
-  console.debug(data);
-  if (!data.config.common?.AppointmentConfirmationEnabled) {
+  if (data.skipAll) {
     asyncContext.completed({ allowEvent: true });
     return;
   }
@@ -633,37 +257,38 @@ async function onAppointmentSend(event) {
   }
 
   console.debug("granted: continue to send");
-  if (data.originalRecipients) {
-    await removeSessionDataAsync(ORIGINAL_ATTENDEES_KEY);
-  }
-  asyncContext.completed({ allowEvent: true });
-}
 
-async function onItemSend(event) {
-  const itemType = Office.context.mailbox.item.itemType;
-  switch (itemType) {
-    case Office.MailboxEnums.ItemType.Message:
-      onMailSend(event);
-      return;
-    case Office.MailboxEnums.ItemType.Appointment:
-      onAppointmentSend(event);
-      return;
-    default:
-      event.completed({ allowEvent: true });
-      return;
+  if (data.delayDelivery) {
+    const currentSetting = await OfficeDataAccessHelper.getDelayDeliveryTime();
+    if (currentSetting == 0) {
+      const currentTime = new Date().getTime();
+      const delayDeliverySeconds = data.config.common?.DelayDeliverySeconds ?? 60;
+      const delayInMilliseconds = delayDeliverySeconds * 1000;
+      const deliveryTime = new Date(currentTime + delayInMilliseconds);
+      await OfficeDataAccessHelper.setDelayDeliveryTimeAsync(deliveryTime);
+    }
   }
+  await OfficeDataAccessHelper.removeOriginalRecipientsSessionDataAsync(data.itemType);
+  asyncContext.completed({ allowEvent: true });
 }
 window.onItemSend = onItemSend;
 
 async function onNewMessageComposeCreated(event) {
-  const [to, cc, bcc] = await Promise.all([getToAsync(), getCcAsync(), getBccAsync()]);
+  const [to, cc, bcc] = await Promise.all([
+    OfficeDataAccessHelper.getToAsync(),
+    OfficeDataAccessHelper.getCcAsync(),
+    OfficeDataAccessHelper.getBccAsync(),
+  ]);
   if (to.length > 0 || cc.length > 0 || bcc.length > 0) {
     const originalRecipients = {
       to,
       cc,
       bcc,
     };
-    await setSessionDataAsync(ORIGINAL_RECIPIENTS_KEY, JSON.stringify(originalRecipients));
+    await OfficeDataAccessHelper.setOriginalRecipientsSessionDataAsync(
+      Office.context.mailbox.item.itemType,
+      JSON.stringify(originalRecipients)
+    );
   }
   event.completed();
 }
@@ -671,8 +296,8 @@ window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 async function onAppointmentOrganizer(event) {
   const [requiredAttendees, optionalAttendees] = await Promise.all([
-    getRequiredAttendeeAsync(),
-    getOptionalAttendeeAsync(),
+    OfficeDataAccessHelper.getRequiredAttendeeAsync(),
+    OfficeDataAccessHelper.getOptionalAttendeeAsync(),
   ]);
 
   if (Office.context.platform == Office.PlatformType.PC) {
@@ -682,7 +307,7 @@ async function onAppointmentOrganizer(event) {
     // This function has nothing to do if this is a new appointment
     // because there is no existing attendees. So return if this is a
     // new appointment.
-    const id = await getItemIdAsync();
+    const id = await OfficeDataAccessHelper.getItemIdAsync();
     if (!id) {
       // On classic Outlook, if the id is not defined, this is a new appointment.
       event.completed();
@@ -695,7 +320,10 @@ async function onAppointmentOrganizer(event) {
       requiredAttendees,
       optionalAttendees,
     };
-    await setSessionDataAsync(ORIGINAL_ATTENDEES_KEY, JSON.stringify(originalAttendees));
+    await OfficeDataAccessHelper.setOriginalRecipientsSessionDataAsync(
+      Office.context.mailbox.item.itemType,
+      JSON.stringify(originalAttendees)
+    );
   }
   event.completed();
 }
