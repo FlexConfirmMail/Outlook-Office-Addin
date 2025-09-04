@@ -129,15 +129,15 @@ export class ConfirmData {
     );
   }
 
-  get needToConvertBcc() {
-    if (!this.config.common?.ConvertBccEnabled ||
+  get needToConvertToBcc() {
+    if (!this.config.common?.ConvertToBccEnabled ||
         this.itemType === Office.MailboxEnums.ItemType.Appointment) {
       return false;
     }
 
     const nonBccRecipientsLength = this.target.to.length + this.target.cc.length;
-    if (this.config.common?.ConvertBccThreshold > 0) {
-      return nonBccRecipientsLength >= this.config.common.ConvertBccThreshold
+    if (this.config.common?.ConvertToBccThreshold > 0) {
+      return nonBccRecipientsLength >= this.config.common.ConvertToBccThreshold
     }
     return false;
   }

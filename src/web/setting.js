@@ -280,10 +280,10 @@ function updateDialogSetting(policy, user) {
   document.getElementById("delayDeliverySeconds").value = common.DelayDeliverySeconds;
   document.getElementById("delayDeliverySeconds").disabled =
     fixedParametersSet.has("DelayDeliverySeconds");
-  document.getElementById("convertBccEnabled").checked = common.ConvertBccEnabled;
-  document.getElementById("convertBccEnabled").disabled = fixedParametersSet.has("ConvertBccEnabled");
-  document.getElementById("convertBccThreshold").value = common.ConvertBccThreshold;
-  document.getElementById("convertBccThreshold").disabled = fixedParametersSet.has("ConvertBccThreshold");
+  document.getElementById("convertToBccEnabled").checked = common.ConvertToBccEnabled;
+  document.getElementById("convertToBccEnabled").disabled = fixedParametersSet.has("ConvertToBccEnabled");
+  document.getElementById("convertToBccThreshold").value = common.ConvertToBccThreshold;
+  document.getElementById("convertToBccThreshold").disabled = fixedParametersSet.has("ConvertToBccThreshold");
 }
 
 function sendStatusToParent(status) {
@@ -324,8 +324,8 @@ function serializeCommonConfigs() {
   ).checked;
   const delayDeliveryEnabled = document.getElementById("delayDeliveryEnabled").checked;
   const delayDeliverySeconds = document.getElementById("delayDeliverySeconds").value;
-  const convertBccEnabled = document.getElementById("convertBccEnabled").checked;
-  const convertBccThreshold = document.getElementById("convertBccThreshold").value;
+  const convertToBccEnabled = document.getElementById("convertToBccEnabled").checked;
+  const convertToBccThreshold = document.getElementById("convertToBccThreshold").value;
   let commonConfigString = "";
   commonConfigString += serializeCommonConfig("CountEnabled", countEnabled);
   commonConfigString += serializeCommonConfig("CountSeconds", countSeconds);
@@ -346,8 +346,8 @@ function serializeCommonConfigs() {
   );
   commonConfigString += serializeCommonConfig("DelayDeliveryEnabled", delayDeliveryEnabled);
   commonConfigString += serializeCommonConfig("DelayDeliverySeconds", delayDeliverySeconds);
-  commonConfigString += serializeCommonConfig("ConvertBccEnabled", convertBccEnabled);
-  commonConfigString += serializeCommonConfig("ConvertBccThreshold", convertBccThreshold);
+  commonConfigString += serializeCommonConfig("ConvertToBccEnabled", convertToBccEnabled);
+  commonConfigString += serializeCommonConfig("ConvertToBccThreshold", convertToBccThreshold);
   // FixedParameters is for policy setting.
   // Do not serialize FixedParameters for user setting.
   return commonConfigString;
