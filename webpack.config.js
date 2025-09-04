@@ -20,6 +20,7 @@ module.exports = async (env, options) => {
       app: ["./src/web/app.js"],
       confirm: ["./src/web/confirm.js"],
       "count-down": ["./src/web/count-down.js"],
+      "convert-to-bcc": ["./src/web/convert-to-bcc.js"],
       block: ["./src/web/block.js"],
       setting: ["./src/web/setting.js"],
     },
@@ -94,6 +95,11 @@ module.exports = async (env, options) => {
         filename: "count-down.html",
         template: "./src/web/count-down.html",
         chunks: ["count-down"],
+      }),
+      new HtmlWebpackPlugin({
+        filename: "convert-to-bcc.html",
+        template: "./src/web/convert-to-bcc.html",
+        chunks: ["convert-to-bcc"],
       }),
       new HtmlWebpackPlugin({
         filename: "setting.html",

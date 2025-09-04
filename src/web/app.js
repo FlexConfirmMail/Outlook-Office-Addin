@@ -227,6 +227,27 @@ async function tryCountDown(data, asyncContext) {
   };
 }
 
+async function tryConvertToBcc(data, asyncContext) {
+  if (!data.needToConvertBcc) {
+    return false;
+  }
+
+  const { status } = await openDialog({
+    url: window.location.origin + "/convert-to-bcc.html",
+    data,
+    asyncContext,
+    height: Math.min(20, charsToPercentage(20, screen.availHeight)),
+    width: Math.min(45, charsToPercentage(45, screen.availWidth)),
+  });
+  console.debug("status: ", status);
+  if (status == "convertBcc")
+  {
+    data.convertRecipientsToBcc();
+    return true;
+  }
+  return false;
+}
+
 async function onItemSend(event) {
   let asyncContext = event;
   const data = await ConfirmData.getCurrentDataAsync(Office.context.mailbox.item.itemType, locale);
@@ -236,6 +257,8 @@ async function onItemSend(event) {
     asyncContext.completed({ allowEvent: true });
     return;
   }
+
+  const needToConvertToBccOnSend = await tryConvertToBcc(data, asyncContext);
 
   {
     const { allowed, asyncContext: updatedAsyncContext } = await tryConfirm(data, asyncContext);
@@ -269,6 +292,14 @@ async function onItemSend(event) {
       await OfficeDataAccessHelper.setDelayDeliveryTimeAsync(deliveryTime);
     }
   }
+
+  if (needToConvertToBccOnSend) {
+    await Promise.all([
+      OfficeDataAccessHelper.setToAsync([]),
+      OfficeDataAccessHelper.setCcAsync([]),
+      OfficeDataAccessHelper.setBccAsync(data.target.bcc)]);
+  }
+
   await OfficeDataAccessHelper.removeOriginalRecipientsSessionDataAsync(data.itemType);
   asyncContext.completed({ allowEvent: true });
 }
