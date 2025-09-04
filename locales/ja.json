@@ -76,7 +76,7 @@
   "setting_configSafeBccEnabled": "To/CCに一定数以上のドメインが含まれている場合に警告する",
   "setting_configSafeBccThreshold": "警告対象となるドメインの数:",
   "setting_configSafeBccReconfirmationThreshold": "再警告対象となるドメインの数:",
-  "setting_configConvertToBccEnabled": "To/CCが一定数以上の場合にBccに変換する",
+  "setting_configConvertToBccEnabled": "To/CCが一定数以上の場合にBCCに変換する",
   "setting_configConvertToBccThreshold": "変換対象となるTo/CCの数:",
   "setting_configSafeNewDomainsEnabled": "返信の宛先に今まで含まれていなかったドメインのアドレスが追加された場合に警告する",
   "setting_configTrustedDomains": "社内ドメイン・アドレス",
