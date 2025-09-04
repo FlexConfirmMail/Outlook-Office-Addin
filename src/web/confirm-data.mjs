@@ -48,26 +48,25 @@ export class ConfirmData {
   originalRecipients;
   classified;
   itemType;
+  locale;
 
-  constructor({ target, config, originalRecipients, itemType, classified }) {
+  constructor({ target, config, originalRecipients, itemType, classified, locale }) {
     this.target = target;
     this.config = config;
     this.originalRecipients = originalRecipients;
     this.itemType = itemType;
     this.classified = classified;
+    this.locale = locale;
   }
 
-  classifyTarget(locale) {
-    if (this.classified) {
-      return;
-    }
+  classifyTarget() {
     this.classified = {};
     const { trustedDomains, unsafeDomains } = this.config;
     switch (this.itemType) {
       case Office.MailboxEnums.ItemType.Message: {
         const { to, cc, bcc } = this.target;
         this.classified.recipients = RecipientClassifier.classifyAll({
-          locale,
+          locale: this.locale,
           to,
           cc,
           bcc,
@@ -80,7 +79,7 @@ export class ConfirmData {
       default: {
         const { requiredAttendees, optionalAttendees } = this.target;
         this.classified.recipients = RecipientClassifier.classifyAll({
-          locale,
+          locale: this.locale,
           requiredAttendees,
           optionalAttendees,
           trustedDomains,
@@ -119,14 +118,37 @@ export class ConfirmData {
     );
   }
 
+  get needToConvertBcc() {
+    if (!this.config.common?.ConvertBccEnabled ||
+        this.itemType === Office.MailboxEnums.ItemType.Appointment) {
+      return false;
+    }
+
+    const nonBccRecipientsLength = this.target.to.length + this.target.cc.length;
+    if (this.config.common?.ConvertBccThreshold > 0) {
+      return nonBccRecipientsLength >= this.config.common.ConvertBccThreshold
+    }
+    return false;
+  }
+
+  convertRecipientsToBcc() {
+    this.target.bcc = this.target.bcc.concat(this.target.to);
+    this.target.bcc = this.target.bcc.concat(this.target.cc);
+    this.target.to = [];
+    this.target.cc = [];
+    this.classifyTarget();
+    return false;
+  }
+
   static async getCurrentDataAsync(itemType, locale) {
     const messageData =
       itemType == Office.MailboxEnums.ItemType.Message
         ? await OfficeDataAccessHelper.getAllMailData()
         : await OfficeDataAccessHelper.getAllAppointmentData();
+    messageData.locale = locale;
     const confirmData = new ConfirmData(messageData);
     confirmData.config = await ConfigLoader.loadEffectiveConfig();
-    confirmData.classifyTarget(locale);
+    confirmData.classifyTarget();
     return confirmData;
   }
 }
