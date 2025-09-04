@@ -39,10 +39,9 @@ export class OfficeDataAccessHelper {
         Office.context.mailbox.item.bcc.setAsync(recipients, (asyncResult) => {
           if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
             resolve(recipients);
-          }
-          else {
+          } else {
             console.log(`Error while setting Bcc: ${asyncResult.error.message}`);
-            reject(error);
+            reject(asyncResult.error);
           }
         });
       } catch (error) {
@@ -75,10 +74,9 @@ export class OfficeDataAccessHelper {
         Office.context.mailbox.item.cc.setAsync(recipients, (asyncResult) => {
           if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
             resolve(recipients);
-          }
-          else {
+          } else {
             console.log(`Error while setting Cc: ${asyncResult.error.message}`);
-            reject(error);
+            reject(asyncResult.error);
           }
         });
       } catch (error) {
@@ -191,10 +189,9 @@ export class OfficeDataAccessHelper {
         Office.context.mailbox.item.to.setAsync(recipients, (asyncResult) => {
           if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
             resolve(recipients);
-          }
-          else {
+          } else {
             console.log(`Error while setting To: ${asyncResult.error.message}`);
-            reject(error);
+            reject(asyncResult.error);
           }
         });
       } catch (error) {

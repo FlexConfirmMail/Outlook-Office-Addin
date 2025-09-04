@@ -356,7 +356,10 @@ export class ConfigLoader {
     ) {
       left.common.DelayDeliverySeconds = right.common.DelayDeliverySeconds;
     }
-    if (right.common.ConvertToBccEnabled != null && !fixedParametersSet.has("ConvertToBccEnabled")) {
+    if (
+      right.common.ConvertToBccEnabled != null &&
+      !fixedParametersSet.has("ConvertToBccEnabled")
+    ) {
       left.common.ConvertToBccEnabled = right.common.ConvertToBccEnabled;
     }
     if (
