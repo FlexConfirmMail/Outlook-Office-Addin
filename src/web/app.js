@@ -240,8 +240,7 @@ async function tryConvertToBcc(data, asyncContext) {
     width: Math.min(45, charsToPercentage(45, screen.availWidth)),
   });
   console.debug("status: ", status);
-  if (status == "convertToBcc")
-  {
+  if (status == "convertToBcc") {
     data.convertRecipientsToBcc();
     return true;
   }
@@ -297,7 +296,8 @@ async function onItemSend(event) {
     await Promise.all([
       OfficeDataAccessHelper.setToAsync([]),
       OfficeDataAccessHelper.setCcAsync([]),
-      OfficeDataAccessHelper.setBccAsync(data.target.bcc)]);
+      OfficeDataAccessHelper.setBccAsync(data.target.bcc),
+    ]);
   }
 
   await OfficeDataAccessHelper.removeOriginalRecipientsSessionDataAsync(data.itemType);

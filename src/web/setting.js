@@ -281,9 +281,11 @@ function updateDialogSetting(policy, user) {
   document.getElementById("delayDeliverySeconds").disabled =
     fixedParametersSet.has("DelayDeliverySeconds");
   document.getElementById("convertToBccEnabled").checked = common.ConvertToBccEnabled;
-  document.getElementById("convertToBccEnabled").disabled = fixedParametersSet.has("ConvertToBccEnabled");
+  document.getElementById("convertToBccEnabled").disabled =
+    fixedParametersSet.has("ConvertToBccEnabled");
   document.getElementById("convertToBccThreshold").value = common.ConvertToBccThreshold;
-  document.getElementById("convertToBccThreshold").disabled = fixedParametersSet.has("ConvertToBccThreshold");
+  document.getElementById("convertToBccThreshold").disabled =
+    fixedParametersSet.has("ConvertToBccThreshold");
 }
 
 function sendStatusToParent(status) {

@@ -6,10 +6,8 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 Copyright (c) 2025 ClearCode Inc.
 */
 import { L10n } from "./l10n.mjs";
-import * as Dialog from "./dialog.mjs";
 
 let l10n;
-const warningContents = [];
 
 Office.onReady(() => {
   if (window !== window.parent) {
