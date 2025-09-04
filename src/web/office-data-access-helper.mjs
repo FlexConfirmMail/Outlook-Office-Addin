@@ -33,6 +33,24 @@ export class OfficeDataAccessHelper {
     });
   }
 
+  static setBccAsync(recipients) {
+    return new Promise((resolve, reject) => {
+      try {
+        Office.context.mailbox.item.bcc.setAsync(recipients, (asyncResult) => {
+          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            resolve(recipients);
+          } else {
+            console.log(`Error while setting Bcc: ${asyncResult.error.message}`);
+            reject(asyncResult.error);
+          }
+        });
+      } catch (error) {
+        console.log(`Error while setting Bcc: ${error}`);
+        reject(error);
+      }
+    });
+  }
+
   static getCcAsync() {
     return new Promise((resolve, reject) => {
       try {
@@ -45,6 +63,24 @@ export class OfficeDataAccessHelper {
         });
       } catch (error) {
         console.log(`Error while getting Cc: ${error}`);
+        reject(error);
+      }
+    });
+  }
+
+  static setCcAsync(recipients) {
+    return new Promise((resolve, reject) => {
+      try {
+        Office.context.mailbox.item.cc.setAsync(recipients, (asyncResult) => {
+          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            resolve(recipients);
+          } else {
+            console.log(`Error while setting Cc: ${asyncResult.error.message}`);
+            reject(asyncResult.error);
+          }
+        });
+      } catch (error) {
+        console.log(`Error while setting Cc: ${error}`);
         reject(error);
       }
     });
@@ -142,6 +178,24 @@ export class OfficeDataAccessHelper {
         });
       } catch (error) {
         console.log(`Error while getting To: ${error}`);
+        reject(error);
+      }
+    });
+  }
+
+  static setToAsync(recipients) {
+    return new Promise((resolve, reject) => {
+      try {
+        Office.context.mailbox.item.to.setAsync(recipients, (asyncResult) => {
+          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            resolve(recipients);
+          } else {
+            console.log(`Error while setting To: ${asyncResult.error.message}`);
+            reject(asyncResult.error);
+          }
+        });
+      } catch (error) {
+        console.log(`Error while setting To: ${error}`);
         reject(error);
       }
     });

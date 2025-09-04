@@ -20,6 +20,8 @@ export class ConfigLoader {
     SafeBccReconfirmationThreshold: "number",
     DelayDeliveryEnabled: "boolean",
     DelayDeliverySeconds: "number",
+    ConvertToBccEnabled: "boolean",
+    ConvertToBccThreshold: "number",
     FixedParameters: "commaSeparatedValues",
   };
 
@@ -254,6 +256,8 @@ export class ConfigLoader {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 60,
+        ConvertToBccEnabled: false,
+        ConvertToBccThreshold: 2,
         FixedParameters: [],
       },
       trustedDomains: [],
@@ -351,6 +355,18 @@ export class ConfigLoader {
       !fixedParametersSet.has("DelayDeliverySeconds")
     ) {
       left.common.DelayDeliverySeconds = right.common.DelayDeliverySeconds;
+    }
+    if (
+      right.common.ConvertToBccEnabled != null &&
+      !fixedParametersSet.has("ConvertToBccEnabled")
+    ) {
+      left.common.ConvertToBccEnabled = right.common.ConvertToBccEnabled;
+    }
+    if (
+      right.common.ConvertToBccThreshold != null &&
+      !fixedParametersSet.has("ConvertToBccThreshold")
+    ) {
+      left.common.ConvertToBccThreshold = right.common.ConvertToBccThreshold;
     }
     if (!fixedParametersSet.has("TrustedDomains")) {
       left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);
