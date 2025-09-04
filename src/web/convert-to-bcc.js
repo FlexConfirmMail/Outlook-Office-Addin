@@ -36,18 +36,18 @@ function sendStatusToParent(status) {
 }
 
 window.onConvert = () => {
-  sendStatusToParent("convertBcc");
+  sendStatusToParent("convertToBcc");
 };
 
 window.onNotConvert = () => {
-  sendStatusToParent("notConvertBcc");
+  sendStatusToParent("notConvertToBcc");
 };
 
 async function onMessageFromParent(arg) {
   const data = JSON.parse(arg.message);
   console.log(data);
   await l10n.ready;
-  const threshold = data.config.common?.ConvertBccThreshold;
+  const threshold = data.config.common?.ConvertToBccThreshold;
   const description = l10n.get("convertToBcc_description", { threshold });
-  document.getElementById("convertBcc-description").textContent = description;
+  document.getElementById("convertToBcc-description").textContent = description;
 }

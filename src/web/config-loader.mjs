@@ -20,8 +20,8 @@ export class ConfigLoader {
     SafeBccReconfirmationThreshold: "number",
     DelayDeliveryEnabled: "boolean",
     DelayDeliverySeconds: "number",
-    ConvertBccEnabled: "boolean",
-    ConvertBccThreshold: "number",
+    ConvertToBccEnabled: "boolean",
+    ConvertToBccThreshold: "number",
     FixedParameters: "commaSeparatedValues",
   };
 
@@ -256,8 +256,8 @@ export class ConfigLoader {
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 60,
-        ConvertBccEnabled: false,
-        ConvertBccThreshold: 2,
+        ConvertToBccEnabled: false,
+        ConvertToBccThreshold: 2,
         FixedParameters: [],
       },
       trustedDomains: [],
@@ -356,14 +356,14 @@ export class ConfigLoader {
     ) {
       left.common.DelayDeliverySeconds = right.common.DelayDeliverySeconds;
     }
-    if (right.common.ConvertBccEnabled != null && !fixedParametersSet.has("ConvertBccEnabled")) {
-      left.common.ConvertBccEnabled = right.common.ConvertBccEnabled;
+    if (right.common.ConvertToBccEnabled != null && !fixedParametersSet.has("ConvertToBccEnabled")) {
+      left.common.ConvertToBccEnabled = right.common.ConvertToBccEnabled;
     }
     if (
-      right.common.ConvertBccThreshold != null &&
-      !fixedParametersSet.has("ConvertBccThreshold")
+      right.common.ConvertToBccThreshold != null &&
+      !fixedParametersSet.has("ConvertToBccThreshold")
     ) {
-      left.common.ConvertBccThreshold = right.common.ConvertBccThreshold;
+      left.common.ConvertToBccThreshold = right.common.ConvertToBccThreshold;
     }
     if (!fixedParametersSet.has("TrustedDomains")) {
       left.trustedDomains = left.trustedDomains.concat(right.trustedDomains);

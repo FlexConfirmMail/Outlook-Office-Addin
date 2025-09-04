@@ -227,7 +227,7 @@ async function tryCountDown(data, asyncContext) {
 }
 
 async function tryConvertToBcc(data, asyncContext) {
-  if (!data.needToConvertBcc) {
+  if (!data.needToConvertToBcc) {
     return false;
   }
 
@@ -239,7 +239,7 @@ async function tryConvertToBcc(data, asyncContext) {
     width: Math.min(45, charsToPercentage(45, screen.availWidth)),
   });
   console.debug("status: ", status);
-  if (status == "convertBcc")
+  if (status == "convertToBcc")
   {
     data.convertRecipientsToBcc();
     return true;
