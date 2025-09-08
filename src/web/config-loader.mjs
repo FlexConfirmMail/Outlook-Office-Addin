@@ -118,6 +118,13 @@ export class ConfigLoader {
     return result;
   }
 
+  static parseUnsafeBodiesConfig(str) {
+    if (!str) {
+      return {};
+    }
+    return JSON.parse(str);
+  }
+
   static toArray(str) {
     const resultList = [];
     if (!str) {
@@ -187,21 +194,24 @@ export class ConfigLoader {
   }
 
   static async loadFileConfig() {
-    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, commonString] =
+    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, unsafeBodiesString, commonString] =
       await Promise.all([
         this.loadFile("configs/TrustedDomains.txt"),
         this.loadFile("configs/UnsafeDomains.txt"),
         this.loadFile("configs/UnsafeFiles.txt"),
+        this.loadFile("configs/UnsafeBodies.txt"),
         this.loadFile("configs/Common.txt"),
       ]);
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
     const unsafeFiles = this.parseUnsafeConfig(unsafeFilesString);
+    const unsafeBodies = this.parseUnsafeBodiesConfig(unsafeBodiesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
       trustedDomains,
       unsafeDomains,
       unsafeFiles,
+      unsafeBodies,
       common,
       trustedDomainsString,
       unsafeDomainsString,
@@ -221,16 +231,19 @@ export class ConfigLoader {
     const trustedDomainsString = Office.context.roamingSettings.get("TrustedDomains")?.trim() ?? "";
     const unsafeDomainsString = Office.context.roamingSettings.get("UnsafeDomains")?.trim() ?? "";
     const unsafeFilesString = Office.context.roamingSettings.get("UnsafeFiles")?.trim() ?? "";
+    const unsafeBodiesString = Office.context.roamingSettings.get("UnsafeBodies")?.trim() ?? "";
     const commonString = Office.context.roamingSettings.get("Common")?.trim() ?? "";
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
     const unsafeFiles = this.parseUnsafeConfig(unsafeFilesString);
+    const unsafeBodies = this.parseUnsafeBodiesConfig(unsafeBodiesString);
     const common = this.toDictionary(commonString, this.commonParamDefs);
     return {
       common,
       trustedDomains,
       unsafeDomains,
       unsafeFiles,
+      unsafeBodies,
       commonString,
       trustedDomainsString,
       unsafeDomainsString,
@@ -259,10 +272,12 @@ export class ConfigLoader {
       trustedDomains: [],
       unsafeDomains: {},
       unsafeFiles: {},
+      unsafeBodies: {},
       commonString: "",
       trustedDomainsString: "",
       unsafeDomainsString: "",
       unsafeFilesString: "",
+      unsafeBodiesString: "",
     };
   }
 
@@ -272,10 +287,12 @@ export class ConfigLoader {
       trustedDomains: [],
       unsafeDomains: {},
       unsafeFiles: {},
+      unsafeBodies: {},
       commonString: "",
       trustedDomainsString: "",
       unsafeDomainsString: "",
       unsafeFilesString: "",
+      unsafeBodiesString: "",
     };
   }
 
@@ -414,6 +431,13 @@ export class ConfigLoader {
         left.unsafeFilesString += "\n" + right.unsafeFilesString;
       }
       left.unsafeFilesString = left.unsafeFilesString.trim();
+    }
+    if (!fixedParametersSet.has("UnsafeBodies")) {
+      const leftUnsafeBodies = left.unsafeBodies || {};
+      const rightUnsafeBodies = right.unsafeBodies || {};
+      const mergedUnsafeBodies = Object.assign({}, leftUnsafeBodies, rightUnsafeBodies);
+      left.unsafeBodies = mergedUnsafeBodies;
+      left.unsafeBodiesString = JSON.stringify(mergedUnsafeBodies);
     }
     const rightFixedParametersSet = new Set(right.common.FixedParameters ?? []);
     const newFixedParametersSet = new Set([...fixedParametersSet, ...rightFixedParametersSet]);
