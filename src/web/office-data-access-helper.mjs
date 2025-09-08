@@ -64,11 +64,11 @@ export class OfficeDataAccessHelper {
     });
   }
 
-  static getBodyAsync() {
+  static getBodyAsync(coerctionType = Office.CoercionType.Html) {
     return new Promise((resolve, reject) => {
       try {
         Office.context.mailbox.item.body.getAsync(
-          Office.CoercionType.Html,
+          coerctionType,
           { bodyMode: Office.MailboxEnums.BodyMode.Full },
           (asyncResult) => {
             const body = asyncResult.value;
@@ -268,12 +268,13 @@ export class OfficeDataAccessHelper {
   }
 
   static async getAllMailData() {
-    const [to, cc, bcc, subject, body, attachments] = await Promise.all([
+    const [to, cc, bcc, subject, body, bodyText, attachments] = await Promise.all([
       OfficeDataAccessHelper.getToAsync(),
       OfficeDataAccessHelper.getCcAsync(),
       OfficeDataAccessHelper.getBccAsync(),
       OfficeDataAccessHelper.getSubjectAsync(),
       OfficeDataAccessHelper.getBodyAsync(),
+      OfficeDataAccessHelper.getBodyAsync(Office.CoercionType.Text),
       OfficeDataAccessHelper.getAttachmentsAsync(),
     ]);
     let originalRecipients = {};
@@ -290,6 +291,7 @@ export class OfficeDataAccessHelper {
         bcc,
         subject,
         body,
+        bodyText,
         attachments,
       },
       originalRecipients,
@@ -298,11 +300,12 @@ export class OfficeDataAccessHelper {
   }
 
   static async getAllAppointmentData() {
-    const [requiredAttendees, optionalAttendees, subject, body, attachments] = await Promise.all([
+    const [requiredAttendees, optionalAttendees, subject, body, bodyText, attachments] = await Promise.all([
       OfficeDataAccessHelper.getRequiredAttendeeAsync(),
       OfficeDataAccessHelper.getOptionalAttendeeAsync(),
       OfficeDataAccessHelper.getSubjectAsync(),
       OfficeDataAccessHelper.getBodyAsync(),
+      OfficeDataAccessHelper.getBodyAsync(Office.CoercionType.Text),
       OfficeDataAccessHelper.getAttachmentsAsync(),
     ]);
     let originalAttendees = {};
@@ -318,6 +321,7 @@ export class OfficeDataAccessHelper {
         optionalAttendees,
         subject,
         body,
+        bodyText,
         attachments,
       },
       originalRecipients: originalAttendees,

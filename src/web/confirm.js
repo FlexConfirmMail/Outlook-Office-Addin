@@ -13,6 +13,7 @@ import { Reconfirmation } from "./reconfirmation.mjs";
 import { UnsafeDomainsReconfirmation } from "./unsafe-domains-reconfirmation.mjs";
 import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation.mjs";
 import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
+import { UnsafeBodiesConfirmation } from "./unsafe-bodies-confirmation.mjs";
 import * as Dialog from "./dialog.mjs";
 
 let l10n;
@@ -22,6 +23,7 @@ let addedDomainsReconfirmation;
 let unsafeDomainsReconfirmation;
 let unsafeAddressesReconfirmation;
 let unsafeFilesReconfirmation;
+let unsafeBodiesConfirmation;
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -37,6 +39,7 @@ Office.onReady(() => {
   unsafeDomainsReconfirmation = new UnsafeDomainsReconfirmation(language);
   unsafeAddressesReconfirmation = new UnsafeAddressesReconfirmation(language);
   unsafeFilesReconfirmation = new UnsafeFilesReconfirmation(language);
+  unsafeBodiesConfirmation = new UnsafeBodiesConfirmation(language);
 
   document.documentElement.setAttribute("lang", language);
 
@@ -220,6 +223,9 @@ async function onMessageFromParent(arg) {
 
   safeBccConfirmation.init(data);
   appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
+
+  unsafeBodiesConfirmation.init(data);
+  appendMiscWarningCheckboxes(unsafeBodiesConfirmation.warningConfirmationItems);
 
   appendMiscWarningCheckboxes(
     Array.from(
