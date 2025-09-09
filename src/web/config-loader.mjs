@@ -194,14 +194,19 @@ export class ConfigLoader {
   }
 
   static async loadFileConfig() {
-    const [trustedDomainsString, unsafeDomainsString, unsafeFilesString, unsafeBodiesString, commonString] =
-      await Promise.all([
-        this.loadFile("configs/TrustedDomains.txt"),
-        this.loadFile("configs/UnsafeDomains.txt"),
-        this.loadFile("configs/UnsafeFiles.txt"),
-        this.loadFile("configs/UnsafeBodies.txt"),
-        this.loadFile("configs/Common.txt"),
-      ]);
+    const [
+      trustedDomainsString,
+      unsafeDomainsString,
+      unsafeFilesString,
+      unsafeBodiesString,
+      commonString,
+    ] = await Promise.all([
+      this.loadFile("configs/TrustedDomains.txt"),
+      this.loadFile("configs/UnsafeDomains.txt"),
+      this.loadFile("configs/UnsafeFiles.txt"),
+      this.loadFile("configs/UnsafeBodies.txt"),
+      this.loadFile("configs/Common.txt"),
+    ]);
     const trustedDomains = this.toArray(trustedDomainsString);
     const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
     const unsafeFiles = this.parseUnsafeConfig(unsafeFilesString);

@@ -300,14 +300,15 @@ export class OfficeDataAccessHelper {
   }
 
   static async getAllAppointmentData() {
-    const [requiredAttendees, optionalAttendees, subject, body, bodyText, attachments] = await Promise.all([
-      OfficeDataAccessHelper.getRequiredAttendeeAsync(),
-      OfficeDataAccessHelper.getOptionalAttendeeAsync(),
-      OfficeDataAccessHelper.getSubjectAsync(),
-      OfficeDataAccessHelper.getBodyAsync(),
-      OfficeDataAccessHelper.getBodyAsync(Office.CoercionType.Text),
-      OfficeDataAccessHelper.getAttachmentsAsync(),
-    ]);
+    const [requiredAttendees, optionalAttendees, subject, body, bodyText, attachments] =
+      await Promise.all([
+        OfficeDataAccessHelper.getRequiredAttendeeAsync(),
+        OfficeDataAccessHelper.getOptionalAttendeeAsync(),
+        OfficeDataAccessHelper.getSubjectAsync(),
+        OfficeDataAccessHelper.getBodyAsync(),
+        OfficeDataAccessHelper.getBodyAsync(Office.CoercionType.Text),
+        OfficeDataAccessHelper.getAttachmentsAsync(),
+      ]);
     let originalAttendees = {};
     const originalAttendeesJson = await OfficeDataAccessHelper.getSessionDataAsync(
       OfficeDataAccessHelper.ORIGINAL_ATTENDEES_KEY

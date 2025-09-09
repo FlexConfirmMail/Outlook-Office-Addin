@@ -8,7 +8,6 @@ Copyright (c) 2025 ClearCode Inc.
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class UnsafeBodiesConfirmation {
-
   constructor(language) {
     this.language = language;
     this.needToConfirm = false;
@@ -39,10 +38,8 @@ export class UnsafeBodiesConfirmation {
     return matcher;
   }
 
-  isTargetLanguage(valueLang)
-  {
-    if (!valueLang)
-    {
+  isTargetLanguage(valueLang) {
+    if (!valueLang) {
       // No value lang means "for all language".
       return true;
     }
@@ -62,23 +59,26 @@ export class UnsafeBodiesConfirmation {
       return;
     }
 
-    const bodyText =  data.target.bodyText;
+    const originalBodyText = data.target.bodyText;
+    if (!originalBodyText) {
+      return;
+    }
+    const bodyText = originalBodyText.split("\n").map(line => { return line.trim(); }).join();
     if (!bodyText) {
       return;
     }
+    
     // config object:
-    // { 
+    // {
     //   "name1" : {
     //     message: "sample message: $1"
     //     patterns: [ "test",
     //                 "test2" ],
     //   }
     // }
-    for(const config of Object.values(unsafeBodies))
-    {
+    for (const config of Object.values(unsafeBodies)) {
       const configLang = config.lang;
-      if (!this.isTargetLanguage(configLang))
-      {
+      if (!this.isTargetLanguage(configLang)) {
         continue;
       }
       const matcher = UnsafeBodiesConfirmation.generateMatcher(config.patterns);
