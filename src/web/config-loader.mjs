@@ -27,6 +27,11 @@ export class ConfigLoader {
 
   static defaultUnsafeConfigSection = "WARNING";
 
+  static unsafeBodiesParamDefs = {
+    Message: "text",
+    Patterns: "commaSeparatedValues",
+  };
+
   static DICTONARY_LINE_SPLITTER = /^([^=]+)=(.*)$/;
 
   static parseValue(paramDefs, key, valueStr) {
@@ -55,6 +60,9 @@ export class ConfigLoader {
           return csvArrayResult;
         }
         break;
+      }
+      case "text": {
+        return valueStr;
       }
     }
     return null;
@@ -118,11 +126,45 @@ export class ConfigLoader {
     return result;
   }
 
+  static parseKeyValue(paramDefs, lineStr) {
+    const match = lineStr.match(this.DICTONARY_LINE_SPLITTER);
+    if (!match) {
+      return null;
+    }
+    const key = match[1].trim();
+    const valueStr = match[2].trim();
+    const value = this.parseValue(paramDefs, key, valueStr);
+    if (value === null) {
+      return null;
+    }
+    return { key, value };
+  }
+
   static parseUnsafeBodiesConfig(str) {
     if (!str) {
       return {};
     }
-    return JSON.parse(str);
+    const configArray = this.toArray(str);
+    let section = null;
+    const result = {};
+    for (const item of configArray) {
+      if (/^\[.*\]$/.test(item)) {
+        const match = item.match(/^\[(.*)\]$/);
+        section = match[1];
+        continue;
+      }
+      if (section == null) {
+        continue;
+      }
+      if (!result[section]) {
+        result[section] = {};
+      }
+      const parsed = this.parseKeyValue(this.unsafeBodiesParamDefs, item);
+      if (parsed) {
+        result[section][parsed.key] = parsed.value;
+      }
+    }
+    return result;
   }
 
   static toArray(str) {
@@ -152,17 +194,10 @@ export class ConfigLoader {
       if (item.length <= 0 || item[0] === "#") {
         continue;
       }
-      const match = item.match(this.DICTONARY_LINE_SPLITTER);
-      if (!match) {
-        continue;
+      const parsed = this.parseKeyValue(paramDefs, item);
+      if (parsed) {
+        dictionary[parsed.key] = parsed.value;
       }
-      const key = match[1].trim();
-      const valueStr = match[2].trim();
-      const value = this.parseValue(paramDefs, key, valueStr);
-      if (value === null) {
-        continue;
-      }
-      dictionary[key] = value;
     }
     return dictionary;
   }
@@ -440,9 +475,14 @@ export class ConfigLoader {
     if (!fixedParametersSet.has("UnsafeBodies")) {
       const leftUnsafeBodies = left.unsafeBodies || {};
       const rightUnsafeBodies = right.unsafeBodies || {};
+      // If there is the same section name in the left and the right, the section of right is used.
       const mergedUnsafeBodies = Object.assign({}, leftUnsafeBodies, rightUnsafeBodies);
       left.unsafeBodies = mergedUnsafeBodies;
-      left.unsafeBodiesString = JSON.stringify(mergedUnsafeBodies);
+      // If there is the same section name in the left and the right, both of them are written
+      // in the unsafeBodiesString. As the config file specification, the later section overrides
+      // the previous, as the result, the section of right is used.
+      left.unsafeBodiesString += "\n" + right.unsafeBodiesString;
+      left.unsafeBodiesString = left.unsafeBodiesString.trim();
     }
     const rightFixedParametersSet = new Set(right.common.FixedParameters ?? []);
     const newFixedParametersSet = new Set([...fixedParametersSet, ...rightFixedParametersSet]);

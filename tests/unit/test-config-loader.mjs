@@ -215,6 +215,79 @@ export function test_parseUnsafeConfig({ str, expected }) {
   );
 }
 
+test_parseUnsafeBodiesConfig.parameters = {
+  "no section": {
+    str: "Patterns=添付\n" +
+         "Message=「添付」が含まれています",
+    expected: {},
+  },
+  "single section": {
+    str: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。",
+    expected: { 
+      "Section1" : 
+      { 
+        Patterns: ["添付"], 
+        Message: "[警告] 「添付」が含まれています。" 
+      } 
+    },
+  },
+  "multi sections": {
+    str: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
+    expected: { 
+      "Section1" : 
+      { 
+        Patterns: ["添付"], 
+        Message: "[警告] 「添付」が含まれています。" 
+      },
+      "Section2" : 
+      { 
+        Patterns: ["添付2", "添付3"], 
+        Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+      } 
+    },
+  },
+  "override section": {
+    str: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section1]\n" +
+         "Patterns=添付After\n" +
+         "Message=[警告] 「添付After」が含まれています。",
+    expected: { 
+      "Section1" : 
+      { 
+        Patterns: ["添付After"], 
+        Message: "[警告] 「添付After」が含まれています。" 
+      },
+    },
+  },
+  "null to empty": {
+    str: null,
+    expected: {},
+  },
+  "undefined to empty": {
+    str: undefined,
+    expected: {},
+  },
+  "empty string to empty": {
+    str: "",
+    expected: {},
+  },
+}
+export function test_parseUnsafeBodiesConfig({ str, expected }) {
+  is(
+    expected,
+    ConfigLoader.parseUnsafeBodiesConfig(str)
+  );
+}
+
 test_toDictionaryCommon.parameters = {
   "CountEnabled=True": {
     str: "CountEnabled=True",
@@ -429,7 +502,7 @@ test_merge.parameters = {
       trustedDomainsString: "",
       unsafeDomainsString: "",
       unsafeFilesString: "",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "",
     },
     right: {
       common: {
@@ -451,7 +524,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2", "添付3"], 
+          Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+        } 
+      },
       commonString:
         "CountEnabled = true\n" +
         "CountAllowSkip = true\n" +
@@ -468,7 +552,12 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     expected: {
       common: {
@@ -490,7 +579,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2", "添付3"], 
+          Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+        } 
+      },
       commonString:
         "CountEnabled = true\n" +
         "CountAllowSkip = true\n" +
@@ -508,7 +608,12 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
     }
   },
   "right is empty": {
@@ -532,7 +637,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2", "添付3"], 
+          Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+        } 
+      },
       commonString: 
         "CountEnabled = true\n" +
         "CountAllowSkip = true\n" +
@@ -550,7 +666,12 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     right: {
       common: {},
@@ -562,7 +683,7 @@ test_merge.parameters = {
       trustedDomainsString: "",
       unsafeDomainsString: "",
       unsafeFilesString: "",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "",
     },
     expected: {
       common: {
@@ -584,7 +705,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain"],
       unsafeDomains: { "WARNING": ["unsafeDomain"] },
       unsafeFiles: { "WARNING": ["unsafeFile"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2", "添付3"], 
+          Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+        } 
+      },
       commonString: 
         "CountEnabled = true\n" +
         "CountAllowSkip = true\n" +
@@ -602,10 +734,15 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
     }
   },
-  "use right defined params": {
+  "merge right to left": {
     left: {
       common: {
         CountEnabled: true,
@@ -626,7 +763,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2", "添付3"], 
+          Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+        } 
+      },
       commonString: 
         "CountEnabled = true\n" +
         "CountAllowSkip = true\n" +
@@ -643,7 +791,12 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     right: {
       common: {
@@ -665,7 +818,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_right"],
       unsafeDomains: { "WARNING": ["unsafeDomain_right"] },
       unsafeFiles: { "WARNING": ["unsafeFile_right"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section2" : 
+        { 
+          Patterns: ["添付2_上書き", "添付3_上書き"], 
+          Message: "[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。" 
+        },
+        "Section3" : 
+        { 
+          Patterns: ["セクション3"], 
+          Message: "[警告] 「セクション3」が含まれています。" 
+        },
+      },
       commonString: 
         "CountEnabled = false\n" +
         "CountAllowSkip = false\n" +
@@ -684,7 +848,12 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
       unsafeFilesString: "unsafeFile_right",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section2]\n" +
+         "Patterns=添付2_上書き,添付3_上書き\n" +
+         "Message=[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。\n" +
+         "[Section3]\n" +
+         "Patterns=セクション3\n" +
+         "Message=[警告] 「セクション3」が含まれています。",
     },
     expected: {
       common: {
@@ -706,7 +875,23 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left", "unsafeDomain_right"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left", "unsafeFile_right"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2_上書き", "添付3_上書き"], 
+          Message: "[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。" 
+        },
+        "Section3" : 
+        { 
+          Patterns: ["セクション3"], 
+          Message: "[警告] 「セクション3」が含まれています。" 
+        },
+      },
       commonString: 
         "CountEnabled = false\n" +
         "CountAllowSkip = false\n" +
@@ -725,7 +910,18 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
       unsafeDomainsString: "unsafeDomain_left\n[WARNING]\nunsafeDomain_right",
       unsafeFilesString: "unsafeFile_left\n[WARNING]\nunsafeFile_right",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2_上書き,添付3_上書き\n" +
+         "Message=[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。\n" +
+         "[Section3]\n" +
+         "Patterns=セクション3\n" +
+         "Message=[警告] 「セクション3」が含まれています。",
     },
   },
   "fix all parameters": {
@@ -767,7 +963,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2", "添付3"], 
+          Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+        } 
+      },
       commonString: 
         "CountEnabled = true\n" +
         "CountAllowSkip = true\n" +
@@ -801,7 +1008,12 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     right: {
       common: {
@@ -823,7 +1035,13 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_right"],
       unsafeDomains: { "WARNING": ["unsafeDomain_right"] },
       unsafeFiles: { "WARNING": ["unsafeFile_right"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section3" : 
+        { 
+          Patterns: ["セクション3"], 
+          Message: "[警告] 「セクション3」が含まれています。" 
+        },
+      },
       commonString: 
         "CountEnabled = false\n" +
         "CountAllowSkip = false\n" +
@@ -842,7 +1060,9 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
       unsafeFilesString: "unsafeFile_right",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section3]\n" +
+         "Patterns=セクション3\n" +
+         "Message=[警告] 「セクション3」が含まれています。",
     },
     expected: {
       common: {
@@ -882,7 +1102,18 @@ test_merge.parameters = {
       trustedDomains: ["trustedDomain_left"],
       unsafeDomains: { "WARNING": ["unsafeDomain_left"] },
       unsafeFiles: { "WARNING": ["unsafeFile_left"] },
-      unsafeBodies: {},
+      unsafeBodies: { 
+        "Section1" : 
+        { 
+          Patterns: ["添付"], 
+          Message: "[警告] 「添付」が含まれています。" 
+        },
+        "Section2" : 
+        { 
+          Patterns: ["添付2", "添付3"], 
+          Message: "[警告] 「添付2」または「添付3」が含まれています。" 
+        } 
+      },
       commonString: 
         "CountEnabled = true\n" +
         "CountAllowSkip = true\n" +
@@ -918,7 +1149,12 @@ test_merge.parameters = {
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
-      unsafeBodiesString: "{}",
+      unsafeBodiesString: "[Section1]\n" +
+         "Patterns=添付\n" +
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "[Section2]\n" +
+         "Patterns=添付2,添付3\n" +
+         "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
   },
 }
