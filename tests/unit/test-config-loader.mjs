@@ -217,53 +217,53 @@ export function test_parseUnsafeConfig({ str, expected }) {
 
 test_parseUnsafeBodiesConfig.parameters = {
   "no section": {
-    str: "Patterns=添付\n" +
+    str: "Keywords=添付\n" +
          "Message=「添付」が含まれています",
     expected: {},
   },
   "single section": {
     str: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。",
     expected: { 
       "Section1" : 
       { 
-        Patterns: ["添付"], 
+        Keywords: ["添付"], 
         Message: "[警告] 「添付」が含まれています。" 
       } 
     },
   },
   "multi sections": {
     str: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     expected: { 
       "Section1" : 
       { 
-        Patterns: ["添付"], 
+        Keywords: ["添付"], 
         Message: "[警告] 「添付」が含まれています。" 
       },
       "Section2" : 
       { 
-        Patterns: ["添付2", "添付3"], 
+        Keywords: ["添付2", "添付3"], 
         Message: "[警告] 「添付2」または「添付3」が含まれています。" 
       } 
     },
   },
   "override section": {
     str: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section1]\n" +
-         "Patterns=添付After\n" +
+         "Keywords=添付After\n" +
          "Message=[警告] 「添付After」が含まれています。",
     expected: { 
       "Section1" : 
       { 
-        Patterns: ["添付After"], 
+        Keywords: ["添付After"], 
         Message: "[警告] 「添付After」が含まれています。" 
       },
     },
@@ -527,12 +527,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2", "添付3"], 
+          Keywords: ["添付2", "添付3"], 
           Message: "[警告] 「添付2」または「添付3」が含まれています。" 
         } 
       },
@@ -553,10 +553,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     expected: {
@@ -582,12 +582,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2", "添付3"], 
+          Keywords: ["添付2", "添付3"], 
           Message: "[警告] 「添付2」または「添付3」が含まれています。" 
         } 
       },
@@ -609,10 +609,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     }
   },
@@ -640,12 +640,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2", "添付3"], 
+          Keywords: ["添付2", "添付3"], 
           Message: "[警告] 「添付2」または「添付3」が含まれています。" 
         } 
       },
@@ -667,10 +667,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     right: {
@@ -708,12 +708,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2", "添付3"], 
+          Keywords: ["添付2", "添付3"], 
           Message: "[警告] 「添付2」または「添付3」が含まれています。" 
         } 
       },
@@ -735,10 +735,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     }
   },
@@ -766,12 +766,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2", "添付3"], 
+          Keywords: ["添付2", "添付3"], 
           Message: "[警告] 「添付2」または「添付3」が含まれています。" 
         } 
       },
@@ -792,10 +792,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     right: {
@@ -821,12 +821,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section2" : 
         { 
-          Patterns: ["添付2_上書き", "添付3_上書き"], 
+          Keywords: ["添付2_上書き", "添付3_上書き"], 
           Message: "[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。" 
         },
         "Section3" : 
         { 
-          Patterns: ["セクション3"], 
+          Keywords: ["セクション3"], 
           Message: "[警告] 「セクション3」が含まれています。" 
         },
       },
@@ -849,10 +849,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain_right",
       unsafeFilesString: "unsafeFile_right",
       unsafeBodiesString: "[Section2]\n" +
-         "Patterns=添付2_上書き,添付3_上書き\n" +
+         "Keywords=添付2_上書き,添付3_上書き\n" +
          "Message=[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。\n" +
          "[Section3]\n" +
-         "Patterns=セクション3\n" +
+         "Keywords=セクション3\n" +
          "Message=[警告] 「セクション3」が含まれています。",
     },
     expected: {
@@ -878,17 +878,17 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2_上書き", "添付3_上書き"], 
+          Keywords: ["添付2_上書き", "添付3_上書き"], 
           Message: "[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。" 
         },
         "Section3" : 
         { 
-          Patterns: ["セクション3"], 
+          Keywords: ["セクション3"], 
           Message: "[警告] 「セクション3」が含まれています。" 
         },
       },
@@ -911,16 +911,16 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain_left\n[WARNING]\nunsafeDomain_right",
       unsafeFilesString: "unsafeFile_left\n[WARNING]\nunsafeFile_right",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2_上書き,添付3_上書き\n" +
+         "Keywords=添付2_上書き,添付3_上書き\n" +
          "Message=[警告] 「添付2_上書き」または「添付3_上書き」が含まれています。\n" +
          "[Section3]\n" +
-         "Patterns=セクション3\n" +
+         "Keywords=セクション3\n" +
          "Message=[警告] 「セクション3」が含まれています。",
     },
   },
@@ -966,12 +966,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2", "添付3"], 
+          Keywords: ["添付2", "添付3"], 
           Message: "[警告] 「添付2」または「添付3」が含まれています。" 
         } 
       },
@@ -1009,10 +1009,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
     right: {
@@ -1038,7 +1038,7 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section3" : 
         { 
-          Patterns: ["セクション3"], 
+          Keywords: ["セクション3"], 
           Message: "[警告] 「セクション3」が含まれています。" 
         },
       },
@@ -1061,7 +1061,7 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain_right",
       unsafeFilesString: "unsafeFile_right",
       unsafeBodiesString: "[Section3]\n" +
-         "Patterns=セクション3\n" +
+         "Keywords=セクション3\n" +
          "Message=[警告] 「セクション3」が含まれています。",
     },
     expected: {
@@ -1105,12 +1105,12 @@ test_merge.parameters = {
       unsafeBodies: { 
         "Section1" : 
         { 
-          Patterns: ["添付"], 
+          Keywords: ["添付"], 
           Message: "[警告] 「添付」が含まれています。" 
         },
         "Section2" : 
         { 
-          Patterns: ["添付2", "添付3"], 
+          Keywords: ["添付2", "添付3"], 
           Message: "[警告] 「添付2」または「添付3」が含まれています。" 
         } 
       },
@@ -1150,10 +1150,10 @@ test_merge.parameters = {
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
       unsafeBodiesString: "[Section1]\n" +
-         "Patterns=添付\n" +
+         "Keywords=添付\n" +
          "Message=[警告] 「添付」が含まれています。\n" +
          "[Section2]\n" +
-         "Patterns=添付2,添付3\n" +
+         "Keywords=添付2,添付3\n" +
          "Message=[警告] 「添付2」または「添付3」が含まれています。",
     },
   },

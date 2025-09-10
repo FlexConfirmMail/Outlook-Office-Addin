@@ -29,7 +29,7 @@ export class ConfigLoader {
 
   static unsafeBodiesParamDefs = {
     Message: "text",
-    Patterns: "commaSeparatedValues",
+    Keywords: "commaSeparatedValues",
   };
 
   static DICTONARY_LINE_SPLITTER = /^([^=]+)=(.*)$/;
@@ -256,6 +256,7 @@ export class ConfigLoader {
       trustedDomainsString,
       unsafeDomainsString,
       unsafeFilesString,
+      unsafeBodiesString,
       commonString,
     };
   }
@@ -288,6 +289,7 @@ export class ConfigLoader {
       trustedDomainsString,
       unsafeDomainsString,
       unsafeFilesString,
+      unsafeBodiesString,
     };
   }
 

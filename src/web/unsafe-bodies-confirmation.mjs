@@ -63,16 +63,20 @@ export class UnsafeBodiesConfirmation {
     if (!originalBodyText) {
       return;
     }
-    const bodyText = originalBodyText.split("\n").map(line => { return line.trim(); }).join();
+    const bodyText = originalBodyText.split("\n").map(line => { 
+      // If we delete blank lines, paragraphs will be joined together, 
+      // and that may cause mis-matching, so leave blank lines as they are.
+      return line.trim() || "\n"; 
+    }).join("");
     if (!bodyText) {
       return;
     }
-    
+
     // config object:
     // {
     //   "name1" : {
-    //     message: "sample message: $1"
-    //     patterns: [ "test",
+    //     Message: "sample message"
+    //     Keywords: [ "test",
     //                 "test2" ],
     //   }
     // }
@@ -81,9 +85,9 @@ export class UnsafeBodiesConfirmation {
       if (!this.isTargetLanguage(configLang)) {
         continue;
       }
-      const matcher = UnsafeBodiesConfirmation.generateMatcher(config.patterns);
+      const matcher = UnsafeBodiesConfirmation.generateMatcher(config.Keywords);
       if (matcher.test(bodyText)) {
-        this.confirmationMessages.push(config.message);
+        this.confirmationMessages.push(config.Message);
       }
     }
     this.needToConfirm = this.confirmationMessages.length >= 1;

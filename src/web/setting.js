@@ -54,9 +54,13 @@ function toPolocyUnsafeBodiesConfigString(unsafeConfig) {
   for (const sectionName of Object.keys(unsafeConfig)) {
     if (unsafeConfig[sectionName] && unsafeConfig[sectionName] != {}) {
       lines.push(`[${sectionName}]`);
-      const value = unsafeConfig[sectionName];
-      lines.push(`Message=${value.message}`);
-      lines.push(`Patterns=${value.patterns.join(",")}`);
+      const section = unsafeConfig[sectionName];
+      if (section.Message) {
+        lines.push(`Message=${section.Message}`);
+      }
+      if (section.Keywords) {
+        lines.push(`Keywords=${section.Keywords.join(",")}`);
+      }
     }
   }
   return lines.join("\n# ");
@@ -153,16 +157,16 @@ function createDisplayUnsafeBodies() {
   if (policyUnsafeBodiesString) {
     let userUnsafeBodiesString = userConfig.unsafeBodiesString?.trim() ?? "";
     if (!userUnsafeBodiesString) {
-      userUnsafeBodiesString = l10n.get("setting_unsafeFilesExample");
+      userUnsafeBodiesString = l10n.get("setting_unsafeBodiesExample");
     }
-    return l10n.get("setting_unsafeFilesPolicy", {
+    return l10n.get("setting_unsafeBodiesPolicy", {
       policy: policyUnsafeBodiesString,
       user: userUnsafeBodiesString,
     });
   } else if (userConfig.unsafeBodiesString) {
     return userConfig.unsafeBodiesString;
   } else {
-    return l10n.get("setting_unsafeFilesTemplate");
+    return l10n.get("setting_unsafeBodiesTemplate");
   }
 }
 
@@ -187,7 +191,7 @@ function serializeUnsafeBodies() {
   let unsafeBodiesString = document.getElementById("unsafeBodiesTextArea").value ?? "";
   if (policyUnsafeBodiesString) {
     const template = l10n
-      .get("setting_unsafeFilesPolicy", {
+      .get("setting_unsafeBodiesPolicy", {
         policy: policyUnsafeBodiesString,
         user: "",
       })
