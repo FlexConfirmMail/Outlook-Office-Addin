@@ -72,6 +72,7 @@
   "setting_configTrustedDomains": "信任域，地址",
   "setting_configUnsafeDomains": "不安全域，地址",
   "setting_configUnsafeFiles": "不安全的文件名",
+  "setting_configUnsafeBodies" : "Unsafe Bodies",
   "setting_configWarning": "To/Cc",
   "setting_configWindowTitle": "设置FlexConfirmMail",
   "setting_aboutAddon": "版本",

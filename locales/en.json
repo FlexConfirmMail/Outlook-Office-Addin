@@ -72,6 +72,7 @@
   "setting_configTrustedDomains": "Trusted Domains and Addresses",
   "setting_configUnsafeDomains": "Unsafe Domains and Addresses",
   "setting_configUnsafeFiles": "Unsafe Files",
+  "setting_configUnsafeBodies" : "Unsafe Bodies",
   "setting_configWarning": "To/Cc",
   "setting_configWindowTitle": "FlexConfirmMail Options",
   "setting_aboutAddon": "Version",
