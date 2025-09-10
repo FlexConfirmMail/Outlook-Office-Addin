@@ -55,11 +55,11 @@ function toPolocyUnsafeBodiesConfigString(unsafeConfig) {
     if (unsafeConfig[sectionName] && unsafeConfig[sectionName] != {}) {
       lines.push(`[${sectionName}]`);
       const section = unsafeConfig[sectionName];
-      if (section.Message) {
-        lines.push(`Message=${section.Message}`);
-      }
       if (section.Keywords) {
         lines.push(`Keywords=${section.Keywords.join(",")}`);
+      }
+      if (section.Message) {
+        lines.push(`Message=${section.Message}`);
       }
     }
   }
