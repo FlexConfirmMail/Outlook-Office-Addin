@@ -50,7 +50,7 @@ function toPolocyUnsafeBodiesConfigString(unsafeConfig) {
   if (!unsafeConfig) {
     return "";
   }
-  let lines = [];
+  const lines = [];
   for (const sectionName of Object.keys(unsafeConfig)) {
     if (unsafeConfig[sectionName] && unsafeConfig[sectionName] != {}) {
       lines.push(`[${sectionName}]`);

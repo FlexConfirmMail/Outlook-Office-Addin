@@ -63,11 +63,14 @@ export class UnsafeBodiesConfirmation {
     if (!originalBodyText) {
       return;
     }
-    const bodyText = originalBodyText.split("\n").map(line => { 
-      // If we delete blank lines, paragraphs will be joined together, 
-      // and that may cause mis-matching, so leave blank lines as they are.
-      return line.trim() || "\n"; 
-    }).join("");
+    const bodyText = originalBodyText
+      .split("\n")
+      .map((line) => {
+        // If we delete blank lines, paragraphs will be joined together,
+        // and that may cause mis-matching, so leave blank lines as they are.
+        return line.trim() || "\n";
+      })
+      .join("");
     if (!bodyText) {
       return;
     }
