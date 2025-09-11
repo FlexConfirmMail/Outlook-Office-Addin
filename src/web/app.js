@@ -90,6 +90,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         Office.context.roamingSettings.set("TrustedDomains", config.trustedDomainsString ?? "");
         Office.context.roamingSettings.set("UnsafeDomains", config.unsafeDomainsString ?? "");
         Office.context.roamingSettings.set("UnsafeFiles", config.unsafeFilesString ?? "");
+        Office.context.roamingSettings.set("UnsafeBodies", config.unsafeBodiesString ?? "");
         Office.context.roamingSettings.saveAsync((saveResult) => {
           // This function should return (resolve) after finishing saveAsync.
           // If returing before finishing saveAsync, roamingSettings is not

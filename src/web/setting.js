@@ -46,6 +46,26 @@ function toPolocyUnsafeConfigString(unsafeConfig) {
   return lines.join("\n# ");
 }
 
+function toPolocyUnsafeBodiesConfigString(unsafeConfig) {
+  if (!unsafeConfig) {
+    return "";
+  }
+  const lines = [];
+  for (const sectionName of Object.keys(unsafeConfig)) {
+    if (unsafeConfig[sectionName] && unsafeConfig[sectionName] != {}) {
+      lines.push(`[${sectionName}]`);
+      const section = unsafeConfig[sectionName];
+      if (section.Keywords) {
+        lines.push(`Keywords=${section.Keywords.join(",")}`);
+      }
+      if (section.Message) {
+        lines.push(`Message=${section.Message}`);
+      }
+    }
+  }
+  return lines.join("\n# ");
+}
+
 function createDisplayTrustedDomains() {
   if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
     const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
@@ -132,6 +152,24 @@ function createDisplayUnsafeFiles() {
   }
 }
 
+function createDisplayUnsafeBodies() {
+  const policyUnsafeBodiesString = toPolocyUnsafeBodiesConfigString(policyConfig.unsafeBodies);
+  if (policyUnsafeBodiesString) {
+    let userUnsafeBodiesString = userConfig.unsafeBodiesString?.trim() ?? "";
+    if (!userUnsafeBodiesString) {
+      userUnsafeBodiesString = l10n.get("setting_unsafeBodiesExample");
+    }
+    return l10n.get("setting_unsafeBodiesPolicy", {
+      policy: policyUnsafeBodiesString,
+      user: userUnsafeBodiesString,
+    });
+  } else if (userConfig.unsafeBodiesString) {
+    return userConfig.unsafeBodiesString;
+  } else {
+    return l10n.get("setting_unsafeBodiesTemplate");
+  }
+}
+
 function serializeUnsafeFiles() {
   const policyUnsafeFilesString = toPolocyUnsafeConfigString(policyConfig.unsafeFiles);
   let unsafeFilesString = document.getElementById("unsafeFilesTextArea").value ?? "";
@@ -146,6 +184,22 @@ function serializeUnsafeFiles() {
   }
   unsafeFilesString = unsafeFilesString.trim();
   return unsafeFilesString;
+}
+
+function serializeUnsafeBodies() {
+  const policyUnsafeBodiesString = toPolocyUnsafeBodiesConfigString(policyConfig.unsafeBodies);
+  let unsafeBodiesString = document.getElementById("unsafeBodiesTextArea").value ?? "";
+  if (policyUnsafeBodiesString) {
+    const template = l10n
+      .get("setting_unsafeBodiesPolicy", {
+        policy: policyUnsafeBodiesString,
+        user: "",
+      })
+      .trim();
+    unsafeBodiesString = unsafeBodiesString.replace(template, "");
+  }
+  unsafeBodiesString = unsafeBodiesString.trim();
+  return unsafeBodiesString;
 }
 
 async function onMessageFromParent(arg) {
@@ -172,6 +226,7 @@ function updateDialogSetting(policy, user) {
   const trustedDomainsString = createDisplayTrustedDomains();
   const unsafeDomainsString = createDisplayUnsafeDomains();
   const unsafeFilesString = createDisplayUnsafeFiles();
+  const unsafeBodiesString = createDisplayUnsafeBodies();
 
   document.getElementById("trustedDomainsTextArea").value = trustedDomainsString;
   document.getElementById("trustedDomainsTextArea").disabled =
@@ -181,6 +236,8 @@ function updateDialogSetting(policy, user) {
     fixedParametersSet.has("UnsafeDomains");
   document.getElementById("unsafeFilesTextArea").value = unsafeFilesString;
   document.getElementById("unsafeFilesTextArea").disabled = fixedParametersSet.has("UnsafeFiles");
+  document.getElementById("unsafeBodiesTextArea").value = unsafeBodiesString;
+  document.getElementById("unsafeBodiesTextArea").disabled = fixedParametersSet.has("UnsafeBodies");
 
   document.getElementById("countEnabled").checked = common.CountEnabled;
   document.getElementById("countEnabled").disabled = fixedParametersSet.has("CountEnabled");
@@ -289,15 +346,18 @@ window.onSave = () => {
   const trustedDomainsString = serializeTrustedDomains();
   const unsafeDomainsString = serializeUnsafeDomains();
   const unsafeFilesString = serializeUnsafeFiles();
+  const unsafeBodiesString = serializeUnsafeBodies();
   console.debug("commonString: ", commonString);
   console.debug("trustedDomainsString: ", trustedDomainsString);
   console.debug("unsafeDomainsString: ", unsafeDomainsString);
   console.debug("unsafeFilesString: ", unsafeFilesString);
+  console.debug("unsafeBodiesString: ", unsafeBodiesString);
   const config = {
     commonString,
     trustedDomainsString,
     unsafeDomainsString,
     unsafeFilesString,
+    unsafeBodiesString,
   };
   sendConfigToParent(config);
 };
