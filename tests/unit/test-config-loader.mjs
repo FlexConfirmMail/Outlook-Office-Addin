@@ -158,7 +158,7 @@ export function test_toArray({ str, expected }) {
   );
 }
 
-test_parseUnsafeConfig.parameters = {
+test_parseUnsafeDomainsConfig.parameters = {
   "default single line": {
     str: "a@example.com",
     expected: { "WARNING" : ["a@example.com"] },
@@ -208,10 +208,10 @@ test_parseUnsafeConfig.parameters = {
     expected: {},
   },
 }
-export function test_parseUnsafeConfig({ str, expected }) {
+export function test_parseUnsafeDomainsConfig({ str, expected }) {
   is(
     expected,
-    ConfigLoader.parseUnsafeConfig(str)
+    ConfigLoader.parseUnsafeDomainsConfig(str)
   );
 }
 
@@ -288,7 +288,7 @@ export function test_parseUnsafeBodiesConfig({ str, expected }) {
   );
 }
 
-test_toDictionaryCommon.parameters = {
+test_parseCommonConfig.parameters = {
   "CountEnabled=True": {
     str: "CountEnabled=True",
     expected: { "CountEnabled": true },
@@ -432,10 +432,10 @@ test_toDictionaryCommon.parameters = {
     expected: {},
   },
 }
-export function test_toDictionaryCommon({ str, expected }) {
+export function test_parseCommonConfig({ str, expected }) {
   is(
     expected,
-    ConfigLoader.toDictionary(str, ConfigLoader.commonParamDefs)
+    ConfigLoader.parseCommonConfig(str)
   );
 }
 

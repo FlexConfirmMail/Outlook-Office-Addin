@@ -23,7 +23,7 @@ export class ConfigLoader {
     FixedParameters: "commaSeparatedValues",
   };
 
-  static unsafeConfigSectionDefs = ["WARNING", "BLOCK", "REWARNING"];
+  static unsafeArraySectionDefs = ["WARNING", "BLOCK", "REWARNING"];
 
   static defaultUnsafeConfigSection = "WARNING";
 
@@ -102,20 +102,60 @@ export class ConfigLoader {
     return null;
   }
 
-  // Example:
+  // Parse INI like file
+  // The difference from the common INI format is that
+  // we only support "#" comment out, not support ";" comment out.
+  static parseIni(str, paramDefs, defaultSection)
+  {
+    if (!str) {
+      return {};
+    }
+    const configArray = this.toArray(str);
+    let section = defaultSection;
+    const result = {};
+    for (const item of configArray) {
+      if (/^\[.*\]$/.test(item)) {
+        const match = item.match(/^\[(.*)\]$/);
+        section = match[1];
+        continue;
+      }
+      if (!section) {
+        continue;
+      }
+      if (!result[section]) {
+        result[section] = {};
+      }
+      const parsed = this.parseKeyValue(paramDefs, item);
+      if (parsed) {
+        result[section][parsed.key] = parsed.value;
+      }
+    }
+    return result;
+  }
+
+  // Input example:
+  //  [WARNING]
+  //  a@example.com
+  //  [BLOCK]
+  //  b@example.com
+  // Result example:
   //   { "WARNING": ["a@example.com"],
   //     "BLOCK": ["b@example.com"] }
-  static parseUnsafeConfig(str) {
+  static parseSectionableArray(str, sectionDefs, defaultSection)
+  {
     const configArray = this.toArray(str);
-    let section = this.defaultUnsafeConfigSection;
+    let section = defaultSection;
     const result = {};
     for (const item of configArray) {
       if (/^\[.*\]$/.test(item)) {
         const match = item.match(/^\[(.*)\]$/);
         const newSection = match[1].toUpperCase();
-        if (this.unsafeConfigSectionDefs.includes(newSection)) {
+        if (sectionDefs.includes(newSection)) {
           section = newSection;
         }
+        continue;
+      }
+      if (section == null) {
         continue;
       }
       if (!result[section]) {
@@ -140,31 +180,26 @@ export class ConfigLoader {
     return { key, value };
   }
 
+  static parseCommonConfig(str) {
+    const defaultSectionName = "Common";
+    const parsedDictionary = this.parseIni(str, this.commonParamDefs, defaultSectionName);
+    return parsedDictionary[defaultSectionName] || {};
+  }
+
+  static parseUnsafeDomainsConfig(str) {
+    return this.parseSectionableArray(str, this.unsafeArraySectionDefs, this.defaultUnsafeConfigSection);
+  }
+
+  static parseUnsafeFilesConfig(str) {
+    return this.parseSectionableArray(str, this.unsafeArraySectionDefs, this.defaultUnsafeConfigSection);
+  }
+
   static parseUnsafeBodiesConfig(str) {
-    if (!str) {
-      return {};
-    }
-    const configArray = this.toArray(str);
-    let section = null;
-    const result = {};
-    for (const item of configArray) {
-      if (/^\[.*\]$/.test(item)) {
-        const match = item.match(/^\[(.*)\]$/);
-        section = match[1];
-        continue;
-      }
-      if (section == null) {
-        continue;
-      }
-      if (!result[section]) {
-        result[section] = {};
-      }
-      const parsed = this.parseKeyValue(this.unsafeBodiesParamDefs, item);
-      if (parsed) {
-        result[section][parsed.key] = parsed.value;
-      }
-    }
-    return result;
+    return this.parseIni(str, this.unsafeBodiesParamDefs, null);
+  }
+
+  static parseTrustedDomainsConfig(str) {
+    return this.toArray(str);
   }
 
   static toArray(str) {
@@ -181,25 +216,6 @@ export class ConfigLoader {
       resultList.push(item);
     }
     return resultList;
-  }
-
-  static toDictionary(str, paramDefs) {
-    const dictionary = {};
-    if (!str) {
-      return dictionary;
-    }
-    str = str.trim();
-    for (let item of str.split("\n")) {
-      item = item.trim();
-      if (item.length <= 0 || item[0] === "#") {
-        continue;
-      }
-      const parsed = this.parseKeyValue(paramDefs, item);
-      if (parsed) {
-        dictionary[parsed.key] = parsed.value;
-      }
-    }
-    return dictionary;
   }
 
   static async loadFile(url) {
@@ -242,11 +258,11 @@ export class ConfigLoader {
       this.loadFile("configs/UnsafeBodies.txt"),
       this.loadFile("configs/Common.txt"),
     ]);
-    const trustedDomains = this.toArray(trustedDomainsString);
-    const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
-    const unsafeFiles = this.parseUnsafeConfig(unsafeFilesString);
+    const trustedDomains = this.parseTrustedDomainsConfig(trustedDomainsString);
+    const unsafeDomains = this.parseUnsafeDomainsConfig(unsafeDomainsString);
+    const unsafeFiles = this.parseUnsafeFilesConfig(unsafeFilesString);
     const unsafeBodies = this.parseUnsafeBodiesConfig(unsafeBodiesString);
-    const common = this.toDictionary(commonString, this.commonParamDefs);
+    const common = this.parseCommonConfig(commonString);
     return {
       trustedDomains,
       unsafeDomains,
@@ -274,11 +290,11 @@ export class ConfigLoader {
     const unsafeFilesString = Office.context.roamingSettings.get("UnsafeFiles")?.trim() ?? "";
     const unsafeBodiesString = Office.context.roamingSettings.get("UnsafeBodies")?.trim() ?? "";
     const commonString = Office.context.roamingSettings.get("Common")?.trim() ?? "";
-    const trustedDomains = this.toArray(trustedDomainsString);
-    const unsafeDomains = this.parseUnsafeConfig(unsafeDomainsString);
-    const unsafeFiles = this.parseUnsafeConfig(unsafeFilesString);
+    const trustedDomains = this.parseTrustedDomainsConfig(trustedDomainsString);
+    const unsafeDomains = this.parseUnsafeDomainsConfig(unsafeDomainsString);
+    const unsafeFiles = this.parseUnsafeFilesConfig(unsafeFilesString);
     const unsafeBodies = this.parseUnsafeBodiesConfig(unsafeBodiesString);
-    const common = this.toDictionary(commonString, this.commonParamDefs);
+    const common = this.parseCommonConfig(commonString);
     return {
       common,
       trustedDomains,
@@ -418,7 +434,7 @@ export class ConfigLoader {
     }
     if (!fixedParametersSet.has("UnsafeDomains")) {
       left.unsafeDomains = this.mergeUnsafeConfig(
-        this.unsafeConfigSectionDefs,
+        this.unsafeArraySectionDefs,
         left.unsafeDomains,
         right.unsafeDomains
       );
@@ -462,7 +478,7 @@ export class ConfigLoader {
     }
     if (!fixedParametersSet.has("UnsafeFiles")) {
       left.unsafeFiles = this.mergeUnsafeConfig(
-        this.unsafeConfigSectionDefs,
+        this.unsafeArraySectionDefs,
         left.unsafeFiles,
         right.unsafeFiles
       );
