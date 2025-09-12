@@ -43,62 +43,29 @@ export class Config {
 
   merge(other) {
     const fixedParametersSet = new Set(this.common.FixedParameters ?? []);
-    if (other.common.CountEnabled != null && !fixedParametersSet.has("CountEnabled")) {
-      this.common.CountEnabled = other.common.CountEnabled;
-    }
-    if (other.common.CountAllowSkip != null && !fixedParametersSet.has("CountAllowSkip")) {
-      this.common.CountAllowSkip = other.common.CountAllowSkip;
-    }
-    if (other.common.SafeBccEnabled != null && !fixedParametersSet.has("SafeBccEnabled")) {
-      this.common.SafeBccEnabled = other.common.SafeBccEnabled;
-    }
-    if (
-      other.common.RequireCheckSubject != null &&
-      !fixedParametersSet.has("RequireCheckSubject")
-    ) {
-      this.common.RequireCheckSubject = other.common.RequireCheckSubject;
-    }
-    if (other.common.RequireCheckBody != null && !fixedParametersSet.has("RequireCheckBody")) {
-      this.common.RequireCheckBody = other.common.RequireCheckBody;
-    }
-    if (other.common.MainSkipIfNoExt != null && !fixedParametersSet.has("MainSkipIfNoExt")) {
-      this.common.MainSkipIfNoExt = other.common.MainSkipIfNoExt;
-    }
-    if (
-      other.common.AppointmentConfirmationEnabled != null &&
-      !fixedParametersSet.has("AppointmentConfirmationEnabled")
-    ) {
-      this.common.AppointmentConfirmationEnabled = other.common.AppointmentConfirmationEnabled;
-    }
-    if (
-      other.common.SafeNewDomainsEnabled != null &&
-      !fixedParametersSet.has("SafeNewDomainsEnabled")
-    ) {
-      this.common.SafeNewDomainsEnabled = other.common.SafeNewDomainsEnabled;
-    }
-    if (other.common.CountSeconds != null && !fixedParametersSet.has("CountSeconds")) {
-      this.common.CountSeconds = other.common.CountSeconds;
-    }
-    if (other.common.SafeBccThreshold != null && !fixedParametersSet.has("SafeBccThreshold")) {
-      this.common.SafeBccThreshold = other.common.SafeBccThreshold;
-    }
-    if (
-      other.common.SafeBccReconfirmationThreshold != null &&
-      !fixedParametersSet.has("SafeBccReconfirmationThreshold")
-    ) {
-      this.common.SafeBccReconfirmationThreshold = other.common.SafeBccReconfirmationThreshold;
-    }
-    if (
-      other.common.DelayDeliveryEnabled != null &&
-      !fixedParametersSet.has("DelayDeliveryEnabled")
-    ) {
-      this.common.DelayDeliveryEnabled = other.common.DelayDeliveryEnabled;
-    }
-    if (
-      other.common.DelayDeliverySeconds != null &&
-      !fixedParametersSet.has("DelayDeliverySeconds")
-    ) {
-      this.common.DelayDeliverySeconds = other.common.DelayDeliverySeconds;
+    for (const [paramName, typeName] of Object.entries(Config.commonParamDefs)) {
+      if (other.common[paramName] == null) {
+        continue;
+      }
+      if (fixedParametersSet.has(paramName)) {
+        continue;
+      }
+      switch (typeName) {
+        case "boolean":
+        case "number":
+        case "text":
+          this.common[paramName] = other.common[paramName];
+          break;
+        case "commaSeparatedValues": {
+          const thisParamValue = this.common[paramName] ?? [];
+          const otherParamValue = other.common[paramName] ?? [];
+          const newParamValueSet = new Set([ ...thisParamValue, ...otherParamValue]);
+          this.common[paramName] = [...newParamValueSet];
+          break;
+        }
+        default:
+          break;
+      }
     }
     if (!fixedParametersSet.has("TrustedDomains")) {
       this.trustedDomains = this.trustedDomains.concat(other.trustedDomains);
@@ -175,9 +142,6 @@ export class Config {
       this.unsafeBodiesString += "\n" + other.unsafeBodiesString;
       this.unsafeBodiesString = this.unsafeBodiesString.trim();
     }
-    const rightFixedParametersSet = new Set(other.common.FixedParameters ?? []);
-    const newFixedParametersSet = new Set([...fixedParametersSet, ...rightFixedParametersSet]);
-    this.common.FixedParameters = [...newFixedParametersSet];
     let commonString = "";
     for (const [key, value] of Object.entries(this.common)) {
       if (key === "FixedParameters") {
