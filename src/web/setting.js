@@ -55,11 +55,25 @@ function createUnsafeBodiesConfigComment(unsafeBodiesConfig) {
     if (unsafeBodiesConfig[sectionName] && unsafeBodiesConfig[sectionName] != {}) {
       lines.push(`[${sectionName}]`);
       const section = unsafeBodiesConfig[sectionName];
-      if (section.Keywords) {
-        lines.push(`Keywords=${section.Keywords.join(",")}`);
-      }
-      if (section.Message) {
-        lines.push(`Message=${section.Message}`);
+      for (const [paramName, typeName] of Object.entries(Config.unsafeBodiesParamDefs))
+      {
+        if (section[paramName] == null)
+        {
+          continue;
+        }
+        switch (typeName) {
+          case "boolean":
+          case "number":
+          case "text":
+            lines.push(`${paramName}=${section[paramName]}`);
+            break;
+          case "commaSeparatedValues": {
+            lines.push(`${paramName}=${section[paramName].join(",")}`)
+            break;
+          }
+          default:
+            break;
+        }
       }
     }
   }
