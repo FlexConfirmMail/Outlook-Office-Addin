@@ -5,7 +5,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 Copyright (c) 2025 ClearCode Inc.
 */
-import { ConfigLoader } from "./config-loader.mjs";
+import { Config } from "./config.mjs";
 import { L10n } from "./l10n.mjs";
 
 let l10n;
@@ -26,35 +26,35 @@ Office.onReady(() => {
   l10n = L10n.get(language);
   l10n.ready.then(() => l10n.translateAll());
   document.documentElement.setAttribute("lang", language);
-  policyConfig = ConfigLoader.createDefaultConfig();
-  userConfig = ConfigLoader.createEmptyConfig();
-  effectiveConfig = ConfigLoader.createEmptyConfig();
+  policyConfig = Config.createDefaultConfig();
+  userConfig = Config.createEmptyConfig();
+  effectiveConfig = Config.createEmptyConfig();
   sendStatusToParent("ready");
 });
 
-function toPolocyUnsafeConfigString(unsafeConfig) {
-  if (!unsafeConfig) {
+function createSectionableArrayConfigComment(config) {
+  if (!config) {
     return "";
   }
   let lines = [];
-  for (const sectionName of ConfigLoader.unsafeConfigSectionDefs) {
-    if (unsafeConfig[sectionName] && unsafeConfig[sectionName].length > 0) {
+  for (const sectionName of Config.unsafeArraySectionDefs) {
+    if (config[sectionName] && config[sectionName].length > 0) {
       lines.push(`[${sectionName}]`);
-      lines = lines.concat(unsafeConfig[sectionName]);
+      lines = lines.concat(config[sectionName]);
     }
   }
   return lines.join("\n# ");
 }
 
-function toPolocyUnsafeBodiesConfigString(unsafeConfig) {
-  if (!unsafeConfig) {
+function createUnsafeBodiesConfigComment(unsafeBodiesConfig) {
+  if (!unsafeBodiesConfig) {
     return "";
   }
   const lines = [];
-  for (const sectionName of Object.keys(unsafeConfig)) {
-    if (unsafeConfig[sectionName] && unsafeConfig[sectionName] != {}) {
+  for (const sectionName of Object.keys(unsafeBodiesConfig)) {
+    if (unsafeBodiesConfig[sectionName] && unsafeBodiesConfig[sectionName] != {}) {
       lines.push(`[${sectionName}]`);
-      const section = unsafeConfig[sectionName];
+      const section = unsafeBodiesConfig[sectionName];
       if (section.Keywords) {
         lines.push(`Keywords=${section.Keywords.join(",")}`);
       }
@@ -101,7 +101,10 @@ function serializeTrustedDomains() {
 }
 
 function createDisplayUnsafeDomains() {
-  const policyUnsafeDomainsString = toPolocyUnsafeConfigString(policyConfig.unsafeDomains);
+  const policyUnsafeDomainsString = createSectionableArrayConfigComment(
+    policyConfig.unsafeDomains,
+    Config.defaultUnsafeDomainsConfigSection
+  );
   if (policyUnsafeDomainsString) {
     let userUnsafeDomainsString = userConfig.unsafeDomainsString?.trim() ?? "";
     if (!userUnsafeDomainsString) {
@@ -120,7 +123,7 @@ function createDisplayUnsafeDomains() {
 
 function serializeUnsafeDomains() {
   let unsafeDomainsString = document.getElementById("unsafeDomainsTextArea").value ?? "";
-  const policyUnsafeDomainsString = toPolocyUnsafeConfigString(policyConfig.unsafeDomains);
+  const policyUnsafeDomainsString = createSectionableArrayConfigComment(policyConfig.unsafeDomains);
   if (policyUnsafeDomainsString) {
     const template = l10n
       .get("setting_unsafeDomainsPolicy", {
@@ -135,7 +138,7 @@ function serializeUnsafeDomains() {
 }
 
 function createDisplayUnsafeFiles() {
-  const policyUnsafeFilesString = toPolocyUnsafeConfigString(policyConfig.unsafeFiles);
+  const policyUnsafeFilesString = createSectionableArrayConfigComment(policyConfig.unsafeFiles);
   if (policyUnsafeFilesString) {
     let userUnsafeFilesString = userConfig.unsafeFilesString?.trim() ?? "";
     if (!userUnsafeFilesString) {
@@ -152,8 +155,27 @@ function createDisplayUnsafeFiles() {
   }
 }
 
+function serializeUnsafeFiles() {
+  const policyUnsafeFilesString = createSectionableArrayConfigComment(
+    policyConfig.unsafeFiles,
+    Config.defaultUnsafeDomainsConfigSection
+  );
+  let unsafeFilesString = document.getElementById("unsafeFilesTextArea").value ?? "";
+  if (policyUnsafeFilesString) {
+    const template = l10n
+      .get("setting_unsafeFilesPolicy", {
+        policy: policyUnsafeFilesString,
+        user: "",
+      })
+      .trim();
+    unsafeFilesString = unsafeFilesString.replace(template, "");
+  }
+  unsafeFilesString = unsafeFilesString.trim();
+  return unsafeFilesString;
+}
+
 function createDisplayUnsafeBodies() {
-  const policyUnsafeBodiesString = toPolocyUnsafeBodiesConfigString(policyConfig.unsafeBodies);
+  const policyUnsafeBodiesString = createUnsafeBodiesConfigComment(policyConfig.unsafeBodies);
   if (policyUnsafeBodiesString) {
     let userUnsafeBodiesString = userConfig.unsafeBodiesString?.trim() ?? "";
     if (!userUnsafeBodiesString) {
@@ -170,24 +192,8 @@ function createDisplayUnsafeBodies() {
   }
 }
 
-function serializeUnsafeFiles() {
-  const policyUnsafeFilesString = toPolocyUnsafeConfigString(policyConfig.unsafeFiles);
-  let unsafeFilesString = document.getElementById("unsafeFilesTextArea").value ?? "";
-  if (policyUnsafeFilesString) {
-    const template = l10n
-      .get("setting_unsafeFilesPolicy", {
-        policy: policyUnsafeFilesString,
-        user: "",
-      })
-      .trim();
-    unsafeFilesString = unsafeFilesString.replace(template, "");
-  }
-  unsafeFilesString = unsafeFilesString.trim();
-  return unsafeFilesString;
-}
-
 function serializeUnsafeBodies() {
-  const policyUnsafeBodiesString = toPolocyUnsafeBodiesConfigString(policyConfig.unsafeBodies);
+  const policyUnsafeBodiesString = createUnsafeBodiesConfigComment(policyConfig.unsafeBodies);
   let unsafeBodiesString = document.getElementById("unsafeBodiesTextArea").value ?? "";
   if (policyUnsafeBodiesString) {
     const template = l10n
@@ -216,10 +222,9 @@ async function onMessageFromParent(arg) {
 }
 
 function updateDialogSetting(policy, user) {
-  policyConfig = ConfigLoader.merge(policyConfig, policy);
-  userConfig = ConfigLoader.merge(userConfig, user);
-  effectiveConfig = ConfigLoader.merge(effectiveConfig, policyConfig);
-  effectiveConfig = ConfigLoader.merge(effectiveConfig, userConfig);
+  policyConfig = policyConfig.merge(policy);
+  userConfig = userConfig.merge(user);
+  effectiveConfig = effectiveConfig.merge(policyConfig).merge(userConfig);
   console.debug(effectiveConfig);
   const common = effectiveConfig.common;
   const fixedParametersSet = new Set(policyConfig.common.FixedParameters ?? []);
@@ -371,8 +376,8 @@ window.onReset = () => {
   console.debug("onReset");
   const currentPolocyConfig = policyConfig;
 
-  policyConfig = ConfigLoader.createDefaultConfig();
-  userConfig = ConfigLoader.createEmptyConfig();
-  effectiveConfig = ConfigLoader.createEmptyConfig();
+  policyConfig = Config.createDefaultConfig();
+  userConfig = Config.createEmptyConfig();
+  effectiveConfig = Config.createEmptyConfig();
   updateDialogSetting(currentPolocyConfig, userConfig);
 };
