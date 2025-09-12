@@ -55,10 +55,8 @@ function createUnsafeBodiesConfigComment(unsafeBodiesConfig) {
     if (unsafeBodiesConfig[sectionName] && unsafeBodiesConfig[sectionName] != {}) {
       lines.push(`[${sectionName}]`);
       const section = unsafeBodiesConfig[sectionName];
-      for (const [paramName, typeName] of Object.entries(Config.unsafeBodiesParamDefs))
-      {
-        if (section[paramName] == null)
-        {
+      for (const [paramName, typeName] of Object.entries(Config.unsafeBodiesParamDefs)) {
+        if (section[paramName] == null) {
           continue;
         }
         switch (typeName) {
@@ -68,7 +66,7 @@ function createUnsafeBodiesConfigComment(unsafeBodiesConfig) {
             lines.push(`${paramName}=${section[paramName]}`);
             break;
           case "commaSeparatedValues": {
-            lines.push(`${paramName}=${section[paramName].join(",")}`)
+            lines.push(`${paramName}=${section[paramName].join(",")}`);
             break;
           }
           default:
