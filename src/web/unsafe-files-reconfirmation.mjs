@@ -30,7 +30,7 @@ export class UnsafeFilesReconfirmation {
     this.needToReconfirm = this.rewarningFiles.size > 0;
   }
 
-  generateReconfirmationContentElement() {
+  generateReconfirmationContentElements() {
     const messageBeforeElement = document.createElement("p");
     const listElement = document.createElement("ul");
     listElement.classList.add("reconfirmation-list");
@@ -48,6 +48,6 @@ export class UnsafeFilesReconfirmation {
     contentElement.appendChild(messageBeforeElement);
     contentElement.appendChild(listElement);
     contentElement.appendChild(messageAfterElement);
-    return contentElement;
+    return [contentElement];
   }
 }
