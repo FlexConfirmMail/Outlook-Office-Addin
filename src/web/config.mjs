@@ -173,8 +173,9 @@ export class Config {
     FixedParameters: "commaSeparatedValues",
   };
   static unsafeBodiesParamDefs = {
-    Message: "text",
     Keywords: "commaSeparatedValues",
+    Message: "text",
+    Language: "text",
   };
   static unsafeArraySectionDefs = ["WARNING", "BLOCK", "REWARNING"];
   static defaultUnsafeDomainsConfigSection = "WARNING";
