@@ -59,7 +59,7 @@ export class Config {
         case "commaSeparatedValues": {
           const thisParamValue = this.common[paramName] ?? [];
           const otherParamValue = other.common[paramName] ?? [];
-          const newParamValueSet = new Set([ ...thisParamValue, ...otherParamValue]);
+          const newParamValueSet = new Set([...thisParamValue, ...otherParamValue]);
           this.common[paramName] = [...newParamValueSet];
           break;
         }
