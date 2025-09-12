@@ -82,8 +82,7 @@ export class ConfigLoader {
   // Parse INI like file
   // The difference from the common INI format is that
   // we only support "#" comment out, not support ";" comment out.
-  static parseIni(str, paramDefs, defaultSection)
-  {
+  static parseIni(str, paramDefs, defaultSection) {
     if (!str) {
       return {};
     }
@@ -118,8 +117,7 @@ export class ConfigLoader {
   // Result example:
   //   { "WARNING": ["a@example.com"],
   //     "BLOCK": ["b@example.com"] }
-  static parseSectionableArray(str, sectionDefs, defaultSection)
-  {
+  static parseSectionableArray(str, sectionDefs, defaultSection) {
     const configArray = this.toArray(str);
     let section = defaultSection;
     const result = {};
@@ -164,11 +162,19 @@ export class ConfigLoader {
   }
 
   static parseUnsafeDomainsConfig(str) {
-    return this.parseSectionableArray(str, Config.unsafeArraySectionDefs, Config.defaultUnsafeDomainsConfigSection);
+    return this.parseSectionableArray(
+      str,
+      Config.unsafeArraySectionDefs,
+      Config.defaultUnsafeDomainsConfigSection
+    );
   }
 
   static parseUnsafeFilesConfig(str) {
-    return this.parseSectionableArray(str, Config.unsafeArraySectionDefs, Config.defaultUnsafeFilesConfigSection);
+    return this.parseSectionableArray(
+      str,
+      Config.unsafeArraySectionDefs,
+      Config.defaultUnsafeFilesConfigSection
+    );
   }
 
   static parseUnsafeBodiesConfig(str) {

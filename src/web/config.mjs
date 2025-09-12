@@ -18,28 +18,27 @@ export class Config {
   unsafeBodiesString = "";
 
   constructor({
-      common,
-      trustedDomains,
-      unsafeDomains,
-      unsafeFiles,
-      unsafeBodies,
-      commonString,
-      trustedDomainsString,
-      unsafeDomainsString,
-      unsafeFilesString,
-      unsafeBodiesString,
-    })
-  {
-      this.common = common;
-      this.trustedDomains = trustedDomains;
-      this.unsafeDomains = unsafeDomains;
-      this.unsafeFiles = unsafeFiles;
-      this.unsafeBodies = unsafeBodies;
-      this.commonString = commonString;
-      this.trustedDomainsString = trustedDomainsString;
-      this.unsafeDomainsString = unsafeDomainsString;
-      this.unsafeFilesString = unsafeFilesString;
-      this.unsafeBodiesString = unsafeBodiesString;
+    common,
+    trustedDomains,
+    unsafeDomains,
+    unsafeFiles,
+    unsafeBodies,
+    commonString,
+    trustedDomainsString,
+    unsafeDomainsString,
+    unsafeFilesString,
+    unsafeBodiesString,
+  }) {
+    this.common = common;
+    this.trustedDomains = trustedDomains;
+    this.unsafeDomains = unsafeDomains;
+    this.unsafeFiles = unsafeFiles;
+    this.unsafeBodies = unsafeBodies;
+    this.commonString = commonString;
+    this.trustedDomainsString = trustedDomainsString;
+    this.unsafeDomainsString = unsafeDomainsString;
+    this.unsafeFilesString = unsafeFilesString;
+    this.unsafeBodiesString = unsafeBodiesString;
   }
 
   merge(other) {

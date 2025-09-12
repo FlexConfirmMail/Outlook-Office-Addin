@@ -101,7 +101,10 @@ function serializeTrustedDomains() {
 }
 
 function createDisplayUnsafeDomains() {
-  const policyUnsafeDomainsString = createSectionableArrayConfigComment(policyConfig.unsafeDomains, Config.defaultUnsafeDomainsConfigSection);
+  const policyUnsafeDomainsString = createSectionableArrayConfigComment(
+    policyConfig.unsafeDomains,
+    Config.defaultUnsafeDomainsConfigSection
+  );
   if (policyUnsafeDomainsString) {
     let userUnsafeDomainsString = userConfig.unsafeDomainsString?.trim() ?? "";
     if (!userUnsafeDomainsString) {
@@ -153,7 +156,10 @@ function createDisplayUnsafeFiles() {
 }
 
 function serializeUnsafeFiles() {
-  const policyUnsafeFilesString = createSectionableArrayConfigComment(policyConfig.unsafeFiles, Config.defaultUnsafeDomainsConfigSection);
+  const policyUnsafeFilesString = createSectionableArrayConfigComment(
+    policyConfig.unsafeFiles,
+    Config.defaultUnsafeDomainsConfigSection
+  );
   let unsafeFilesString = document.getElementById("unsafeFilesTextArea").value ?? "";
   if (policyUnsafeFilesString) {
     const template = l10n
