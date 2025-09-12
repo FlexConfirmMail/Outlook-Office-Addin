@@ -1,11 +1,4 @@
-[Section1]
-Keywords=添付
-Message=[警告] 「添付」が含まれています。
-
-[Section2]
-Keywords=添付2,添付3
-Message=[警告] 「添付2」または「添付3」が含まれています。
-
-[Section3]
-Keywords=セクション3
-Message=[警告] 「セクション3」が含まれています。
+[Example]
+Keywords=test,test2
+Message=test test
+Language=ja-JP

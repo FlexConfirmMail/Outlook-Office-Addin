@@ -224,12 +224,14 @@ test_parseUnsafeBodiesConfig.parameters = {
   "single section": {
     str: "[Section1]\n" +
          "Keywords=添付\n" +
-         "Message=[警告] 「添付」が含まれています。",
+         "Message=[警告] 「添付」が含まれています。\n" +
+         "Language=ja-JP",
     expected: { 
       "Section1" : 
       { 
         Keywords: ["添付"], 
-        Message: "[警告] 「添付」が含まれています。" 
+        Message: "[警告] 「添付」が含まれています。",
+        Language: "ja-JP"
       } 
     },
   },

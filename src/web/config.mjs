@@ -173,9 +173,10 @@ export class Config {
     FixedParameters: "commaSeparatedValues",
   };
   static unsafeBodiesParamDefs = {
+    Keywords: "commaSeparatedValues",
     WarningType: "text",
     Message: "text",
-    Keywords: "commaSeparatedValues",
+    Language: "text",
   };
   static unsafeWarningTypeDefs = ["WARNING", "BLOCK", "REWARNING"];
   static unsafeArraySectionDefs = Config.unsafeWarningTypeDefs;
