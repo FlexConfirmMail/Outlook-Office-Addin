@@ -7,6 +7,7 @@ Copyright (c) 2025 ClearCode Inc.
 */
 import { RecipientClassifier } from "./recipient-classifier.mjs";
 import { AttachmentClassifier } from "./attachment-classifier.mjs";
+import { UnsafeBodiesConfirmation } from "./unsafe-bodies-confirmation.mjs";
 import { ConfigLoader } from "./config-loader.mjs";
 import { OfficeDataAccessHelper } from "./office-data-access-helper.mjs";
 
@@ -48,6 +49,7 @@ export class ConfirmData {
   originalRecipients;
   classified;
   itemType;
+  bodyBlockTargetWords;
 
   constructor({ target, config, originalRecipients, itemType, classified }) {
     this.target = target;
@@ -92,8 +94,17 @@ export class ConfirmData {
     this.classified.attachments = AttachmentClassifier.classify(this);
   }
 
+  setUnsafeBodiesBlockStatus(language) {
+    // No need to wait to ready because we don't access "locale" in
+    // UnsafeBodiesConfirmation.
+    const unsafeBodiesConfirmation = new UnsafeBodiesConfirmation(language);
+    unsafeBodiesConfirmation.init(this);
+    this.bodyBlockTargetWords = unsafeBodiesConfirmation.blockTargetWords;
+  }
+
   get blockSending() {
     return (
+      this.bodyBlockTargetWords.length > 0 ||
       this.classified.recipients.block.length > 0 ||
       this.classified.recipients.blockWithDomain.length > 0 ||
       this.classified.attachments.block.length > 0
@@ -127,6 +138,7 @@ export class ConfirmData {
     const confirmData = new ConfirmData(messageData);
     confirmData.config = await ConfigLoader.loadEffectiveConfig();
     confirmData.classifyTarget(locale);
+    confirmData.setUnsafeBodiesBlockStatus(locale.language);
     return confirmData;
   }
 }
