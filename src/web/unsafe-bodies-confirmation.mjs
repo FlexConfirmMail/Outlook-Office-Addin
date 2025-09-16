@@ -6,13 +6,18 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 Copyright (c) 2025 ClearCode Inc.
 */
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
+import { L10n } from "./l10n.mjs";
 
 export class UnsafeBodiesConfirmation {
   constructor(language) {
     this.language = language;
     this.needToConfirm = false;
+    this.needToReconfirm = false;
     this.initialized = false;
     this.confirmationMessages = [];
+    this.reconfirmationMessages = [];
+    this.locale = L10n.get(language);
+    this.ready = this.locale.ready;
   }
 
   static generateMatcher(patterns) {
@@ -90,31 +95,38 @@ export class UnsafeBodiesConfirmation {
       }
       const matcher = UnsafeBodiesConfirmation.generateMatcher(config.Keywords);
       if (matcher.test(bodyText)) {
-        this.confirmationMessages.push(config.Message);
+        const warningType = config.WarningType?.toUpperCase();
+        switch (warningType) {
+          case "WARNING":
+          default:
+            this.confirmationMessages.push(config.Message);
+            break;
+          case "REWARNING":
+            this.reconfirmationMessages.push(config.Message);
+            break;
+        }
       }
     }
     this.needToConfirm = this.confirmationMessages.length >= 1;
+    this.needToReconfirm = this.reconfirmationMessages.length >= 1;
   }
 
-  // generateReconfirmationContentElement() {
-  //   const strongElement = document.createElement("strong");
-  //   strongElement.textContent =
-  //     this.itemType === Office.MailboxEnums.ItemType.Message
-  //       ? this.locale.get("Reconfirmation_safeBccReconfirmationThresholdWarning", {
-  //           threshold: this.reconfirmationThreshold,
-  //         })
-  //       : this.locale.get("Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning", {
-  //           threshold: this.reconfirmationThreshold,
-  //         });
-  //   const messageAfterElement = document.createElement("p");
-  //   messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
-  //   const contentElement = document.createElement("div");
-  //   const messageBodyElement = document.createElement("p");
-  //   messageBodyElement.appendChild(strongElement);
-  //   contentElement.appendChild(messageBodyElement);
-  //   contentElement.appendChild(messageAfterElement);
-  //   return contentElement;
-  // }
+  generateReconfirmationContentElements() {
+    const contentElements = [];
+    for (const message of this.reconfirmationMessages) {
+      const strongElement = document.createElement("strong");
+      strongElement.textContent = message.replace("\\n", "\n");
+      const messageAfterElement = document.createElement("p");
+      messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
+      const contentElement = document.createElement("div");
+      const messageBodyElement = document.createElement("pre");
+      messageBodyElement.appendChild(strongElement);
+      contentElement.appendChild(messageBodyElement);
+      contentElement.appendChild(messageAfterElement);
+      contentElements.push(contentElement);
+    }
+    return contentElements;
+  }
 
   get warningConfirmationItems() {
     return this.confirmationMessages;

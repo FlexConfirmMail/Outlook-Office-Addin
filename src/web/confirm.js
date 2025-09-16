@@ -190,6 +190,7 @@ async function onMessageFromParent(arg) {
     unsafeDomainsReconfirmation.loaded,
     unsafeAddressesReconfirmation.loaded,
     unsafeFilesReconfirmation.loaded,
+    unsafeBodiesConfirmation.loaded,
   ]);
 
   if (data.classified.recipients.trusted.length == 0) {
@@ -259,14 +260,16 @@ async function onMessageFromParent(arg) {
     unsafeDomainsReconfirmation,
     unsafeAddressesReconfirmation,
     unsafeFilesReconfirmation,
+    unsafeBodiesConfirmation,
     safeBccConfirmation,
   ]) {
     reconfirmationChecker.init(data);
     if (!reconfirmationChecker.needToReconfirm) {
       continue;
     }
-    const content = reconfirmationChecker.generateReconfirmationContentElement();
-    reconfirmation.appendContent(content);
+    for (const content of reconfirmationChecker.generateReconfirmationContentElements()) {
+      reconfirmation.appendContent(content);
+    }
   }
   Dialog.resizeToContent();
 }

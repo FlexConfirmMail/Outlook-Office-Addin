@@ -46,7 +46,7 @@ export class SafeBccConfirmation {
     this.itemType = data.itemType;
   }
 
-  generateReconfirmationContentElement() {
+  generateReconfirmationContentElements() {
     const strongElement = document.createElement("strong");
     strongElement.textContent =
       this.itemType === Office.MailboxEnums.ItemType.Message
@@ -63,7 +63,7 @@ export class SafeBccConfirmation {
     messageBodyElement.appendChild(strongElement);
     contentElement.appendChild(messageBodyElement);
     contentElement.appendChild(messageAfterElement);
-    return contentElement;
+    return [contentElement];
   }
 
   get warningConfirmationItems() {

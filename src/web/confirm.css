@@ -79,6 +79,7 @@ fluent-dialog .reconfirmation-content {
 fluent-dialog .reconfirmation-content strong {
   font-size: large;
   font-weight: bold;
+  line-height: 1.4;
 }
 
 .reconfirmation-list {

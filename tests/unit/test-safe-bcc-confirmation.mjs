@@ -257,7 +257,7 @@ test_shouldReconfirm.parameters = {
       },
       itemType: Office.MailboxEnums.ItemType.Message,
     },
-    textContent: "To・Ccに1件以上のドメインが含まれています。送信してよろしいですか？",
+    textContents: ["To・Ccに1件以上のドメインが含まれています。送信してよろしいですか？"],
   },
   EqualsToThreshold: {
     data: {
@@ -274,7 +274,7 @@ test_shouldReconfirm.parameters = {
       },
       itemType: Office.MailboxEnums.ItemType.Message
     },
-    textContent: "To・Ccに2件以上のドメインが含まれています。送信してよろしいですか？",
+    textContents: ["To・Ccに2件以上のドメインが含まれています。送信してよろしいですか？"],
   },
   MoreThanThresholdAttenees: {
     data: {
@@ -290,7 +290,7 @@ test_shouldReconfirm.parameters = {
       },
       itemType: Office.MailboxEnums.ItemType.Appointoment,
     },
-    textContent: "出席者に1件以上のドメインが含まれています。送信してよろしいですか？",
+    textContents: ["出席者に1件以上のドメインが含まれています。送信してよろしいですか？"],
   },
   EqualsToThreshold: {
     data: {
@@ -306,14 +306,14 @@ test_shouldReconfirm.parameters = {
       },
       itemType: Office.MailboxEnums.ItemType.Appointoment,
     },
-    textContent: "出席者に2件以上のドメインが含まれています。送信してよろしいですか？",
+    textContents: ["出席者に2件以上のドメインが含まれています。送信してよろしいですか？"],
   },
 };
-export function test_shouldReconfirm({ data, textContent }) {
+export function test_shouldReconfirm({ data, textContents }) {
   confirmation.init(data);
   ok(confirmation.needToReconfirm);
   is(
-    textContent,
-    confirmation.generateReconfirmationContentElement().textContent
+    textContents,
+    confirmation.generateReconfirmationContentElements().map(content => content.textContent)
   );
 }
