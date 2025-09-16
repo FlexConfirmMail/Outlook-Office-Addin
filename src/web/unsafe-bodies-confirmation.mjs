@@ -115,7 +115,7 @@ export class UnsafeBodiesConfirmation {
     const contentElements = [];
     for (const message of this.reconfirmationMessages) {
       const strongElement = document.createElement("strong");
-      strongElement.textContent = message;
+      strongElement.textContent = message.replace("\\n", "\n");
       const messageAfterElement = document.createElement("p");
       messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
       const contentElement = document.createElement("div");
