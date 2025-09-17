@@ -133,7 +133,8 @@ test_blockSending.parameters = {
     config: {
       trustedDomains: [],
       unsafeDomains: {},
-      unsafeFiles :  {},
+      unsafeFiles:  {},
+      unsafeBodies: {},
     },
     expected: false,
   },
@@ -145,7 +146,8 @@ test_blockSending.parameters = {
     config: {
       trustedDomains: [],
       unsafeDomains: { "BLOCK": [ "example.com" ] },
-      unsafeFiles :  {},
+      unsafeFiles: {},
+      unsafeBodies: {},
     },
     expected: true,
   },
@@ -157,7 +159,8 @@ test_blockSending.parameters = {
     config: {
       trustedDomains: [],
       unsafeDomains: { "BLOCK": [ "aaa@example.com" ] },
-      unsafeFiles :  {},
+      unsafeFiles: {},
+      unsafeBodies: {},
     },
     expected: true,
   },
@@ -171,7 +174,29 @@ test_blockSending.parameters = {
     config: {
       trustedDomains: [],
       unsafeDomains: {},
-      unsafeFiles :  { "BLOCK": [ "機密" ] }
+      unsafeFiles: { "BLOCK": [ "機密" ] },
+      unsafeBodies: {}
+    },
+    expected: true,
+  },
+  BlockTargetWithBody: {
+    target: {
+      to: [],
+      attachments: [ 
+        attachment("機密.txt"),
+      ],
+      bodyText: "社外秘",
+    },
+    config: {
+      trustedDomains: [],
+      unsafeDomains: {},
+      unsafeFiles:  { "BLOCK": [ "機密" ] },
+      unsafeBodies: { 
+        "TEST" : {
+          "WarningType": "BLOCK",
+          "Keywords": [ "社外秘" ]
+        }
+      }
     },
     expected: true,
   },
