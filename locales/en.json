@@ -23,6 +23,9 @@
   "block_messageBeforeForMailAttachments": "The mail cannot be sent because its attachments contain forbidden files.",
   "block_messageBeforeForAppointmentAttachments": "The appointment cannot be sent because its attachments contain forbidden files.",
   "block_messageAfterForAttachments": "Please change the attachments.",
+  "block_messageBeforeForMailBodies": "The mail cannot be sent because its body contains forbidden words.",
+  "block_messageBeforeForAppointmentBodies": "The appointment cannot be sent because its body contains forbidden words.",
+  "block_messageAfterForBodies": "Please change the body",
 
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",

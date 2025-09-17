@@ -76,6 +76,7 @@ async function onMessageFromParent(arg) {
     ...data.classified.recipients.blockWithDomain,
   ];
   const attachments = data.classified.attachments.block;
+  const bodyMatchedWords = data.bodyBlockTargetWords;
   if (recipients.length > 0) {
     for (const recipient of recipients) {
       targets.add(`${recipient.type}: ${recipient.address}`);
@@ -96,6 +97,16 @@ async function onMessageFromParent(arg) {
     const messageAfter = l10n.get("block_messageAfterForAttachments");
     warningContents.push({ targets, messageBefore, messageAfter });
   }
-
+  if (bodyMatchedWords.length > 0) {
+    for (const word of bodyMatchedWords) {
+      targets.add(word);
+    }
+    const messageBefore =
+      data.itemType == Office.MailboxEnums.ItemType.Message
+        ? l10n.get("block_messageBeforeForMailBodies")
+        : l10n.get("block_messageBeforeForAppointmentBodies");
+    const messageAfter = l10n.get("block_messageAfterForBodies");
+    warningContents.push({ targets, messageBefore, messageAfter });
+  }
   showNextWarning();
 }

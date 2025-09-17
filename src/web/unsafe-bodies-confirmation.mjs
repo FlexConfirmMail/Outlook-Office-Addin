@@ -16,6 +16,8 @@ export class UnsafeBodiesConfirmation {
     this.initialized = false;
     this.confirmationMessages = [];
     this.reconfirmationMessages = [];
+    this.blockTargetWords = [];
+    this.needToBlock = false;
     this.locale = L10n.get(language);
     this.ready = this.locale.ready;
   }
@@ -37,7 +39,7 @@ export class UnsafeBodiesConfirmation {
       patterns.length > 0
         ? new RegExp(
             Array.from(uniquePatterns, (pattern) => wildcardToRegexp(pattern)).join("|"),
-            "i"
+            "ig"
           )
         : null;
     return matcher;
@@ -94,7 +96,8 @@ export class UnsafeBodiesConfirmation {
         continue;
       }
       const matcher = UnsafeBodiesConfirmation.generateMatcher(config.Keywords);
-      if (matcher.test(bodyText)) {
+      const matches = bodyText.match(matcher);
+      if (matches) {
         const warningType = config.WarningType?.toUpperCase();
         switch (warningType) {
           case "WARNING":
@@ -104,11 +107,15 @@ export class UnsafeBodiesConfirmation {
           case "REWARNING":
             this.reconfirmationMessages.push(config.Message);
             break;
+          case "BLOCK":
+            this.blockTargetWords = this.blockTargetWords.concat(matches);
+            break;
         }
       }
     }
     this.needToConfirm = this.confirmationMessages.length >= 1;
     this.needToReconfirm = this.reconfirmationMessages.length >= 1;
+    this.needToBlock = this.blockTargetWords.length >= 1;
   }
 
   generateReconfirmationContentElements() {
