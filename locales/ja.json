@@ -44,6 +44,11 @@
   "countDown_sendButtonLabel": "今すぐ送信",
   "countDown_cancelButtonLabel": "キャンセル",
 
+  "convertToBcc_description": "To・CCが${threshold}件以上指定されています。",
+  "convertToBcc_confirmation": "To・CCをBCCに変換しますか？",
+  "convertToBcc_convertButton": "変換する",
+  "convertToBcc_notConvertButton": "変換しない",
+
   "setting_trustedDomains" : "社内ドメイン・アドレス",
   "setting_trustedDomainsExample" : "example.com\n-example.org",
   "setting_trustedDomainsPolicy" : "# 社内ドメイン・アドレス設定 ###\n# 組織設定により、社内ドメイン・アドレスとして以下が指定されています。\n#\n# ${policy}\n#\n# さらにドメイン・アドレスを追加する場合は、以下に1行ずつ入力してください。\n# また、先頭に「-」をつけると、ドメイン・アドレスを除外することができます。\n# 指定にはワイルドカード（*および?）も使用可能です。\n# @を含む場合はアドレスが指定されたとみなします。\n# @を含まない場合はドメインが指定されたとみなします。\n##################################\n\n${user}",
@@ -71,6 +76,8 @@
   "setting_configSafeBccEnabled": "To/CCに一定数以上のドメインが含まれている場合に警告する",
   "setting_configSafeBccThreshold": "警告対象となるドメインの数:",
   "setting_configSafeBccReconfirmationThreshold": "再警告対象となるドメインの数:",
+  "setting_configConvertToBccEnabled": "To/CCが一定数以上の場合にBCCに変換する",
+  "setting_configConvertToBccThreshold": "変換対象となるTo/CCの数:",
   "setting_configSafeNewDomainsEnabled": "返信の宛先に今まで含まれていなかったドメインのアドレスが追加された場合に警告する",
   "setting_configTrustedDomains": "社内ドメイン・アドレス",
   "setting_configUnsafeDomains": "注意が必要なドメイン・アドレス",

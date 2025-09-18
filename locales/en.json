@@ -44,6 +44,11 @@
   "countDown_sendButtonLabel": "Send Now",
   "countDown_cancelButtonLabel": "Cancel",
 
+  "convertToBcc_description": "${threshold} or more To/CC fields are specified.",
+  "convertToBcc_confirmation": "Do you want to convert To/CC to BCC?",
+  "convertToBcc_convertButton": "Convert",
+  "convertToBcc_notConvertButton": "Do not Convert",
+
   "setting_trustedDomains" : "Trusted Domains and Addresses",
   "setting_trustedDomainsExample" : "example.com\n-example.org",
   "setting_trustedDomainsPolicy" : "# Trusted Domains and Addresses ###\n# The following domains and addresses are trusted by Group Policy.\n#\n# ${policy}\n#\n# To add more domains or addresses, input entries (one per line) below.\n# You can also exclude domains or addresses by adding \"-\" at the beginning.\n# And wildcards (* and ?) are also available.\n# When an entry contains @, the entry is regarded as address.\n# When an entry does not contains @, the entry is regarded as domain.\n##################################\n\n${user}",
@@ -71,6 +76,8 @@
   "setting_configSafeBccEnabled": "Enable \"too many domains in To/Cc fields\" warnings",
   "setting_configSafeBccThreshold": "Warn if To/Cc fields contain",
   "setting_configSafeBccReconfirmationThreshold": "Re-warn if To/Cc fields contain",
+  "setting_configConvertToBccEnabled": "Enable to convert To/CC to Bcc when too many To/CC fields",
+  "setting_configConvertToBccThreshold": "Convert if To/CC fields are greater than or equal to",
   "setting_configSafeNewDomainsEnabled": "Confirm when any recipients with domains different from any existing recipients are added",
   "setting_configTrustedDomains": "Trusted Domains and Addresses",
   "setting_configUnsafeDomains": "Unsafe Domains and Addresses",

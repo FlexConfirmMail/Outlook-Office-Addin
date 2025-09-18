@@ -44,6 +44,11 @@
   "countDown_sendButtonLabel": "现在发送",
   "countDown_cancelButtonLabel": "取消",
 
+  "convertToBcc_description": "${threshold} or more To/CC fields are specified.",
+  "convertToBcc_confirmation": "Do you want to convert To/CC to BCC?",
+  "convertToBcc_convertButton": "Convert",
+  "convertToBcc_notConvertButton": "Do not Convert",
+
   "setting_trustedDomains" : "信任域，地址",
   "setting_trustedDomainsExample" : "example.com\n-example.org",
   "setting_trustedDomainsPolicy" : "# 信任域，地址 ###\n# 以下域，地址是由组策略信任的。\n#\n# ${policy}\n#\n# 要添加更多的域，地址，请在下面输入条目（每行一个）。\n# 你也可以通过在开头添加\"-\"来排除域名，地址。\n# And wildcards (* and ?) are also available.\n# When an entry contains @, the entry is regarded as address.\n# When an entry does not contains @, the entry is regarded as domain.\n# The following sections can be specified:\n#   * [WARNING]: Show warning\n#   * [REWARNING]: Show the re-warning dialog\n#   * [BLOCK]: Prohibit sending\n# If the section is omitted, it is regarded as [WARNING].\n##################################\n\n${user}",
@@ -71,6 +76,8 @@
   "setting_configSafeBccEnabled": "当To/Cc包含许多域时发出警告",
   "setting_configSafeBccThreshold": "警告的阈值:",
   "setting_configSafeBccReconfirmationThreshold": "Re-warn if To/Cc fields contain",
+  "setting_configConvertToBccEnabled": "Enable to convert To/CC to BCC when too many To/CC fields",
+  "setting_configConvertToBccThreshold": "Convert if To/CC fields are greater than or equal to",
   "setting_configSafeNewDomainsEnabled": "当回复的收件人地址中新增了与现有收件人域名不同的地址时，系统将警告确认",
   "setting_configTrustedDomains": "信任域，地址",
   "setting_configUnsafeDomains": "不安全域，地址",
