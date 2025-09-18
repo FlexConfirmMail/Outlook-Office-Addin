@@ -294,8 +294,8 @@ async function onItemSend(event) {
 
   if (needToConvertToBccOnSend) {
     await Promise.all([
-      OfficeDataAccessHelper.setToAsync([]),
-      OfficeDataAccessHelper.setCcAsync([]),
+      OfficeDataAccessHelper.clearToAsync(),
+      OfficeDataAccessHelper.clearCcAsync(),
       OfficeDataAccessHelper.setBccAsync(data.target.bcc),
     ]);
   }
