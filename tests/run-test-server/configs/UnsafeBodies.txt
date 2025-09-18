@@ -9,3 +9,4 @@ Message=[警告] 「添付2」または「添付3」が含まれています。
 [Section3]
 Keywords=セクション3
 Message=[警告] 「セクション3」が含まれています。
+Language=ja-JP

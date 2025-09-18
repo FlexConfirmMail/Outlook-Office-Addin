@@ -85,13 +85,14 @@ export class UnsafeBodiesConfirmation {
     // config object:
     // {
     //   "name1" : {
+    //     Language: "en-US",
     //     Message: "sample message"
     //     Keywords: [ "test",
     //                 "test2" ],
     //   }
     // }
     for (const config of Object.values(unsafeBodies)) {
-      const configLang = config.lang;
+      const configLang = config.Language;
       if (!this.isTargetLanguage(configLang)) {
         continue;
       }
