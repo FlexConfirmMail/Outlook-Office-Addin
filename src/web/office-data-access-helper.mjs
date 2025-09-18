@@ -86,6 +86,10 @@ export class OfficeDataAccessHelper {
     });
   }
 
+  static clearCcAsync() {
+    return OfficeDataAccessHelper.setCcAsync([]);
+  }
+
   static getSubjectAsync() {
     return new Promise((resolve, reject) => {
       try {
@@ -199,6 +203,10 @@ export class OfficeDataAccessHelper {
         reject(error);
       }
     });
+  }
+
+  static clearToAsync() {
+    return OfficeDataAccessHelper.setToAsync([]);
   }
 
   static getSessionDataAsync(key) {
