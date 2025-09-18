@@ -59,6 +59,7 @@ export class ConfirmData {
     this.itemType = itemType;
     this.classified = classified;
     this.locale = locale;
+    this.bodyBlockTargetWords = [];
   }
 
   classifyTarget() {
