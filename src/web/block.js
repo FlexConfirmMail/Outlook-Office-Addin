@@ -70,7 +70,6 @@ async function onMessageFromParent(arg) {
   console.log(data);
   await l10n.ready;
 
-  const targets = new Set();
   const recipients = [
     ...data.classified.recipients.block,
     ...data.classified.recipients.blockWithDomain,
@@ -78,6 +77,7 @@ async function onMessageFromParent(arg) {
   const attachments = data.classified.attachments.block;
   const bodyMatchedWords = data.bodyBlockTargetWords;
   if (recipients.length > 0) {
+    const targets = new Set();
     for (const recipient of recipients) {
       targets.add(`${recipient.type}: ${recipient.address}`);
     }
@@ -98,6 +98,7 @@ async function onMessageFromParent(arg) {
     warningContents.push({ targets, messageBefore, messageAfter });
   }
   if (bodyMatchedWords.length > 0) {
+    const targets = new Set();
     for (const word of bodyMatchedWords) {
       targets.add(word);
     }
