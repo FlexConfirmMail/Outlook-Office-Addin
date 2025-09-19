@@ -55,7 +55,6 @@ export class AttachmentClassifier {
         trusted.delete(attachment);
       }
       if (rewarningAttachmentMatcher && rewarningAttachmentMatcher.test(attachment.name)) {
-        unsafe.add(attachment);
         rewarning.add(attachment);
         trusted.delete(attachment);
       }
