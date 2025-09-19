@@ -95,10 +95,8 @@ export class RecipientClassifier {
 
         if (this.$rewarningPatternsMatchers.domain.test(classifiedRecipient.domain)) {
           rewarningWithDomain.add(classifiedRecipient);
-          unsafeWithDomain.add(classifiedRecipient);
         } else if (this.$rewarningPatternsMatchers.full.test(classifiedRecipient.address)) {
           rewarning.add(classifiedRecipient);
-          unsafe.add(classifiedRecipient);
         }
       }
     }
