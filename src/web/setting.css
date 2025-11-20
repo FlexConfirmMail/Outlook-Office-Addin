@@ -53,6 +53,10 @@ fluent-text-area {
   width: 100%;
 }
 
+#unsafeDomainsTextArea {
+  height: 90%;
+}
+
 fluent-text-area::part(control){
   height:100%;
 }
@@ -60,5 +64,3 @@ fluent-text-area::part(control){
 fluent-number-field {
   margin-left: 10px;
 }
-
-

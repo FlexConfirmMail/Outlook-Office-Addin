@@ -209,6 +209,60 @@ test_classifyAddresses.parameters = {
       ],
     }
   },
+  'unsafe and trusted recipients must be classified to untrusted by UntrustUnsafeRecipients': {
+    recipients: [
+      'zzz@example.com',
+      'aaa@clear-code.com',
+      'bbb@example.org',
+      'ccc@clear-code.com'
+    ],
+    trustedDomains: ['clear-code.com'],
+    unsafeDomains: { 
+      "WARNING": [
+        'example.com',
+        '*c@clear-code.com',
+      ],
+      "BLOCK": [
+        'example.com',
+        '*c@clear-code.com',
+      ],
+      "REWARNING": [
+        'example.com',
+        '*c@clear-code.com',
+      ],
+    },
+    commonConfig: {
+      UntrustUnsafeRecipients : true,
+    },
+    expected: {
+      trusted: [
+        'aaa@clear-code.com',
+      ],
+      untrusted: [
+        'zzz@example.com',
+        'bbb@example.org',
+        'ccc@clear-code.com',
+      ],
+      unsafeWithDomain: [
+        'zzz@example.com',
+      ],
+      unsafe: [
+        'ccc@clear-code.com'
+      ],
+      blockWithDomain: [
+        'zzz@example.com',
+      ],
+      block: [
+        'ccc@clear-code.com'
+      ],
+      rewarningWithDomain: [
+        'zzz@example.com',
+      ],
+      rewarning: [
+        'ccc@clear-code.com'
+      ],
+    }
+  },
   'difference of cases in domains must be ignored': {
     recipients: [
       'aaa@CLEAR-code.com',
@@ -589,8 +643,8 @@ test_classifyAddresses.parameters = {
     }
   },
 };
-export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomains, expected }) {
-  const classifier = new RecipientClassifier({ trustedDomains, unsafeDomains });
+export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomains, commonConfig, expected }) {
+  const classifier = new RecipientClassifier({ trustedDomains, unsafeDomains, commonConfig });
   const classified = classifier.classify(recipients);
   is(
     Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [], blockWithDomain: [], block: [], rewarningWithDomain: [], rewarning: [] }, expected),
