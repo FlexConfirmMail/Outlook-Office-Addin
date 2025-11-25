@@ -64,7 +64,7 @@ export class ConfirmData {
 
   classifyTarget() {
     this.classified = {};
-    const { trustedDomains, unsafeDomains } = this.config;
+    const { trustedDomains, unsafeDomains, common } = this.config;
     switch (this.itemType) {
       case Office.MailboxEnums.ItemType.Message: {
         const { to, cc, bcc } = this.target;
@@ -75,6 +75,7 @@ export class ConfirmData {
           bcc,
           trustedDomains,
           unsafeDomains,
+          commonConfig: common,
         });
         break;
       }
@@ -87,6 +88,7 @@ export class ConfirmData {
           optionalAttendees,
           trustedDomains,
           unsafeDomains,
+          commonConfig: common,
         });
         break;
       }

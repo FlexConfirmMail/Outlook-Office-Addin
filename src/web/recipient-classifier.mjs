@@ -9,12 +9,13 @@ import * as RecipientParser from "./recipient-parser.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class RecipientClassifier {
-  constructor({ trustedDomains, unsafeDomains } = {}) {
+  constructor({ trustedDomains, unsafeDomains, commonConfig } = {}) {
     this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
     this.$unsafePatternsMatchers = this.generateMatchers(unsafeDomains?.["WARNING"] || []);
     this.$blockPatternsMatchers = this.generateMatchers(unsafeDomains?.["BLOCK"] || []);
     this.$rewarningPatternsMatchers = this.generateMatchers(unsafeDomains?.["REWARNING"] || []);
     this.classify = this.classify.bind(this);
+    this.commonConfig = commonConfig;
   }
 
   generateMatchers(patterns) {
@@ -98,6 +99,20 @@ export class RecipientClassifier {
         } else if (this.$rewarningPatternsMatchers.full.test(classifiedRecipient.address)) {
           rewarning.add(classifiedRecipient);
         }
+
+        if (this.commonConfig?.UntrustUnsafeRecipients) {
+          for (const recipient of [
+            ...unsafeWithDomain,
+            ...unsafe,
+            ...blockWithDomain,
+            ...block,
+            ...rewarningWithDomain,
+            ...rewarning,
+          ]) {
+            trusted.delete(recipient);
+            untrusted.add(recipient);
+          }
+        }
       }
     }
     return {
@@ -121,10 +136,12 @@ export class RecipientClassifier {
     optionalAttendees,
     trustedDomains,
     unsafeDomains,
+    commonConfig,
   }) {
     const classifier = new RecipientClassifier({
       trustedDomains: trustedDomains || [],
       unsafeDomains: unsafeDomains || [],
+      commonConfig: commonConfig || {},
     });
     const classifiedTo = classifier.classify(to);
     const classifiedCc = classifier.classify(cc);

@@ -72,6 +72,7 @@
   "setting_configCountSeconds": "倒计时秒:",
   "setting_configGeneral": "一般",
   "setting_configMainSkipIfNoExt": "如果所有目的地都是受信任的，则立即发送",
+  "setting_configUntrustUnsafeRecipients": "Treat recipients as \"not trusted\" if they are matched to unsafe patterns.",
   "setting_configAppointmentConfirmationEnabled": "Enable confirmation on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "当To/Cc包含许多域时发出警告",
   "setting_configSafeBccThreshold": "警告的阈值:",

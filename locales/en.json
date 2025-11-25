@@ -72,6 +72,7 @@
   "setting_configCountSeconds": "Delay sending a message by",
   "setting_configGeneral": "General",
   "setting_configMainSkipIfNoExt": "Skip confirmation if all the recpients are trusted.",
+  "setting_configUntrustUnsafeRecipients": "Treat recipients as \"not trusted\" if they are matched to unsafe patterns.",
   "setting_configAppointmentConfirmationEnabled": "Enable confirmation on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "Enable \"too many domains in To/Cc fields\" warnings",
   "setting_configSafeBccThreshold": "Warn if To/Cc fields contain",
