@@ -202,6 +202,14 @@ async function tryCountDown(data, asyncContext) {
     };
   }
 
+  if (data.skipConfirm &&
+      data.config.common.CountSkipIfNoExt) {
+    return {
+      allowed: true,
+      asyncContext,
+    };  
+  }
+
   const { status, asyncContext: updatedAsyncContext } = await openDialog({
     url: window.location.origin + "/count-down.html",
     data,
