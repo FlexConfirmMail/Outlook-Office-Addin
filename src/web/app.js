@@ -188,14 +188,7 @@ async function tryConfirm(data, asyncContext) {
 }
 
 async function tryCountDown(data, asyncContext) {
-  if (!data.config.common.CountEnabled) {
-    return {
-      allowed: true,
-      asyncContext,
-    };
-  }
-
-  if (data.config.common.CountSeconds <= 0) {
+  if (data.skipCountDown) {
     return {
       allowed: true,
       asyncContext,

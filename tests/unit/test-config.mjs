@@ -19,6 +19,7 @@ export function test_createDefaultConfig() {
         RequireCheckSubject: false,
         RequireCheckBody: false,
         MainSkipIfNoExt: false,
+        CountSkipIfNoExt: false,
         UntrustUnsafeRecipients: false,
         AppointmentConfirmationEnabled: false,
         SafeNewDomainsEnabled: true,
@@ -85,6 +86,7 @@ test_merge.parameters = {
         RequireCheckSubject: true,
         RequireCheckBody: true,
         MainSkipIfNoExt: true,
+        CountSkipIfNoExt: true,
         UntrustUnsafeRecipients: true,
         AppointmentConfirmationEnabled: true,
         SafeNewDomainsEnabled: true,
@@ -119,6 +121,7 @@ test_merge.parameters = {
         "RequireCheckSubject = true\n" +
         "RequireCheckBody = true\n" +
         "MainSkipIfNoExt = true\n" +
+        "CountSkipIfNoExt = true\n" +
         "UntrustUnsafeRecipients = true\n" +
         "AppointmentConfirmationEnabled = true\n" +
         "SafeNewDomainsEnabled = true\n" +
@@ -146,6 +149,7 @@ test_merge.parameters = {
         RequireCheckSubject: true,
         RequireCheckBody: true,
         MainSkipIfNoExt: true,
+        CountSkipIfNoExt: true,
         UntrustUnsafeRecipients: true,
         AppointmentConfirmationEnabled: true,
         SafeNewDomainsEnabled: true,
@@ -180,6 +184,7 @@ test_merge.parameters = {
         "RequireCheckSubject = true\n" +
         "RequireCheckBody = true\n" +
         "MainSkipIfNoExt = true\n" +
+        "CountSkipIfNoExt = true\n" +
         "UntrustUnsafeRecipients = true\n" +
         "AppointmentConfirmationEnabled = true\n" +
         "SafeNewDomainsEnabled = true\n" +
@@ -210,6 +215,7 @@ test_merge.parameters = {
         RequireCheckSubject: true,
         RequireCheckBody: true,
         MainSkipIfNoExt: true,
+        CountSkipIfNoExt: true,
         UntrustUnsafeRecipients: true,
         AppointmentConfirmationEnabled: true,
         SafeNewDomainsEnabled: true,
@@ -244,6 +250,7 @@ test_merge.parameters = {
         "RequireCheckSubject = true\n" +
         "RequireCheckBody = true\n" +
         "MainSkipIfNoExt = true\n" +
+        "CountSkipIfNoExt = true\n" +
         "UntrustUnsafeRecipients = true\n" +
         "AppointmentConfirmationEnabled = true\n" +
         "SafeNewDomainsEnabled = true\n" +
@@ -284,6 +291,7 @@ test_merge.parameters = {
         RequireCheckSubject: true,
         RequireCheckBody: true,
         MainSkipIfNoExt: true,
+        CountSkipIfNoExt: true,
         UntrustUnsafeRecipients: true,
         AppointmentConfirmationEnabled: true,
         SafeNewDomainsEnabled: true,
@@ -318,6 +326,7 @@ test_merge.parameters = {
         "RequireCheckSubject = true\n" +
         "RequireCheckBody = true\n" +
         "MainSkipIfNoExt = true\n" +
+        "CountSkipIfNoExt = true\n" +
         "UntrustUnsafeRecipients = true\n" +
         "AppointmentConfirmationEnabled = true\n" +
         "SafeNewDomainsEnabled = true\n" +
@@ -348,6 +357,7 @@ test_merge.parameters = {
         RequireCheckSubject: true,
         RequireCheckBody: true,
         MainSkipIfNoExt: true,
+        CountSkipIfNoExt: true,
         UntrustUnsafeRecipients: true,
         AppointmentConfirmationEnabled: true,
         SafeNewDomainsEnabled: true,
@@ -382,6 +392,7 @@ test_merge.parameters = {
         "RequireCheckSubject = true\n" +
         "RequireCheckBody = true\n" +
         "MainSkipIfNoExt = true\n" +
+        "CountSkipIfNoExt = true\n" +
         "UntrustUnsafeRecipients = true\n" +
         "AppointmentConfirmationEnabled = true\n" +
         "SafeNewDomainsEnabled = true\n" +
@@ -409,6 +420,7 @@ test_merge.parameters = {
         RequireCheckSubject: false,
         RequireCheckBody: false,
         MainSkipIfNoExt: false,
+        CountSkipIfNoExt: false,
         UntrustUnsafeRecipients: false,
         AppointmentConfirmationEnabled: false,
         SafeNewDomainsEnabled: false,
@@ -443,6 +455,7 @@ test_merge.parameters = {
         "RequireCheckSubject = false\n" +
         "RequireCheckBody = false\n" +
         "MainSkipIfNoExt = false\n" +
+        "CountSkipIfNoExt = false\n" +
         "UntrustUnsafeRecipients = false\n" +
         "AppointmentConfirmationEnabled = false\n" +
         "SafeNewDomainsEnabled = false\n" +
@@ -472,6 +485,7 @@ test_merge.parameters = {
         RequireCheckSubject: false,
         RequireCheckBody: false,
         MainSkipIfNoExt: false,
+        CountSkipIfNoExt: false,
         UntrustUnsafeRecipients: false,
         AppointmentConfirmationEnabled: false,
         SafeNewDomainsEnabled: false,
@@ -511,6 +525,7 @@ test_merge.parameters = {
         "RequireCheckSubject = false\n" +
         "RequireCheckBody = false\n" +
         "MainSkipIfNoExt = false\n" +
+        "CountSkipIfNoExt = false\n" +
         "UntrustUnsafeRecipients = false\n" +
         "AppointmentConfirmationEnabled = false\n" +
         "SafeNewDomainsEnabled = false\n" +
@@ -548,6 +563,7 @@ test_merge.parameters = {
         RequireCheckSubject: true,
         RequireCheckBody: true,
         MainSkipIfNoExt: true,
+        CountSkipIfNoExt: true,
         UntrustUnsafeRecipients: true,
         AppointmentConfirmationEnabled: true,
         SafeNewDomainsEnabled: true,
@@ -565,6 +581,7 @@ test_merge.parameters = {
           "RequireCheckSubject",
           "RequireCheckBody",
           "MainSkipIfNoExt",
+          "CountSkipIfNoExt",
           "UntrustUnsafeRecipients",
           "AppointmentConfirmationEnabled",
           "SafeNewDomainsEnabled",
@@ -603,6 +620,7 @@ test_merge.parameters = {
         "RequireCheckSubject = true\n" +
         "RequireCheckBody = true\n" +
         "MainSkipIfNoExt = true\n" +
+        "CountSkipIfNoExt = true\n" +
         "UntrustUnsafeRecipients = true\n" +
         "AppointmentConfirmationEnabled = true\n" +
         "SafeNewDomainsEnabled = true\n" +
@@ -618,6 +636,7 @@ test_merge.parameters = {
             "CountAllowSkip," +
             "SafeBccEnabled," +
             "MainSkipIfNoExt," +
+            "CountSkipIfNoExt," + 
             "UntrustUnsafeRecipients," +
             "AppointmentConfirmationEnabled," +
             "SafeNewDomainsEnabled," +
@@ -650,6 +669,7 @@ test_merge.parameters = {
         RequireCheckSubject: false,
         RequireCheckBody: false,
         MainSkipIfNoExt: false,
+        CountSkipIfNoExt: false,
         UntrustUnsafeRecipients: false,
         AppointmentConfirmationEnabled: false,
         SafeNewDomainsEnabled: false,
@@ -679,6 +699,7 @@ test_merge.parameters = {
         "RequireCheckSubject = false\n" +
         "RequireCheckBody = false\n" +
         "MainSkipIfNoExt = false\n" +
+        "CountSkipIfNoExt = false\n" +
         "UntrustUnsafeRecipients = false\n" +
         "AppointmentConfirmationEnabled = false\n" +
         "SafeNewDomainsEnabled = false\n" +
@@ -705,6 +726,7 @@ test_merge.parameters = {
         RequireCheckSubject: true,
         RequireCheckBody: true,
         MainSkipIfNoExt: true,
+        CountSkipIfNoExt: true,
         UntrustUnsafeRecipients: true,
         AppointmentConfirmationEnabled: true,
         SafeNewDomainsEnabled: true,
@@ -722,6 +744,7 @@ test_merge.parameters = {
           "RequireCheckSubject",
           "RequireCheckBody",
           "MainSkipIfNoExt",
+          "CountSkipIfNoExt",
           "UntrustUnsafeRecipients",
           "AppointmentConfirmationEnabled",
           "SafeNewDomainsEnabled",
@@ -760,6 +783,7 @@ test_merge.parameters = {
         "RequireCheckSubject = true\n" +
         "RequireCheckBody = true\n" +
         "MainSkipIfNoExt = true\n" +
+        "CountSkipIfNoExt = true\n" +
         "UntrustUnsafeRecipients = true\n" +
         "AppointmentConfirmationEnabled = true\n" +
         "SafeNewDomainsEnabled = true\n" +
@@ -777,6 +801,7 @@ test_merge.parameters = {
           "RequireCheckSubject," +
           "RequireCheckBody," +
           "MainSkipIfNoExt," +
+          "CountSkipIfNoExt," +
           "UntrustUnsafeRecipients," +
           "AppointmentConfirmationEnabled," +
           "SafeNewDomainsEnabled," +

@@ -265,6 +265,118 @@ export async function test_skipConfirm({ target, config, expected }) {
   is(expected, data.skipConfirm);
 }
 
+test_skipCountDown.parameters = {
+  CountEnabledIsTrueAndNotSkip: {
+    target: {
+      to: [ "aaa@example.com" ],
+      attachments: [],
+    },
+    config: {
+      trustedDomains: [],
+      unsafeDomains: {},
+      unsafeFiles :  {},
+      common: {
+        CountEnabled: true,
+        CountSeconds: 10,
+        CountSkipIfNoExt: false,
+      }
+    },
+    expected: false,
+  },
+  CountEnabledIsFalse: {
+    target: {
+      to: [ "aaa@example.com" ],
+      attachments: [],
+    },
+    config: {
+      trustedDomains: [],
+      unsafeDomains: {},
+      unsafeFiles :  {},
+      common: {
+        CountEnabled: false,
+        CountSeconds: 10,
+        CountSkipIfNoExt: false,
+      }
+    },
+    expected: true,
+  },
+  CountSecondsIsZero: {
+    target: {
+      to: [ "aaa@example.com" ],
+      attachments: [],
+    },
+    config: {
+      trustedDomains: [],
+      unsafeDomains: {},
+      unsafeFiles :  {},
+      common: {
+        CountEnabled: true,
+        CountSeconds: 0,
+        CountSkipIfNoExt: false,
+      }
+    },
+    expected: true,
+  },
+  AllTrustedAndCountSkipIfNoExtIsFalse: {
+    target: {
+      to: [ "aaa@example.com" ],
+      attachments: [],
+    },
+    config: {
+      trustedDomains: [ "example.com" ],
+      unsafeDomains: {},
+      unsafeFiles :  {},
+      common: {
+        CountEnabled: true,
+        CountSeconds: 10,
+        CountSkipIfNoExt: false,
+      }
+    },
+    expected: false,
+  },
+  AllTrustedAndCountSkipIfNoExtIsTrue: {
+    target: {
+      to: [ "aaa@example.com" ],
+      attachments: [],
+    },
+    config: {
+      trustedDomains: [ "example.com" ],
+      unsafeDomains: {},
+      unsafeFiles :  {},
+      common: {
+        CountEnabled: true,
+        CountSeconds: 10,
+        CountSkipIfNoExt: true,
+      }
+    },
+    expected: true,
+  },
+  HasUntrusted: {
+    target: {
+      to: [ "aaa@example.com" ],
+      attachments: [],
+    },
+    config: {
+      trustedDomains: [],
+      unsafeDomains: {},
+      unsafeFiles :  {},
+      common: {
+        CountEnabled: true,
+        CountSeconds: 10,
+        CountSkipIfNoExt: true,
+      }
+    },
+    expected: false,
+  },
+};
+export async function test_skipCountDown({ target, config, expected }) {
+  const data = new ConfirmData({target, config, itemType: Office.MailboxEnums.ItemType.Message});
+  const locale = await prepareLocale("ja");
+  data.classifyTarget(locale);
+  data.setUnsafeBodiesBlockStatus(locale.language);
+  is(expected, data.skipCountDown);
+}
+
 test_delayDelivery.parameters = {
   DelayDeliveryEnabledIsTrueAndItemTypeIsMessage: {
     target: {

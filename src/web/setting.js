@@ -269,6 +269,8 @@ function updateDialogSetting(policy, user) {
   document.getElementById("requireCheckBody").disabled = fixedParametersSet.has("RequireCheckBody");
   document.getElementById("mainSkipIfNoExt").checked = common.MainSkipIfNoExt;
   document.getElementById("mainSkipIfNoExt").disabled = fixedParametersSet.has("MainSkipIfNoExt");
+  document.getElementById("countSkipIfNoExt").checked = common.CountSkipIfNoExt;
+  document.getElementById("countSkipIfNoExt").disabled = fixedParametersSet.has("CountSkipIfNoExt");
   document.getElementById("untrustUnsafeRecipients").checked = common.UntrustUnsafeRecipients;
   document.getElementById("untrustUnsafeRecipients").disabled =
     fixedParametersSet.has("UntrustUnsafeRecipients");
@@ -336,6 +338,7 @@ function serializeCommonConfigs() {
   const requireCheckSubject = document.getElementById("requireCheckSubject").checked;
   const requireCheckBody = document.getElementById("requireCheckBody").checked;
   const mainSkipIfNoExt = document.getElementById("mainSkipIfNoExt").checked;
+  const countSkipIfNoExt = document.getElementById("countSkipIfNoExt").checked;
   const untrustUnsafeRecipients = document.getElementById("untrustUnsafeRecipients").checked;
   const appointmentConfirmationEnabled = document.getElementById(
     "AppointmentConfirmationEnabled"
@@ -358,6 +361,7 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("RequireCheckSubject", requireCheckSubject);
   commonConfigString += serializeCommonConfig("RequireCheckBody", requireCheckBody);
   commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
+  commonConfigString += serializeCommonConfig("CountSkipIfNoExt", countSkipIfNoExt);
   commonConfigString += serializeCommonConfig("UntrustUnsafeRecipients", untrustUnsafeRecipients);
   commonConfigString += serializeCommonConfig(
     "AppointmentConfirmationEnabled",
