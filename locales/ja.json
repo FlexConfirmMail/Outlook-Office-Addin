@@ -72,7 +72,7 @@
   "setting_configCountSeconds": "送信までのカウントダウン秒数:",
   "setting_configGeneral": "一般",
   "setting_configMainSkipIfNoExt": "宛先が社内のみの場合は確認をスキップする",
-  "setting_configCountSkipIfNoExt": "メール送信前のカウントダウンもスキップする",
+  "setting_configCountSkipIfNoExt": "宛先が社内のみの場合はメール送信前のカウントダウンをスキップをする",
   "setting_configUntrustUnsafeRecipients": "注意が必要なパターンに該当する宛先を「社内ではない」ものとして扱う",
   "setting_configAppointmentConfirmationEnabled": "予定表から予定を送信する場合にも確認する",
   "setting_configSafeBccEnabled": "To/CCに一定数以上のドメインが含まれている場合に警告する",

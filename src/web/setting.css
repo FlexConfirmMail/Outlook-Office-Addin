@@ -64,7 +64,3 @@ fluent-text-area::part(control){
 fluent-number-field {
   margin-left: 10px;
 }
-
-#countSkipIfNoExt {
-  margin-left: 20px;
-}

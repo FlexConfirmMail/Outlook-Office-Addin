@@ -117,6 +117,16 @@ export class ConfirmData {
     return this.config.common.MainSkipIfNoExt && this.classified.recipients.untrusted.length == 0;
   }
 
+  get skipCountDown() {
+    if (!this.config.common.CountEnabled) {
+      return true;
+    }
+    if (this.config.common.CountSeconds <= 0) {
+      return true;
+    }
+    return this.config.common.CountSkipIfNoExt && this.classified.recipients.untrusted.length == 0;
+  }
+
   get delayDelivery() {
     return (
       this.itemType === Office.MailboxEnums.ItemType.Message &&
