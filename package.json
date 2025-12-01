@@ -30,7 +30,6 @@
   },
   "dependencies": {
     "@fluentui/web-components": "^2.6.1",
-    "@microsoft/office-js": "^1.1.110",
     "bootstrap": "^5.3.6",
     "core-js": "^3.42.0",
     "dompurify": "^3.2.6",
