@@ -9,13 +9,13 @@
   "confirmation_cancelButtonLabel": "取消",
 
   "confirmation_safeBccThresholdCheckboxLabel": "[警告] To/Cc 包含${threshold}个以上的域",
-  "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[警告] Attendees 包含${threshold}个以上的域",
+  "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[警告] 与会者 包含${threshold}个以上的域",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[警告] 包含不安全的域 (${domain})",
   "confirmation_unsafeRecipientCheckboxLabel": "[警告] 包含不安全地址 (${address})",
   "confirmation_unsafeAttachmentCheckboxLabel": "[警告] 包含不安全的文件名 (${name})",
   "confirmation_attachmentCheckboxLabel": "[附件] ${name}",
-  "confirmation_requiredAttendee": "Required Attendee",
-  "confirmation_optionalAttendee": "Optional Attendee",
+  "confirmation_requiredAttendee": "必需的与会者",
+  "confirmation_optionalAttendee": "可选与会者",
 
   "block_messageBeforeForMailRecipients": "This mail cannot be sent because its recipients contain forbidden recipients.",
   "block_messageBeforeForAppointmentRecipients": "This event cannot be sent because its recipients contain forbidden recipients.",
