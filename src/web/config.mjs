@@ -174,6 +174,7 @@ export class Config {
     DelayDeliverySeconds: "number",
     ConvertToBccEnabled: "boolean",
     ConvertToBccThreshold: "number",
+    BlockDistributionLists: "boolean",
     FixedParameters: "commaSeparatedValues",
   };
   static unsafeBodiesParamDefs = {
@@ -207,6 +208,7 @@ export class Config {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: false,
         ConvertToBccThreshold: 2,
+        BlockDistributionLists: true,
         FixedParameters: [],
       },
       trustedDomains: [],
