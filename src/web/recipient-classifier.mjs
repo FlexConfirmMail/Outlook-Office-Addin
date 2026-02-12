@@ -36,8 +36,8 @@ export class RecipientClassifier {
       uniquePatterns.delete(`-${negativeItem}`);
     }
 
-    const domainPatterns = new Set();
-    const fullPatterns = new Set();
+    const domainPatterns = new Set("(?!)");
+    const fullPatterns = new Set("(?!)");
     for (const pattern of uniquePatterns) {
       if (pattern.includes("@")) {
         fullPatterns.add(pattern);

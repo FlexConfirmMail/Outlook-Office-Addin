@@ -118,7 +118,14 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
     const container = document.getElementById(idForGroup);
     const createdLabels = new Set();
     for (const recipient of recipients) {
-      const label = `${recipient.type}: ${recipient.address}`;
+      let target = recipient.address;
+      if (!target || target === "") {
+        target = recipient.displayName;
+      }
+      if (!target || target === "") {
+        target = "Unknown";
+      }
+      const label = `${recipient.type}: ${target}`;
       if (createdLabels.has(label)) {
         continue;
       }

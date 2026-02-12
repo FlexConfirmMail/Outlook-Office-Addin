@@ -642,6 +642,26 @@ test_classifyAddresses.parameters = {
       ],
     }
   },
+  'no domain (distribution list)': {
+    recipients: [
+      'test-group',
+    ],
+    trustedDomains: [
+    ],
+    unsafeDomains: {
+      "BLOCK": [
+        "@", // means no domain
+      ],
+    },
+    expected: {
+      untrusted: [
+        'test-group',
+      ],
+      blockWithDomain: [
+        'test-group',
+      ],
+    }
+  },
 };
 export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomains, commonConfig, expected }) {
   const classifier = new RecipientClassifier({ trustedDomains, unsafeDomains, commonConfig });
