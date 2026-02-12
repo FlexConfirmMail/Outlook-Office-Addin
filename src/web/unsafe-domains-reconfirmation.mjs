@@ -26,7 +26,16 @@ export class UnsafeDomainsReconfirmation {
     }
     this.initialized = true;
     this.rewarningDomains = new Set(
-      data.classified.recipients.rewarningWithDomain.map((recipient) => recipient.domain)
+      data.classified.recipients.rewarningWithDomain.map((recipient) => {
+        let target = recipient.domain;
+        if (!target || target === "") {
+          target = recipient.displayName;
+        }
+        if (!target || target === "") {
+          target = "Unknown";
+        }
+        return target;
+      })
     );
     this.needToReconfirm = this.rewarningDomains.size > 0;
   }

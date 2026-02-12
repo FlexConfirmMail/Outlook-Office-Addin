@@ -79,7 +79,14 @@ async function onMessageFromParent(arg) {
   if (recipients.length > 0) {
     const targets = new Set();
     for (const recipient of recipients) {
-      targets.add(`${recipient.type}: ${recipient.address}`);
+      let target = recipient.address;
+      if (!target || target === "") {
+        target = recipient.displayName;
+      }
+      if (!target || target === "") {
+        target = "Unknown";
+      }
+      targets.add(`${recipient.type}: ${target}`);
     }
     const messageBefore =
       data.itemType == Office.MailboxEnums.ItemType.Message

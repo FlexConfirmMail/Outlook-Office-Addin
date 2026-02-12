@@ -26,7 +26,16 @@ export class UnsafeAddressesReconfirmation {
     }
     this.initialized = true;
     this.rewarningAddresses = new Set(
-      data.classified.recipients.rewarning.map((recipient) => recipient.address)
+      data.classified.recipients.rewarning.map((recipient) => {
+        let target = recipient.address;
+        if (!target || target === "") {
+          target = recipient.displayName;
+        }
+        if (!target || target === "") {
+          target = "Unknown";
+        }
+        return target;
+      })
     );
     this.needToReconfirm = this.rewarningAddresses.size > 0;
   }
