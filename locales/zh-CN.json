@@ -19,9 +19,9 @@
 
   "block_messageBeforeForMailRecipients": "由于指定了被禁止发送的收件人，所以无法发送邮件。",
   "block_messageBeforeForAppointmentRecipients": "由于指定了被禁止发送的收件人，所以无法发送日程预定。",
-  "block_messageBeforeForMailDistributionLists": "This mail cannot be sent because unexpanded distribution lists or contact groups have been specified.",
-  "block_messageBeforeForAppointmentDistributionLists": "This event cannot be sent because unexpanded distribution lists or contact groups have been specified.",
-  "block_messageAfterDistributionLists": "Please expand the distribution lists or contact groups.",
+  "block_messageBeforeForMailDistributionLists": "由于指定了未展开的分发列表、联系人组，所以无法发送邮件。",
+  "block_messageBeforeForAppointmentDistributionLists": "由于指定了未展开的分发列表、联系人组，所以无法发送日程预定。",
+  "block_messageAfterDistributionLists": "请展开分发列表、联系人组。",
   "block_messageAfterForRecipients": "请更改收件人。",
   "block_messageBeforeForMailAttachments": "由于附加了禁止发送的文件，所以无法发送邮件。",
   "block_messageBeforeForAppointmentAttachments": "由于附加了禁止发送的文件，所以无法发送日程预定。",
@@ -99,6 +99,6 @@
   "setting_delayDeliverySeconds": "发送前的延迟秒数",
   "setting_requireCheckSubject": "要求确认主题",
   "setting_requireCheckBody": "要求确认电子邮件的文本",
-  "setting_configBlockDistributionLists":	"Block sending if unexpanded distribution lists or contact groups are included",
-  "setting_configEmphasizeExternalRecipients": "Emphasize external domains in To/Cc fields"
+  "setting_configBlockDistributionLists":	"如果包含未展开的分发列表、联系人组，则禁止发送",
+  "setting_configEmphasizeExternalRecipients": "将外部域名的收件人（To）・抄送（CC）高亮显示"
 }
