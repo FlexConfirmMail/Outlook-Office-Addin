@@ -88,7 +88,7 @@
   "setting_configUnsafeDomains": "Unsafe Domains and Addresses",
   "setting_configUnsafeFiles": "Unsafe Files",
   "setting_configUnsafeBodies" : "Unsafe Bodies",
-  "setting_configWarning": "To/Cc",
+  "setting_configWarning": "Warning",
   "setting_configWindowTitle": "FlexConfirmMail Options",
   "setting_aboutAddon": "Version",
   "setting_resetSetting": "Reset to Default",
