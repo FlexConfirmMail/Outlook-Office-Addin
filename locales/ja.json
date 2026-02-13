@@ -19,6 +19,9 @@
 
   "block_messageBeforeForMailRecipients": "送信が禁止された宛先が指定されているため、メールを送信できません。",
   "block_messageBeforeForAppointmentRecipients": "送信が禁止された宛先が指定されているため、予定を送信できません。",
+  "block_messageBeforeForMailDistributionLists": "未展開の配布リスト、連絡グループが指定されているため、メールを送信できません。",
+  "block_messageBeforeForAppointmentDistributionLists": "未展開の配布リスト、連絡グループが指定されているため、予定を送信できません。",
+  "block_messageAfterDistributionLists": "配布リスト、連絡グループを展開してください。",
   "block_messageAfterForRecipients": "宛先を変更してください。",
   "block_messageBeforeForMailAttachments": "送信が禁止されたファイルが添付されているため、メールを送信できません。",
   "block_messageBeforeForAppointmentAttachments": "送信が禁止されたファイルが添付されているため、予定を送信できません。",
@@ -95,5 +98,7 @@
   "setting_delayDeliveryEnabled": "遅延送信を有効化する",
   "setting_delayDeliverySeconds": "送信までの遅延秒数:",
   "setting_requireCheckSubject": "件名の確認を求める",
-  "setting_requireCheckBody": "メール本文の確認を求める"
+  "setting_requireCheckBody": "メール本文の確認を求める",
+  "setting_configBlockDistributionLists": "未展開の配布リスト、連絡グループが含まれる場合、送信を禁止する",
+  "setting_configEmphasizeExternalRecipients": "社外ドメインのTo・CCを強調表示する"
 }

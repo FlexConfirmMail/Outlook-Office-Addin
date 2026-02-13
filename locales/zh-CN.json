@@ -19,6 +19,9 @@
 
   "block_messageBeforeForMailRecipients": "This mail cannot be sent because its recipients contain forbidden recipients.",
   "block_messageBeforeForAppointmentRecipients": "This event cannot be sent because its recipients contain forbidden recipients.",
+  "block_messageBeforeForMailDistributionLists": "This mail cannot be sent because unexpanded distribution lists or contact groups have been specified.",
+  "block_messageBeforeForAppointmentDistributionLists": "This event cannot be sent because unexpanded distribution lists or contact groups have been specified.",
+  "block_messageAfterDistributionLists": "Please expand the distribution lists or contact groups.",
   "block_messageAfterForRecipients": "Please change the recipients.",
   "block_messageBeforeForMailAttachments": "The mail cannot be sent because its attachments contains forbidden files.",
   "block_messageBeforeForAppointmentAttachments": "The appointment cannot be sent because its attachments contains forbidden files.",
@@ -95,5 +98,7 @@
   "setting_delayDeliveryEnabled": "Enable delay delivery",
   "setting_delayDeliverySeconds": "Delay delivery a message by (in seconds)",
   "setting_requireCheckSubject": "要求确认主题",
-  "setting_requireCheckBody": "要求确认电子邮件的文本"
+  "setting_requireCheckBody": "要求确认电子邮件的文本",
+  "setting_configBlockDistributionLists":	"Block sending if unexpanded distribution lists or contact groups are included",
+  "setting_configEmphasizeExternalRecipients": "Emphasize external domains in To/Cc fields"
 }
