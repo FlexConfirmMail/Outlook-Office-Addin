@@ -62,6 +62,7 @@ export class RecipientClassifier {
     const untrusted = new Set();
     const unsafeWithDomain = new Set();
     const unsafe = new Set();
+    const distributionLists = new Set();
     const blockWithDomain = new Set();
     const block = new Set();
     const rewarningWithDomain = new Set();
@@ -100,10 +101,18 @@ export class RecipientClassifier {
           rewarning.add(classifiedRecipient);
         }
 
+
+        if (classifiedRecipient.recipientType === Office.MailboxEnums.RecipientType.DistributionList &&
+            (!classifiedRecipient.address || classifiedRecipient.address === "") &&
+            (!classifiedRecipient.domain || classifiedRecipient.domain === "")) {
+          distributionLists.add(classifiedRecipient);
+        }
+
         if (this.commonConfig?.UntrustUnsafeRecipients) {
           for (const recipient of [
             ...unsafeWithDomain,
             ...unsafe,
+            ...distributionLists,
             ...blockWithDomain,
             ...block,
             ...rewarningWithDomain,
@@ -120,6 +129,7 @@ export class RecipientClassifier {
       untrusted: Array.from(untrusted),
       unsafeWithDomain: Array.from(unsafeWithDomain),
       unsafe: Array.from(unsafe),
+      distributionLists: Array.from(distributionLists),
       blockWithDomain: Array.from(blockWithDomain),
       block: Array.from(block),
       rewarningWithDomain: Array.from(rewarningWithDomain),
@@ -235,6 +245,21 @@ export class RecipientClassifier {
             type: locale.get("confirmation_requiredAttendee"),
           })),
           ...classifiedOptionalAttendee.block.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_optionalAttendee"),
+          })),
+        ]),
+      ],
+      distributionLists: [
+        ...new Set([
+          ...classifiedTo.distributionLists.map((recipient) => ({ ...recipient, type: "To" })),
+          ...classifiedCc.distributionLists.map((recipient) => ({ ...recipient, type: "Cc" })),
+          ...classifiedBcc.distributionLists.map((recipient) => ({ ...recipient, type: "Bcc" })),
+          ...classifiedRequiredAttendee.distributionLists.map((recipient) => ({
+            ...recipient,
+            type: locale.get("confirmation_requiredAttendee"),
+          })),
+          ...classifiedOptionalAttendee.distributionLists.map((recipient) => ({
             ...recipient,
             type: locale.get("confirmation_optionalAttendee"),
           })),
