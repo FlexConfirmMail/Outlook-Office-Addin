@@ -175,6 +175,7 @@ export class Config {
     ConvertToBccEnabled: "boolean",
     ConvertToBccThreshold: "number",
     BlockDistributionLists: "boolean",
+    EmphasizeUntrustedToCc: "boolean",
     FixedParameters: "commaSeparatedValues",
   };
   static unsafeBodiesParamDefs = {
@@ -209,6 +210,7 @@ export class Config {
         ConvertToBccEnabled: false,
         ConvertToBccThreshold: 2,
         BlockDistributionLists: true,
+        EmphasizeUntrustedToCc: false,
         FixedParameters: [],
       },
       trustedDomains: [],
