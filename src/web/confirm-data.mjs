@@ -110,7 +110,8 @@ export class ConfirmData {
       this.classified.recipients.block.length > 0 ||
       this.classified.recipients.blockWithDomain.length > 0 ||
       this.classified.attachments.block.length > 0 ||
-      this.config.common.BlockDistributionLists && this.classified.recipients.distributionLists.length > 0
+      (this.config.common.BlockDistributionLists &&
+        this.classified.recipients.distributionLists.length > 0)
     );
   }
 

@@ -257,7 +257,8 @@ async function onMessageFromParent(arg) {
           recipient.displayName.toLowerCase()
         )
       ),
-      (displayName) => l10n.get("confirmation_unsafeDistributionListCheckboxLabel", { name: displayName })
+      (displayName) =>
+        l10n.get("confirmation_unsafeDistributionListCheckboxLabel", { name: displayName })
     )
   );
 

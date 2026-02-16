@@ -101,10 +101,12 @@ export class RecipientClassifier {
           rewarning.add(classifiedRecipient);
         }
 
-
-        if (classifiedRecipient.recipientType === Office.MailboxEnums.RecipientType.DistributionList &&
-            (!classifiedRecipient.address || classifiedRecipient.address === "") &&
-            (!classifiedRecipient.domain || classifiedRecipient.domain === "")) {
+        if (
+          classifiedRecipient.recipientType ===
+            Office.MailboxEnums.RecipientType.DistributionList &&
+          (!classifiedRecipient.address || classifiedRecipient.address === "") &&
+          (!classifiedRecipient.domain || classifiedRecipient.domain === "")
+        ) {
           distributionLists.add(classifiedRecipient);
         }
 
