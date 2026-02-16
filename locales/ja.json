@@ -8,7 +8,7 @@
   "confirmation_sendButtonLabel": "送信",
   "confirmation_cancelButtonLabel": "キャンセル",
 
-  "confirmation_safeBccThresholdCheckboxLabel": "[警告] To・Ccに${threshold}件以上のドメインが含まれています。",
+  "confirmation_safeBccThresholdCheckboxLabel": "[警告] To・Ccに${threshold}件以上のドメインが含まれています。Bccへの変更要否を確認してください。",
   "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[警告] 出席者に${threshold}件以上のドメインが含まれています。",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[警告] 注意が必要なドメイン（${domain}）が宛先に含まれています。",
   "confirmation_unsafeRecipientCheckboxLabel": "[警告] 注意が必要な宛先（${address}）が含まれています。",
@@ -30,10 +30,10 @@
   "block_messageBeforeForAppointmentBodies": "送信が禁止された文字列が本文が記載されているため、予定を送信できません。",
   "block_messageAfterForBodies": "本文を変更してください。",
 
-  "newlyAddedDomainReconfirmation_caption": "CAUTION!",
+  "newlyAddedDomainReconfirmation_caption": "警告！",
   "newlyAddedDomainReconfirmation_messageBefore": "返信元のメールの宛先に含まれていなかったドメインの以下の宛先が追加されています。",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "変更前の予定の出席者に含まれていなかったドメインの以下の出席者が追加されています。",
-  "Reconfirmation_safeBccReconfirmationThresholdWarning": "To・Ccに${threshold}件以上のドメインが含まれています。",
+  "Reconfirmation_safeBccReconfirmationThresholdWarning": "To・Ccに${threshold}件以上のドメインが含まれています。Bccへの変更要否を確認してください。",
   "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "出席者に${threshold}件以上のドメインが含まれています。",
   "Reconfirmation_unsafeDomains": "注意が必要な以下のドメインが含まれています。",
   "Reconfirmation_unsafeAddresses": "注意が必要な以下の宛先が含まれています。",

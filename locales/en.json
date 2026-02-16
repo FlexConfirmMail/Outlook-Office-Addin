@@ -8,7 +8,7 @@
   "confirmation_sendButtonLabel": "Send",
   "confirmation_cancelButtonLabel": "Cancel",
 
-  "confirmation_safeBccThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains",
+  "confirmation_safeBccThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains. Please confirm if you want to convert them to Bcc.",
   "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[Warn] Attendee fields contain no less than ${threshold} domains",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[Warn] An unsafe domain \"${domain}\" found in the recipient list",
   "confirmation_unsafeRecipientCheckboxLabel": "[Warn] An unsafe address \"${address}\" found in the recipient list",
@@ -33,7 +33,7 @@
   "newlyAddedDomainReconfirmation_caption": "CAUTION!",
   "newlyAddedDomainReconfirmation_messageBefore": "There are recipients with domains not included in the recipients of the original message.",
   "newlyAddedDomainReconfirmation_messageBeforeForAppointment": "There are attendees with domains not included in the attendees of the original appointment.",
-  "Reconfirmation_safeBccReconfirmationThresholdWarning": "[Warn] To/Cc fields contain no less than ${threshold} domains.",
+  "Reconfirmation_safeBccReconfirmationThresholdWarning": "[Warn] To/Cc fields contain no less than ${threshold} domains. Please confirm if you want to convert them to Bcc.",
   "Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning": "[Warn] Attendee fields contain no less than ${threshold} domains.",
   "Reconfirmation_unsafeDomains": "The following unsafe domains found in the recipient list.",
   "Reconfirmation_unsafeAddresses": "The following unsafe addresses found in the recipient list.",
