@@ -173,7 +173,7 @@ test_shouldConfirm.parameters = {
       itemType: Office.MailboxEnums.ItemType.Message,
     },
     warnings: [
-      "[警告] To・Ccに1件以上のドメインが含まれています。"
+      "[警告] To・Ccに1件以上のドメインが含まれています。Bccへの変更要否を確認してください。"
     ],
   },
   EqualsToThreshold: {
@@ -257,7 +257,7 @@ test_shouldReconfirm.parameters = {
       },
       itemType: Office.MailboxEnums.ItemType.Message,
     },
-    textContents: ["To・Ccに1件以上のドメインが含まれています。送信してよろしいですか？"],
+    textContents: ["To・Ccに1件以上のドメインが含まれています。Bccへの変更要否を確認してください。送信してよろしいですか？"],
   },
   EqualsToThreshold: {
     data: {
