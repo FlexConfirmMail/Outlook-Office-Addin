@@ -109,20 +109,18 @@ export class RecipientClassifier {
         ) {
           distributionLists.add(classifiedRecipient);
         }
-
-        if (this.commonConfig?.UntrustUnsafeRecipients) {
-          for (const recipient of [
-            ...unsafeWithDomain,
-            ...unsafe,
-            ...distributionLists,
-            ...blockWithDomain,
-            ...block,
-            ...rewarningWithDomain,
-            ...rewarning,
-          ]) {
-            trusted.delete(recipient);
-            untrusted.add(recipient);
-          }
+      }
+      if (this.commonConfig?.UntrustUnsafeRecipients) {
+        for (const recipient of [
+          ...unsafeWithDomain,
+          ...unsafe,
+          ...blockWithDomain,
+          ...block,
+          ...rewarningWithDomain,
+          ...rewarning,
+        ]) {
+          trusted.delete(recipient);
+          untrusted.add(recipient);
         }
       }
     }
