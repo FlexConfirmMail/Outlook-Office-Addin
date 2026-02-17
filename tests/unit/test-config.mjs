@@ -135,7 +135,7 @@ test_merge.parameters = {
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
         "ConvertToBccThreshold = 3\n" +
-        "BlockDistributionLists = true\n"
+        "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
