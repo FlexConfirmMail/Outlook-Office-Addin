@@ -74,6 +74,7 @@ async function onMessageFromParent(arg) {
     ...data.classified.recipients.block,
     ...data.classified.recipients.blockWithDomain,
   ];
+  const distributionListTypeRecipients = data.classified.recipients.distributionLists;
   const attachments = data.classified.attachments.block;
   const bodyMatchedWords = data.bodyBlockTargetWords;
   if (recipients.length > 0) {
@@ -93,6 +94,22 @@ async function onMessageFromParent(arg) {
         ? l10n.get("block_messageBeforeForMailRecipients")
         : l10n.get("block_messageBeforeForAppointmentRecipients");
     const messageAfter = l10n.get("block_messageAfterForRecipients");
+    warningContents.push({ targets, messageBefore, messageAfter });
+  }
+  if (distributionListTypeRecipients.length > 0) {
+    const targets = new Set();
+    for (const recipient of distributionListTypeRecipients) {
+      let target = recipient.displayName;
+      if (!target || target === "") {
+        target = "Unknown";
+      }
+      targets.add(`${recipient.type}: ${target}`);
+    }
+    const messageBefore =
+      data.itemType == Office.MailboxEnums.ItemType.Message
+        ? l10n.get("block_messageBeforeForMailDistributionLists")
+        : l10n.get("block_messageBeforeForAppointmentDistributionLists");
+    const messageAfter = l10n.get("block_messageAfterForDistributionLists");
     warningContents.push({ targets, messageBefore, messageAfter });
   }
   if (attachments.length > 0) {

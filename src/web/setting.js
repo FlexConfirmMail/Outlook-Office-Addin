@@ -303,6 +303,9 @@ function updateDialogSetting(policy, user) {
   document.getElementById("convertToBccThreshold").value = common.ConvertToBccThreshold;
   document.getElementById("convertToBccThreshold").disabled =
     fixedParametersSet.has("ConvertToBccThreshold");
+  document.getElementById("blockDistributionLists").checked = common.BlockDistributionLists;
+  document.getElementById("blockDistributionLists").disabled =
+    fixedParametersSet.has("BlockDistributionLists");
 }
 
 function sendStatusToParent(status) {
@@ -347,6 +350,7 @@ function serializeCommonConfigs() {
   const delayDeliverySeconds = document.getElementById("delayDeliverySeconds").value;
   const convertToBccEnabled = document.getElementById("convertToBccEnabled").checked;
   const convertToBccThreshold = document.getElementById("convertToBccThreshold").value;
+  const blockDistributionLists = document.getElementById("blockDistributionLists").checked;
   let commonConfigString = "";
   commonConfigString += serializeCommonConfig("CountEnabled", countEnabled);
   commonConfigString += serializeCommonConfig("CountSeconds", countSeconds);
@@ -371,6 +375,8 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("DelayDeliverySeconds", delayDeliverySeconds);
   commonConfigString += serializeCommonConfig("ConvertToBccEnabled", convertToBccEnabled);
   commonConfigString += serializeCommonConfig("ConvertToBccThreshold", convertToBccThreshold);
+  commonConfigString += serializeCommonConfig("BlockDistributionLists", blockDistributionLists);
+
   // FixedParameters is for policy setting.
   // Do not serialize FixedParameters for user setting.
   return commonConfigString;

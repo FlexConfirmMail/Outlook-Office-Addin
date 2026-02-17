@@ -30,6 +30,7 @@ export function test_createDefaultConfig() {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: false,
         ConvertToBccThreshold: 2,
+        BlockDistributionLists: true,
         FixedParameters: [],
       },
       trustedDomains: [],
@@ -97,6 +98,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: true,
         ConvertToBccThreshold: 3,
+        BlockDistributionLists: true,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -130,7 +132,8 @@ test_merge.parameters = {
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
-        "ConvertToBccThreshold = 3",
+        "ConvertToBccThreshold = 3\n" +
+        "BlockDistributionLists = true",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -160,6 +163,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: true,
         ConvertToBccThreshold: 3,
+        BlockDistributionLists: true,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -194,7 +198,8 @@ test_merge.parameters = {
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
-        "ConvertToBccThreshold = 3",
+        "ConvertToBccThreshold = 3\n" +
+        "BlockDistributionLists = true",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -226,6 +231,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: true,
         ConvertToBccThreshold: 3,
+        BlockDistributionLists: true,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -260,7 +266,8 @@ test_merge.parameters = {
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
-        "ConvertToBccThreshold = 3",
+        "ConvertToBccThreshold = 3\n" +
+        "BlockDistributionLists = true",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -302,6 +309,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: true,
         ConvertToBccThreshold: 3,
+        BlockDistributionLists: true,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -336,7 +344,8 @@ test_merge.parameters = {
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
-        "ConvertToBccThreshold = 3",
+        "ConvertToBccThreshold = 3\n" +
+        "BlockDistributionLists = true",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -368,6 +377,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: true,
         ConvertToBccThreshold: 4,
+        BlockDistributionLists: true,
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain_left"],
@@ -401,7 +411,8 @@ test_merge.parameters = {
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
-        "ConvertToBccThreshold = 4",
+        "ConvertToBccThreshold = 4\n" +
+        "BlockDistributionLists = true",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
@@ -431,6 +442,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 10,
         ConvertToBccEnabled: false,
         ConvertToBccThreshold: 2,
+        BlockDistributionLists: false,
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
@@ -466,6 +478,7 @@ test_merge.parameters = {
         "DelayDeliverySeconds = 10\n" +
         "ConvertToBccEnabled = false\n" +
         "ConvertToBccThreshold = 2\n" +
+        "BlockDistributionLists = false\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
@@ -496,6 +509,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 10,
         ConvertToBccEnabled: false,
         ConvertToBccThreshold: 2,
+        BlockDistributionLists: false,
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
@@ -536,6 +550,7 @@ test_merge.parameters = {
         "DelayDeliverySeconds = 10\n" +
         "ConvertToBccEnabled = false\n" +
         "ConvertToBccThreshold = 2\n" +
+        "BlockDistributionLists = false\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
       unsafeDomainsString: "unsafeDomain_left\n[WARNING]\nunsafeDomain_right",
@@ -574,6 +589,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: true,
         ConvertToBccThreshold: 3,
+        BlockDistributionLists: true,
         FixedParameters: [
           "CountEnabled",
           "CountAllowSkip",
@@ -592,6 +608,7 @@ test_merge.parameters = {
           "DelayDeliverySeconds",
           "ConvertToBccEnabled",
           "ConvertToBccThreshold",
+          "BlockDistributionLists",
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
@@ -631,6 +648,7 @@ test_merge.parameters = {
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
         "ConvertToBccThreshold = 3\n" +
+        "BlockDistributionLists = true\n" +
         "FixedParameters = " + 
             "CountEnabled," +
             "CountAllowSkip," +
@@ -647,6 +665,7 @@ test_merge.parameters = {
             "DelayDeliverySeconds," +
             "ConvertToBccEnabled," +
             "ConvertToBccThreshold," +
+            "BlockDistributionLists," +
             "TrustedDomains," +
             "UnsafeDomains," +
             "UnsafeFiles," + 
@@ -680,6 +699,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 10,
         ConvertToBccEnabled: false,
         ConvertToBccThreshold: 2,
+        BlockDistributionLists: false,
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
@@ -710,6 +730,7 @@ test_merge.parameters = {
         "DelayDeliverySeconds = 10\n" +
         "ConvertToBccEnabled = false\n" +
         "ConvertToBccThreshold = 2\n" +
+        "BlockDistributionLists = false\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
@@ -737,6 +758,7 @@ test_merge.parameters = {
         DelayDeliverySeconds: 60,
         ConvertToBccEnabled: true,
         ConvertToBccThreshold: 3,
+        BlockDistributionLists: true,
         FixedParameters: [
           "CountEnabled",
           "CountAllowSkip",
@@ -755,6 +777,7 @@ test_merge.parameters = {
           "DelayDeliverySeconds",
           "ConvertToBccEnabled",
           "ConvertToBccThreshold",
+          "BlockDistributionLists",
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
@@ -794,6 +817,7 @@ test_merge.parameters = {
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
         "ConvertToBccThreshold = 3\n" +
+        "BlockDistributionLists = true\n" +
         "FixedParameters = " + 
           "CountEnabled," +
           "CountAllowSkip," +
@@ -812,6 +836,7 @@ test_merge.parameters = {
           "DelayDeliverySeconds," +
           "ConvertToBccEnabled," +
           "ConvertToBccThreshold," +
+          "BlockDistributionLists," +
           "TrustedDomains," +
           "UnsafeDomains," +
           "UnsafeFiles," + 

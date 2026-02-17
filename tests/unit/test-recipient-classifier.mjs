@@ -7,7 +7,24 @@
 
 import { RecipientClassifier } from '../../src/web/recipient-classifier.mjs';
 import { assert } from 'tiny-esm-test-runner';
+import { OfficeMockObject } from 'office-addin-mock';
 const { is } = assert;
+
+const mockData = {
+  host: "outlook", // Outlookの場合必須
+  MailboxEnums : {
+    ItemType: {
+      Message: "message",
+      Appointment: "appointment"
+    },
+    RecipientType: {
+      DistributionList: "distributionList"
+    }
+  }
+};
+
+const officeMock = new OfficeMockObject(mockData);
+global.Office = officeMock;
 
 export function test_format() {
   const recipients = [
@@ -37,6 +54,7 @@ export function test_format() {
       ],
       unsafeWithDomain: [],
       unsafe: [],
+      distributionLists: [],
       blockWithDomain: [],
       block: [],
       rewarningWithDomain: [],
@@ -130,6 +148,7 @@ test_classifyAddresses.parameters = {
       block: [
         'bbb+unsafe@example.com',
       ],
+      distributionLists: [],
       rewarningWithDomain: [
         'aaa@unsafe.example.com',
       ],
@@ -201,6 +220,7 @@ test_classifyAddresses.parameters = {
       block: [
         'ccc@clear-code.com'
       ],
+      distributionLists: [],
       rewarningWithDomain: [
         'zzz@example.com',
       ],
@@ -255,6 +275,7 @@ test_classifyAddresses.parameters = {
       block: [
         'ccc@clear-code.com'
       ],
+      distributionLists: [],
       rewarningWithDomain: [
         'zzz@example.com',
       ],
@@ -289,6 +310,7 @@ test_classifyAddresses.parameters = {
       blockWithDomain: [
         'ccc@ExAmPlE.com',
       ],
+      distributionLists: [],
       rewarningWithDomain: [
         'ccc@ExAmPlE.com',
       ],
@@ -372,6 +394,7 @@ test_classifyAddresses.parameters = {
       blockWithDomain: [
         'bbb@example.com'
       ],
+      distributionLists: [],
       rewarningWithDomain: [
         'bbb@example.com'
       ],
@@ -642,7 +665,7 @@ test_classifyAddresses.parameters = {
       ],
     }
   },
-  'no domain (distribution list)': {
+  'no domain (distribution list) and block no domain': {
     recipients: [
       'test-group',
     ],
@@ -662,17 +685,43 @@ test_classifyAddresses.parameters = {
       ],
     }
   },
+  'no domain (distribution list)': {
+    commonConfig: {
+      BlockDistributionLists: true,
+    },
+    recipients: [
+      { 
+        displayName: 'test-group',
+        domain: '',
+        address: '', 
+        recipientType: global.Office.MailboxEnums.RecipientType.DistributionList
+      },
+    ],
+    trustedDomains: [
+    ],
+    unsafeDomains: {
+    },
+    expected: {
+      untrusted: [
+        '',
+      ],
+      distributionLists: [
+        '',
+      ],
+    }
+  },
 };
 export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomains, commonConfig, expected }) {
   const classifier = new RecipientClassifier({ trustedDomains, unsafeDomains, commonConfig });
   const classified = classifier.classify(recipients);
   is(
-    Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [], blockWithDomain: [], block: [], rewarningWithDomain: [], rewarning: [] }, expected),
+    Object.assign({ trusted: [], untrusted: [], unsafeWithDomain: [], unsafe: [], distributionLists: [], blockWithDomain: [], block: [], rewarningWithDomain: [], rewarning: [] }, expected),
     {
       trusted: classified.trusted.map(recipient => recipient.address),
       untrusted: classified.untrusted.map(recipient => recipient.address),
       unsafeWithDomain: classified.unsafeWithDomain.map(recipient => recipient.address),
       unsafe: classified.unsafe.map(recipient => recipient.address),
+      distributionLists: classified.distributionLists.map(recipient => recipient.address),
       blockWithDomain: classified.blockWithDomain.map(recipient => recipient.address),
       block: classified.block.map(recipient => recipient.address),
       rewarningWithDomain: classified.rewarningWithDomain.map(recipient => recipient.address),
@@ -731,6 +780,7 @@ test_classifyAll.parameters = {
           type: 'Cc' }
       ],
       block: [],
+      distributionLists: [],
       rewarningWithDomain: [
         { recipient: 'bbb@example.org',
           address: 'bbb@example.org',

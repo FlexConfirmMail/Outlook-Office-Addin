@@ -250,6 +250,17 @@ async function onMessageFromParent(arg) {
       l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
     )
   );
+  appendMiscWarningCheckboxes(
+    Array.from(
+      new Set(
+        data.classified.recipients.distributionLists.map((recipient) =>
+          recipient.displayName.toLowerCase()
+        )
+      ),
+      (displayName) =>
+        l10n.get("confirmation_unsafeDistributionListCheckboxLabel", { name: displayName })
+    )
+  );
 
   const attachmentWarningLabels = data.classified.attachments.unsafe.map((attachment) =>
     l10n.get("confirmation_unsafeAttachmentCheckboxLabel", { name: attachment.name })

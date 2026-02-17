@@ -18,6 +18,9 @@ const mockData = {
     ItemType: {
       Message: "message",
       Appointment: "appointment"
+    },
+    RecipientType: {
+      DistributionList: "distributionList"
     }
   }
 };
@@ -60,6 +63,9 @@ test_classifyTarget.parameters = {
           "#safe",
           "-safe",
       ]},
+      common: {
+        BlockDistributionLists: true,
+      }
     },
     itemType: Office.MailboxEnums.ItemType.Message,
     expected: {
@@ -97,6 +103,7 @@ test_classifyTarget.parameters = {
         unsafe: [],
         blockWithDomain: [],
         block: [],
+        distributionLists: [],
         rewarningWithDomain: [],
         rewarning: []
       },
@@ -136,6 +143,9 @@ test_blockSending.parameters = {
       unsafeDomains: {},
       unsafeFiles:  {},
       unsafeBodies: {},
+      common: {
+        BlockDistributionLists: true,
+      }
     },
     expected: false,
   },
@@ -149,6 +159,9 @@ test_blockSending.parameters = {
       unsafeDomains: { "BLOCK": [ "example.com" ] },
       unsafeFiles: {},
       unsafeBodies: {},
+      common: {
+        BlockDistributionLists: true,
+      }
     },
     expected: true,
   },
@@ -162,6 +175,9 @@ test_blockSending.parameters = {
       unsafeDomains: { "BLOCK": [ "aaa@example.com" ] },
       unsafeFiles: {},
       unsafeBodies: {},
+      common: {
+        BlockDistributionLists: true,
+      }
     },
     expected: true,
   },
@@ -176,7 +192,10 @@ test_blockSending.parameters = {
       trustedDomains: [],
       unsafeDomains: {},
       unsafeFiles: { "BLOCK": [ "機密" ] },
-      unsafeBodies: {}
+      unsafeBodies: {},
+      common: {
+        BlockDistributionLists: true,
+      }
     },
     expected: true,
   },
@@ -197,6 +216,25 @@ test_blockSending.parameters = {
           "WarningType": "BLOCK",
           "Keywords": [ "社外秘" ]
         }
+      },
+      common: {
+        BlockDistributionLists: true,
+      }
+    },
+    expected: true,
+  },
+  BlockDistributionLists: {
+    target: {
+      to: [{ 
+        displayName: 'test-group',
+        domain: '',
+        address: '', 
+        recipientType: global.Office.MailboxEnums.RecipientType.DistributionList
+      },],
+    },
+    config: {
+      common: {
+        BlockDistributionLists: true,
       }
     },
     expected: true,
@@ -222,6 +260,7 @@ test_skipConfirm.parameters = {
       unsafeFiles :  {},
       common: {
         MainSkipIfNoExt: false,
+        BlockDistributionLists: true,
       }
     },
     expected: false,
@@ -237,6 +276,7 @@ test_skipConfirm.parameters = {
       unsafeFiles :  {},
       common: {
         MainSkipIfNoExt: true,
+        BlockDistributionLists: true,
       }
     },
     expected: true,
@@ -252,6 +292,7 @@ test_skipConfirm.parameters = {
       unsafeFiles :  {},
       common: {
         MainSkipIfNoExt: true,
+        BlockDistributionLists: true,
       }
     },
     expected: false,
@@ -279,6 +320,7 @@ test_skipCountDown.parameters = {
         CountEnabled: true,
         CountSeconds: 10,
         CountSkipIfNoExt: false,
+        BlockDistributionLists: true,
       }
     },
     expected: false,
@@ -296,6 +338,7 @@ test_skipCountDown.parameters = {
         CountEnabled: false,
         CountSeconds: 10,
         CountSkipIfNoExt: false,
+        BlockDistributionLists: true,
       }
     },
     expected: true,
@@ -313,6 +356,7 @@ test_skipCountDown.parameters = {
         CountEnabled: true,
         CountSeconds: 0,
         CountSkipIfNoExt: false,
+        BlockDistributionLists: true,
       }
     },
     expected: true,
@@ -330,6 +374,7 @@ test_skipCountDown.parameters = {
         CountEnabled: true,
         CountSeconds: 10,
         CountSkipIfNoExt: false,
+        BlockDistributionLists: true,
       }
     },
     expected: false,
@@ -347,6 +392,7 @@ test_skipCountDown.parameters = {
         CountEnabled: true,
         CountSeconds: 10,
         CountSkipIfNoExt: true,
+        BlockDistributionLists: true,
       }
     },
     expected: true,
@@ -364,6 +410,7 @@ test_skipCountDown.parameters = {
         CountEnabled: true,
         CountSeconds: 10,
         CountSkipIfNoExt: true,
+        BlockDistributionLists: true,
       }
     },
     expected: false,
@@ -389,6 +436,7 @@ test_delayDelivery.parameters = {
       unsafeFiles :  {},
       common: {
         DelayDeliveryEnabled: true,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Message,
@@ -405,6 +453,7 @@ test_delayDelivery.parameters = {
       unsafeFiles :  {},
       common: {
         DelayDeliveryEnabled: true,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Appointment,
@@ -421,6 +470,7 @@ test_delayDelivery.parameters = {
       unsafeFiles :  {},
       common: {
         DelayDeliveryEnabled: false,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Message,
@@ -437,6 +487,7 @@ test_delayDelivery.parameters = {
       unsafeFiles :  {},
       common: {
         DelayDeliveryEnabled: false,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Appointment,
@@ -460,6 +511,7 @@ test_skipAll.parameters = {
       unsafeFiles :  {},
       common: {
         AppointmentConfirmationEnabled: true,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Appointment,
@@ -476,6 +528,7 @@ test_skipAll.parameters = {
       unsafeFiles :  {},
       common: {
         AppointmentConfirmationEnabled: true,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Message,
@@ -492,6 +545,7 @@ test_skipAll.parameters = {
       unsafeFiles :  {},
       common: {
         AppointmentConfirmationEnabled: false,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Appointment,
@@ -508,6 +562,7 @@ test_skipAll.parameters = {
       unsafeFiles :  {},
       common: {
         AppointmentConfirmationEnabled: false,
+        BlockDistributionLists: true,
       }
     },
     itemType: Office.MailboxEnums.ItemType.Message,
