@@ -102,7 +102,7 @@ window.checkboxChanged = (targetElement) => {
   sendButton.disabled = hasUnchecked;
 };
 
-function appendRecipientCheckboxes(target, groupedRecipients) {
+function appendRecipientCheckboxes({ target, groupedRecipients, emphasizeToCc }) {
   for (const [key, recipients] of Object.entries(groupedRecipients)) {
     const idForGroup = generateTempId();
     const idForGroupTitle = generateTempId();
@@ -118,18 +118,22 @@ function appendRecipientCheckboxes(target, groupedRecipients) {
     const container = document.getElementById(idForGroup);
     const createdLabels = new Set();
     for (const recipient of recipients) {
-      let target = recipient.address;
-      if (!target || target === "") {
-        target = recipient.displayName;
+      let displayInfo = recipient.address;
+      if (!displayInfo || displayInfo === "") {
+        displayInfo = recipient.displayName;
       }
-      if (!target || target === "") {
-        target = "Unknown";
+      if (!displayInfo || displayInfo === "") {
+        displayInfo = "Unknown";
       }
-      const label = `${recipient.type}: ${target}`;
+      const label = `${recipient.type}: ${displayInfo}`;
       if (createdLabels.has(label)) {
         continue;
       }
-      appendCheckbox({ container, label });
+      let emphasize = false;
+      if (emphasizeToCc && (recipient.type === "To" || recipient.type === "Cc")) {
+        emphasize = true;
+      }
+      appendCheckbox({ container, label, emphasize });
       createdLabels.add(label);
     }
   }
@@ -168,13 +172,16 @@ function appendMiscWarningCheckboxes(items) {
   }
 }
 
-function appendCheckbox({ container, id, label, warning }) {
+function appendCheckbox({ container, id, label, warning, emphasize }) {
   if (!id) {
     id = generateTempId();
   }
   const extraClasses = new Set();
   if (warning) {
     extraClasses.add("warning");
+  }
+  if (emphasize) {
+    extraClasses.add("emphasized");
   }
   const checkbox = document.createElement("fluent-checkbox");
   checkbox.id = id;
@@ -207,12 +214,19 @@ async function onMessageFromParent(arg) {
     data.classified.recipients.trusted,
     (item) => item.domain
   );
-  appendRecipientCheckboxes(document.getElementById("trusted-domains"), groupedByTypeTrusteds);
+  appendRecipientCheckboxes({
+    target: document.getElementById("trusted-domains"),
+    groupedRecipients: groupedByTypeTrusteds,
+  });
   const groupedByTypeUntrusted = Object.groupBy(
     data.classified.recipients.untrusted,
     (item) => item.domain
   );
-  appendRecipientCheckboxes(document.getElementById("untrusted-domains"), groupedByTypeUntrusted);
+  appendRecipientCheckboxes({
+    target: document.getElementById("untrusted-domains"),
+    groupedRecipients: groupedByTypeUntrusted,
+    emphasizeToCc: data.config.common.EmphasizeUntrustedToCc,
+  });
 
   if (data.config.common.RequireCheckSubject) {
     const mailSubject = document.getElementById("mail-subject");
