@@ -41,6 +41,10 @@ fluent-card {
   color: red;
 }
 
+fluent-checkbox.emphasized::part(label) {
+  background-color: yellow;
+}
+
 #attachment-and-others fluent-checkbox.warning::part(label) {
   color:red;
 }

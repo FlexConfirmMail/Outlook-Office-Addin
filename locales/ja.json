@@ -101,5 +101,5 @@
   "setting_requireCheckSubject": "件名の確認を求める",
   "setting_requireCheckBody": "メール本文の確認を求める",
   "setting_configBlockDistributionLists": "未展開の配布リスト、連絡グループが含まれる場合、送信を禁止する",
-  "setting_configEmphasizeExternalRecipients": "社外ドメインのTo・CCを強調表示する"
+  "setting_configEmphasizeUntrustedToCc": "社外ドメインのTo・CCを強調表示する"
 }

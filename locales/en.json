@@ -101,5 +101,5 @@
   "setting_requireCheckSubject": "Require check the subject",
   "setting_requireCheckBody": "Require to check the message body",
   "setting_configBlockDistributionLists":	"Block sending if unexpanded distribution lists or contact groups are included",
-  "setting_configEmphasizeExternalRecipients": "Emphasize external domains in To/Cc fields"
+  "setting_configEmphasizeUntrustedToCc": "Emphasize external domains in To/Cc fields"
 }

@@ -306,6 +306,9 @@ function updateDialogSetting(policy, user) {
   document.getElementById("blockDistributionLists").checked = common.BlockDistributionLists;
   document.getElementById("blockDistributionLists").disabled =
     fixedParametersSet.has("BlockDistributionLists");
+  document.getElementById("emphasizeUntrustedToCc").checked = common.EmphasizeUntrustedToCc;
+  document.getElementById("emphasizeUntrustedToCc").disabled =
+    fixedParametersSet.has("EmphasizeUntrustedToCc");
 }
 
 function sendStatusToParent(status) {
@@ -351,6 +354,7 @@ function serializeCommonConfigs() {
   const convertToBccEnabled = document.getElementById("convertToBccEnabled").checked;
   const convertToBccThreshold = document.getElementById("convertToBccThreshold").value;
   const blockDistributionLists = document.getElementById("blockDistributionLists").checked;
+  const emphasizeUntrustedToCc = document.getElementById("emphasizeUntrustedToCc").checked;
   let commonConfigString = "";
   commonConfigString += serializeCommonConfig("CountEnabled", countEnabled);
   commonConfigString += serializeCommonConfig("CountSeconds", countSeconds);
@@ -376,7 +380,7 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("ConvertToBccEnabled", convertToBccEnabled);
   commonConfigString += serializeCommonConfig("ConvertToBccThreshold", convertToBccThreshold);
   commonConfigString += serializeCommonConfig("BlockDistributionLists", blockDistributionLists);
-
+  commonConfigString += serializeCommonConfig("EmphasizeUntrustedToCc", emphasizeUntrustedToCc);
   // FixedParameters is for policy setting.
   // Do not serialize FixedParameters for user setting.
   return commonConfigString;
