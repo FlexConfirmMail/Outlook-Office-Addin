@@ -43,7 +43,7 @@ test_get.parameters = {
     key: "missingFallbackMessage",
     expected: "フォールバック先で定義されているメッセージ",
   },
-  customLocaleOverride: {
+  customLocale: {
     language: "ja-JP",
     key: "customOverrideMessage",
     expected: "JP：カスタムロケールの上書きメッセージ",
