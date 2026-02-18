@@ -80,7 +80,7 @@ export class L10n {
       if (customLocale) {
         //console.debug("locale successfully loaded from ", urlForCustom, customLocale);
         locale = { ...defaultLocale, ...customLocale };
-      }      
+      }
       return (this.cache[language] = locale || {});
     }
     if (customLocale) {
