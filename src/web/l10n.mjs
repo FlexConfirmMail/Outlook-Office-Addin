@@ -66,14 +66,28 @@ export class L10n {
       return this.cache[language];
     }
     const baseUrl = this.baseUrl.split("?")[0].replace(/\/([^/]+)?$/, "");
-    const url = `${baseUrl}/locales/${language}.json`;
-    //console.debug("loading locale from ", url);
-    const locale = await this.JSONFetcher(url);
-    if (locale) {
-      //console.debug("locale successfully loaded from ", url, locale);
+    const urlForDefault = `${baseUrl}/locales/${language}.json`;
+    const urlForCustom = `${baseUrl}/custom-locales/${language}.json`;
+    //console.debug("loading locale from ", urlForDefault);
+    //console.debug("loading locale from ", urlForCustom);
+    const [defaultLocale, customLocale] = await Promise.all([
+      this.JSONFetcher(urlForDefault),
+      this.JSONFetcher(urlForCustom),
+    ]);
+    if (defaultLocale) {
+      //console.debug("locale successfully loaded from ", urlForDefault, defaultLocale);
+      let locale = defaultLocale;
+      if (customLocale) {
+        //console.debug("locale successfully loaded from ", urlForCustom, customLocale);
+        locale = { ...defaultLocale, ...customLocale };
+      }
       return (this.cache[language] = locale || {});
     }
-    //console.debug("failed to load locale from ", url);
+    if (customLocale) {
+      //console.debug("locale successfully loaded from ", urlForCustom, customLocale);
+      return (this.cache[language] = customLocale || {});
+    }
+    //console.debug(`failed to load locale from ${urlForDefault} and ${urlForCustom}`);
     return (this.cache[language] = {});
   }
 
