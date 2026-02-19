@@ -259,6 +259,24 @@ export class OfficeDataAccessHelper {
     });
   }
 
+  static getBodyTypeAsync() {
+    return new Promise((resolve, reject) => {
+      try {
+        Office.context.mailbox.item.body.getTypeAsync((asyncResult) => {
+          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            resolve(asyncResult.value);
+          } else {
+            console.log(`Error while getting body type: ${asyncResult.error.message}`);
+            reject(false);
+          }
+        });
+      } catch (error) {
+        console.log(`Error while getting body type: ${error}`);
+        reject(error);
+      }
+    });
+  }
+
   static setDelayDeliveryTimeAsync(deliveryTime) {
     return new Promise((resolve, reject) => {
       try {
@@ -330,13 +348,14 @@ export class OfficeDataAccessHelper {
   }
 
   static async getAllMailData() {
-    const [to, cc, bcc, subject, body, bodyText, attachments] = await Promise.all([
+    const [to, cc, bcc, subject, body, bodyText, bodyType, attachments] = await Promise.all([
       OfficeDataAccessHelper.getToAsync(),
       OfficeDataAccessHelper.getCcAsync(),
       OfficeDataAccessHelper.getBccAsync(),
       OfficeDataAccessHelper.getSubjectAsync(),
       OfficeDataAccessHelper.getBodyAsync(),
       OfficeDataAccessHelper.getBodyAsync(Office.CoercionType.Text),
+      OfficeDataAccessHelper.getBodyTypeAsync(),
       OfficeDataAccessHelper.getAttachmentsAsync(),
     ]);
     let originalRecipients = {};
@@ -354,6 +373,7 @@ export class OfficeDataAccessHelper {
         subject,
         body,
         bodyText,
+        bodyType,
         attachments,
       },
       originalRecipients,
@@ -362,13 +382,14 @@ export class OfficeDataAccessHelper {
   }
 
   static async getAllAppointmentData() {
-    const [requiredAttendees, optionalAttendees, subject, body, bodyText, attachments] =
+    const [requiredAttendees, optionalAttendees, subject, body, bodyText, bodyType, attachments] =
       await Promise.all([
         OfficeDataAccessHelper.getRequiredAttendeeAsync(),
         OfficeDataAccessHelper.getOptionalAttendeeAsync(),
         OfficeDataAccessHelper.getSubjectAsync(),
         OfficeDataAccessHelper.getBodyAsync(),
         OfficeDataAccessHelper.getBodyAsync(Office.CoercionType.Text),
+        OfficeDataAccessHelper.getBodyTypeAsync(),
         OfficeDataAccessHelper.getAttachmentsAsync(),
       ]);
     let originalAttendees = {};
@@ -385,6 +406,7 @@ export class OfficeDataAccessHelper {
         subject,
         body,
         bodyText,
+        bodyType,
         attachments,
       },
       originalRecipients: originalAttendees,

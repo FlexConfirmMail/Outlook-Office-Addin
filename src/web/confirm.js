@@ -237,8 +237,14 @@ async function onMessageFromParent(arg) {
 
   if (data.config.common.RequireCheckBody) {
     const mailBody = document.getElementById("mail-body");
-    const sanitizedBody = DOMPurify.sanitize(data.target.body);
-    mailBody.insertAdjacentHTML("beforeend", sanitizedBody);
+    if (data.target.bodyType === Office.CoercionType.Html) {
+      const sanitizedBody = DOMPurify.sanitize(data.target.body);
+      mailBody.insertAdjacentHTML("beforeend", sanitizedBody);
+    } else {
+      const preElement = document.createElement("pre");
+      preElement.textContent = data.target.bodyText;
+      mailBody.appendChild(preElement);
+    }
     document.getElementById("mail-body-checkbox").checked = false;
     document.getElementById("mail-body-card").hidden = false;
   }
