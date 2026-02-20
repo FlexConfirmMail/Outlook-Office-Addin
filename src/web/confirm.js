@@ -130,7 +130,13 @@ function appendRecipientCheckboxes({ target, groupedRecipients, emphasizeToCc })
         continue;
       }
       let emphasize = false;
-      if (emphasizeToCc && (recipient.type === "To" || recipient.type === "Cc")) {
+      if (
+        emphasizeToCc &&
+        (recipient.type === "To" ||
+          recipient.type === "Cc" ||
+          recipient.type === l10n.get("confirmation_requiredAttendee") ||
+          recipient.type === l10n.get("confirmation_optionalAttendee"))
+      ) {
         emphasize = true;
       }
       appendCheckbox({ container, label, emphasize });
