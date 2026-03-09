@@ -173,7 +173,7 @@ test_shouldConfirm.parameters = {
       itemType: Office.MailboxEnums.ItemType.Message,
     },
     warnings: [
-      "[警告] To・Ccに1件以上のドメインが含まれています。Bccへの変更要否を確認してください。"
+      "[警告] To・Ccに1件以上のドメインが含まれています。"
     ],
   },
   EqualsToThreshold: {
@@ -213,7 +213,7 @@ test_shouldConfirm.parameters = {
       "[警告] 出席者に1件以上のドメインが含まれています。"
     ],
   },
-  EqualsToThreshold: {
+  EqualsToThresholdAttendees: {
     data: {
       target: {
         requiredAttendees: [recipient("example@example.com")],
@@ -238,6 +238,91 @@ export function test_shouldConfirm({ data, warnings }) {
   is(
     warnings.map((label) => ({label})),
     confirmation.warningConfirmationItems
+  );
+}
+
+test_shouldConversionConfirm.parameters = {
+  MoreThanThreshold: {
+    data: {
+      target: {
+        to: [recipient("example@example.com")],
+        cc: [recipient("example@example.net")],
+        bcc: [],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccConversionThreshold: 1,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Message,
+    },
+    warnings: [
+      "[警告] To・Ccに1件以上のドメインが含まれています。Bccへの変更要否を確認してください。"
+    ],
+  },
+  EqualsToThreshold: {
+    data: {
+      target: {
+        to: [recipient("example@example.com")],
+        cc: [recipient("example@example.net")],
+        bcc: [],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccConversionThreshold: 2,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Message
+    },
+    warnings: [
+      "[警告] To・Ccに2件以上のドメインが含まれています。Bccへの変更要否を確認してください。"
+    ],
+  },
+  MoreThanThresholdAttenees: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+        optionalAttendees: [recipient("example@example.net")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccConversionThreshold: 1,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Appointoment,
+    },
+    warnings: [
+      "[警告] 出席者に1件以上のドメインが含まれています。"
+    ],
+  },
+  EqualsToThresholdAttendees: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+        optionalAttendees: [recipient("example@example.net")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          SafeBccConversionThreshold: 2,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Appointoment,
+    },
+    warnings: [
+      "[警告] 出席者に2件以上のドメインが含まれています。"
+    ]
+  },
+};
+export function test_shouldConversionConfirm({ data, warnings }) {
+  confirmation.init(data);
+  ok(confirmation.needToConversionConfirm);
+  is(
+    warnings.map((label) => ({label})),
+    confirmation.warningConversionConfirmationItems
   );
 }
 
