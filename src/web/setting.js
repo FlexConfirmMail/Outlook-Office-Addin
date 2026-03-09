@@ -18,10 +18,6 @@ Office.onReady(() => {
     // Inframe mode
     document.documentElement.classList.add("in-frame");
   }
-  Office.context.ui.addHandlerAsync(
-    Office.EventType.DialogParentMessageReceived,
-    onMessageFromParent
-  );
   const language = Office.context.displayLanguage;
   l10n = L10n.get(language);
   l10n.ready.then(() => l10n.translateAll());
@@ -29,7 +25,13 @@ Office.onReady(() => {
   policyConfig = Config.createDefaultConfig();
   userConfig = Config.createEmptyConfig();
   effectiveConfig = Config.createEmptyConfig();
-  sendStatusToParent("ready");
+  Office.context.ui.addHandlerAsync(
+    Office.EventType.DialogParentMessageReceived,
+    onMessageFromParent,
+    () => {
+      sendStatusToParent("ready");
+    }
+  );
 });
 
 function createSectionableArrayConfigComment(config) {
