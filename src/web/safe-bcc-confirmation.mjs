@@ -114,14 +114,13 @@ export class SafeBccConfirmation {
         ];
       case Office.MailboxEnums.ItemType.Appointment:
       default:
+        // Appointment has no Bcc type recipients, so the warning message is same as threshold warning.
+        // This message will be emphasized in the warning dialog.
         return [
           {
-            label: this.locale.get(
-              "confirmation_safeBccConversionThresholdForAttendeesCheckboxLabel",
-              {
-                threshold: this.conversionThreshold,
-              }
-            ),
+            label: this.locale.get("confirmation_safeBccThresholdForAttendeesCheckboxLabel", {
+              threshold: this.conversionThreshold,
+            }),
           },
         ];
     }
