@@ -289,7 +289,9 @@ function updateDialogSetting(policy, user) {
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
   document.getElementById("safeBccThreshold").disabled = fixedParametersSet.has("SafeBccThreshold");
   document.getElementById("safeBccConversionThreshold").value = common.SafeBccConversionThreshold;
-  document.getElementById("safeBccConversionThreshold").disabled = fixedParametersSet.has("SafeBccConversionThreshold");
+  document.getElementById("safeBccConversionThreshold").disabled = fixedParametersSet.has(
+    "SafeBccConversionThreshold"
+  );
   document.getElementById("safeBccReconfirmationThreshold").value =
     common.SafeBccReconfirmationThreshold;
   document.getElementById("safeBccReconfirmationThreshold").disabled = fixedParametersSet.has(
@@ -366,7 +368,10 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("CountAllowSkip", countAllowSkip);
   commonConfigString += serializeCommonConfig("SafeBccEnabled", safeBccEnabled);
   commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
-  commonConfigString += serializeCommonConfig("SafeBccConversionThreshold", safeBccConversionThreshold);
+  commonConfigString += serializeCommonConfig(
+    "SafeBccConversionThreshold",
+    safeBccConversionThreshold
+  );
   commonConfigString += serializeCommonConfig(
     "SafeBccReconfirmationThreshold",
     safeBccReconfirmationThreshold

@@ -9,7 +9,7 @@
   "confirmation_cancelButtonLabel": "Cancel",
 
   "confirmation_safeBccThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains.",
-  "confirmation_safeBccConversionThresholdCheckboxLabel": "To/Cc fields contain no less than ${threshold} domains. Please confirm if you want to convert them to Bcc.",
+  "confirmation_safeBccConversionThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains. Please confirm if you want to convert them to Bcc.",
   "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[Warn] Attendee fields contain no less than ${threshold} domains",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[Warn] An unsafe domain \"${domain}\" found in the recipient list",
   "confirmation_unsafeRecipientCheckboxLabel": "[Warn] An unsafe address \"${address}\" found in the recipient list",
