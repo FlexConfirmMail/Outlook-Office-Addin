@@ -361,9 +361,9 @@ test_shouldReconfirmTooManyDomains.parameters = {
       },
       itemType: Office.MailboxEnums.ItemType.Message
     },
-    textContents: ["To・Ccに2件以上のドメインが含まれています。送信してよろしいですか？"],
+    textContents: ["To・Ccに2件以上のドメインが含まれています。Bccへの変更要否を確認してください。送信してよろしいですか？"],
   },
-  MoreThanThresholdAttenees: {
+  MoreThanThresholdAttendees: {
     data: {
       target: {
         requiredAttendees: [recipient("example@example.com")],
@@ -379,7 +379,7 @@ test_shouldReconfirmTooManyDomains.parameters = {
     },
     textContents: ["出席者に1件以上のドメインが含まれています。送信してよろしいですか？"],
   },
-  EqualsToThreshold: {
+  EqualsToThresholdAttendees: {
     data: {
       target: {
         requiredAttendees: [recipient("example@example.com")],
