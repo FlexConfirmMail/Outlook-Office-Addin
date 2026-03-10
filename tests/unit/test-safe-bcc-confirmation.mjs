@@ -151,12 +151,14 @@ test_shouldNotConfirm.parameters = {
 };
 export function test_shouldNotConfirm({ data }) {
   confirmation.init(data);
-  ng(confirmation.shouldConfirm);
-  ng(confirmation.shouldReconfirm);
-  is([], confirmation.warningConfirmationItems);
+  ng(confirmation.needToConfirmTooManyDomains);
+  ng(confirmation.needToConfirmConversionRecommendation);
+  ng(confirmation.needToReconfirmTooManyDomains);
+  is([], confirmation.warningTooManyDomainsConfirmationItems);
+  is([], confirmation.warningConversionRecommendationConfirmationItems);
 }
 
-test_shouldConfirm.parameters = {
+test_shouldConfirmTooManyDomains.parameters = {
   MoreThanThreshold: {
     data: {
       target: {
@@ -173,7 +175,7 @@ test_shouldConfirm.parameters = {
       itemType: Office.MailboxEnums.ItemType.Message,
     },
     warnings: [
-      "[警告] To・Ccに1件以上のドメインが含まれています。Bccへの変更要否を確認してください。"
+      "[警告] To・Ccに1件以上のドメインが含まれています。"
     ],
   },
   EqualsToThreshold: {
@@ -213,7 +215,7 @@ test_shouldConfirm.parameters = {
       "[警告] 出席者に1件以上のドメインが含まれています。"
     ],
   },
-  EqualsToThreshold: {
+  EqualsToThresholdAttendees: {
     data: {
       target: {
         requiredAttendees: [recipient("example@example.com")],
@@ -232,16 +234,101 @@ test_shouldConfirm.parameters = {
     ],
   },
 };
-export function test_shouldConfirm({ data, warnings }) {
+export function test_shouldConfirmTooManyDomains({ data, warnings }) {
   confirmation.init(data);
-  ok(confirmation.needToConfirm);
+  ok(confirmation.needToConfirmTooManyDomains);
   is(
     warnings.map((label) => ({label})),
-    confirmation.warningConfirmationItems
+    confirmation.warningTooManyDomainsConfirmationItems
   );
 }
 
-test_shouldReconfirm.parameters = {
+test_shouldConfirmConversionRecommendation.parameters = {
+  MoreThanThreshold: {
+    data: {
+      target: {
+        to: [recipient("example@example.com")],
+        cc: [recipient("example@example.net")],
+        bcc: [],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          BccConversionRecommendationDomainsThreshold: 1,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Message,
+    },
+    warnings: [
+      "[警告] To・Ccに1件以上のドメインが含まれています。Bccへの変更要否を確認してください。"
+    ],
+  },
+  EqualsToThreshold: {
+    data: {
+      target: {
+        to: [recipient("example@example.com")],
+        cc: [recipient("example@example.net")],
+        bcc: [],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          BccConversionRecommendationDomainsThreshold: 2,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Message
+    },
+    warnings: [
+      "[警告] To・Ccに2件以上のドメインが含まれています。Bccへの変更要否を確認してください。"
+    ],
+  },
+  MoreThanThresholdAttenees: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+        optionalAttendees: [recipient("example@example.net")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          BccConversionRecommendationDomainsThreshold: 1,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Appointoment,
+    },
+    warnings: [
+      "[警告] 出席者に1件以上のドメインが含まれています。"
+    ],
+  },
+  EqualsToThresholdAttendees: {
+    data: {
+      target: {
+        requiredAttendees: [recipient("example@example.com")],
+        optionalAttendees: [recipient("example@example.net")],
+      },
+      config: {
+        common: {
+          SafeBccEnabled: true,
+          BccConversionRecommendationDomainsThreshold: 2,
+        },
+      },
+      itemType: Office.MailboxEnums.ItemType.Appointoment,
+    },
+    warnings: [
+      "[警告] 出席者に2件以上のドメインが含まれています。"
+    ]
+  },
+};
+export function test_shouldConfirmConversionRecommendation({ data, warnings }) {
+  confirmation.init(data);
+  ok(confirmation.needToConfirmConversionRecommendation);
+  is(
+    warnings.map((label) => ({label})),
+    confirmation.warningConversionRecommendationConfirmationItems
+  );
+}
+
+test_shouldReconfirmTooManyDomains.parameters = {
   MoreThanThreshold: {
     data: {
       target: {
@@ -309,9 +396,9 @@ test_shouldReconfirm.parameters = {
     textContents: ["出席者に2件以上のドメインが含まれています。送信してよろしいですか？"],
   },
 };
-export function test_shouldReconfirm({ data, textContents }) {
+export function test_shouldReconfirmTooManyDomains({ data, textContents }) {
   confirmation.init(data);
-  ok(confirmation.needToReconfirm);
+  ok(confirmation.needToReconfirmTooManyDomains);
   is(
     textContents,
     confirmation.generateReconfirmationContentElements().map(content => content.textContent)

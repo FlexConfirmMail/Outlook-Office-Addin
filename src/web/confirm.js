@@ -147,7 +147,7 @@ function appendRecipientCheckboxes({ target, groupedRecipients, emphasizeToCc })
   }
 }
 
-function appendMiscCheckboxes(items) {
+function appendMiscCheckboxes({ items, warning, emphasize }) {
   const container = document.getElementById("attachment-and-others");
   const createdLabels = new Set();
   for (const item of items) {
@@ -158,23 +158,8 @@ function appendMiscCheckboxes(items) {
     appendCheckbox({
       container,
       label,
-    });
-    createdLabels.add(label);
-  }
-}
-
-function appendMiscWarningCheckboxes(items) {
-  const container = document.getElementById("attachment-and-others");
-  const createdLabels = new Set();
-  for (const item of items) {
-    const label = item.label || item;
-    if (createdLabels.has(label)) {
-      continue;
-    }
-    appendCheckbox({
-      container,
-      label,
-      warning: true,
+      warning,
+      emphasize,
     });
     createdLabels.add(label);
   }
@@ -258,28 +243,38 @@ async function onMessageFromParent(arg) {
   }
 
   safeBccConfirmation.init(data);
-  appendMiscWarningCheckboxes(safeBccConfirmation.warningConfirmationItems);
+  appendMiscCheckboxes({
+    items: safeBccConfirmation.warningTooManyDomainsConfirmationItems,
+    warning: true,
+  });
+  appendMiscCheckboxes({
+    items: safeBccConfirmation.warningConversionRecommendationConfirmationItems,
+    warning: true,
+    emphasize: true,
+  });
 
   unsafeBodiesConfirmation.init(data);
-  appendMiscWarningCheckboxes(unsafeBodiesConfirmation.warningConfirmationItems);
+  appendMiscCheckboxes({ items: unsafeBodiesConfirmation.warningConfirmationItems, warning: true });
 
-  appendMiscWarningCheckboxes(
-    Array.from(
+  appendMiscCheckboxes({
+    items: Array.from(
       new Set(
         data.classified.recipients.unsafeWithDomain.map((recipient) =>
           recipient.domain.toLowerCase()
         )
       ),
       (domain) => l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
-    )
-  );
-  appendMiscWarningCheckboxes(
-    data.classified.recipients.unsafe.map((recipient) =>
+    ),
+    warning: true,
+  });
+  appendMiscCheckboxes({
+    items: data.classified.recipients.unsafe.map((recipient) =>
       l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
-    )
-  );
-  appendMiscWarningCheckboxes(
-    Array.from(
+    ),
+    warning: true,
+  });
+  appendMiscCheckboxes({
+    items: Array.from(
       new Set(
         data.classified.recipients.distributionLists.map((recipient) =>
           recipient.displayName.toLowerCase()
@@ -287,8 +282,9 @@ async function onMessageFromParent(arg) {
       ),
       (displayName) =>
         l10n.get("confirmation_unsafeDistributionListCheckboxLabel", { name: displayName })
-    )
-  );
+    ),
+    warning: true,
+  });
 
   const attachmentWarningLabels = data.classified.attachments.unsafe.map((attachment) =>
     l10n.get("confirmation_unsafeAttachmentCheckboxLabel", { name: attachment.name })
@@ -297,8 +293,8 @@ async function onMessageFromParent(arg) {
     data.target.attachments?.map((attachment) =>
       l10n.get("confirmation_attachmentCheckboxLabel", { name: attachment.name })
     ) || [];
-  appendMiscWarningCheckboxes(attachmentWarningLabels);
-  appendMiscCheckboxes(attachmentLabels);
+  appendMiscCheckboxes({ items: attachmentWarningLabels, warning: true });
+  appendMiscCheckboxes({ items: attachmentLabels });
 
   reconfirmation.initUI(sendStatusToParent);
   for (const reconfirmationChecker of [

@@ -8,7 +8,8 @@
   "confirmation_sendButtonLabel": "Send",
   "confirmation_cancelButtonLabel": "Cancel",
 
-  "confirmation_safeBccThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains. Please confirm if you want to convert them to Bcc.",
+  "confirmation_safeBccThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains.",
+  "confirmation_bccConversionRecommendationDomainsThresholdCheckboxLabel": "[Warn] To/Cc fields contain no less than ${threshold} domains. Please confirm if you want to convert them to Bcc.",
   "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[Warn] Attendee fields contain no less than ${threshold} domains",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[Warn] An unsafe domain \"${domain}\" found in the recipient list",
   "confirmation_unsafeRecipientCheckboxLabel": "[Warn] An unsafe address \"${address}\" found in the recipient list",
@@ -81,6 +82,7 @@
   "setting_configAppointmentConfirmationEnabled": "Enable confirmation on sending an appointment from Calendar.",
   "setting_configSafeBccEnabled": "Enable \"too many domains in To/Cc fields\" warnings",
   "setting_configSafeBccThreshold": "Warn if To/Cc fields contain",
+  "setting_configBccConversionRecommendationDomainsThreshold": "Warn to convert to Bcc if To/Cc fields contain",
   "setting_configSafeBccReconfirmationThreshold": "Re-warn if To/Cc fields contain",
   "setting_configConvertToBccEnabled": "Enable to convert To/CC to Bcc when too many To/CC fields",
   "setting_configConvertToBccThreshold": "Convert if To/CC fields are greater than or equal to",
