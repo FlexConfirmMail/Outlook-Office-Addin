@@ -288,10 +288,10 @@ function updateDialogSetting(policy, user) {
   document.getElementById("countSeconds").disabled = fixedParametersSet.has("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
   document.getElementById("safeBccThreshold").disabled = fixedParametersSet.has("SafeBccThreshold");
-  document.getElementById("bccConversionRecommendationDomainsThreshold").value = common.BccConversionRecommendationDomainsThreshold;
-  document.getElementById("bccConversionRecommendationDomainsThreshold").disabled = fixedParametersSet.has(
-    "BccConversionRecommendationDomainsThreshold"
-  );
+  document.getElementById("bccConversionRecommendationDomainsThreshold").value =
+    common.BccConversionRecommendationDomainsThreshold;
+  document.getElementById("bccConversionRecommendationDomainsThreshold").disabled =
+    fixedParametersSet.has("BccConversionRecommendationDomainsThreshold");
   document.getElementById("safeBccReconfirmationThreshold").value =
     common.SafeBccReconfirmationThreshold;
   document.getElementById("safeBccReconfirmationThreshold").disabled = fixedParametersSet.has(
@@ -343,7 +343,9 @@ function serializeCommonConfigs() {
   const countSeconds = document.getElementById("countSeconds").value;
   const safeBccEnabled = document.getElementById("safeBccEnabled").checked;
   const safeBccThreshold = document.getElementById("safeBccThreshold").value;
-  const bccConversionRecommendationDomainsThreshold = document.getElementById("bccConversionRecommendationDomainsThreshold").value;
+  const bccConversionRecommendationDomainsThreshold = document.getElementById(
+    "bccConversionRecommendationDomainsThreshold"
+  ).value;
   const safeBccReconfirmationThreshold = document.getElementById(
     "safeBccReconfirmationThreshold"
   ).value;

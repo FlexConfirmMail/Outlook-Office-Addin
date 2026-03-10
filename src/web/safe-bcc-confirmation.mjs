@@ -32,7 +32,8 @@ export class SafeBccConfirmation {
       return;
     }
     this.threshold = data.config.common.SafeBccThreshold;
-    this.conversionRecommendationThreshold = data.config.common.BccConversionRecommendationDomainsThreshold;
+    this.conversionRecommendationThreshold =
+      data.config.common.BccConversionRecommendationDomainsThreshold;
     this.reconfirmationThreshold = data.config.common.SafeBccReconfirmationThreshold;
     const to = data.target.to ?? [];
     const cc = data.target.cc ?? [];
@@ -44,7 +45,8 @@ export class SafeBccConfirmation {
       this.needToConfirm = domains.size >= this.threshold;
     }
     if (this.conversionRecommendationThreshold >= 1) {
-      this.needToConversionRecommendationConfirm = domains.size >= this.conversionRecommendationThreshold;
+      this.needToConversionRecommendationConfirm =
+        domains.size >= this.conversionRecommendationThreshold;
     }
     if (this.reconfirmationThreshold >= 1) {
       this.needToReconfirm = domains.size >= this.reconfirmationThreshold;
@@ -107,9 +109,12 @@ export class SafeBccConfirmation {
       case Office.MailboxEnums.ItemType.Message:
         return [
           {
-            label: this.locale.get("confirmation_bccConversionRecommendationDomainsThresholdCheckboxLabel", {
-              threshold: this.conversionRecommendationThreshold,
-            }),
+            label: this.locale.get(
+              "confirmation_bccConversionRecommendationDomainsThresholdCheckboxLabel",
+              {
+                threshold: this.conversionRecommendationThreshold,
+              }
+            ),
           },
         ];
       case Office.MailboxEnums.ItemType.Appointment:
