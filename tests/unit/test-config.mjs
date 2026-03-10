@@ -25,7 +25,7 @@ export function test_createDefaultConfig() {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 60,
@@ -95,7 +95,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
@@ -133,7 +133,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = true\n" +
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
-        "SafeBccConversionThreshold = 5\n" +
+        "BccConversionRecommendationDomainsThreshold = 5\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
@@ -164,7 +164,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
@@ -202,7 +202,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = true\n" +
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
-        "SafeBccConversionThreshold = 5\n" +
+        "BccConversionRecommendationDomainsThreshold = 5\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
@@ -236,7 +236,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
@@ -274,7 +274,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = true\n" +
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
-        "SafeBccConversionThreshold = 5\n" +
+        "BccConversionRecommendationDomainsThreshold = 5\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
@@ -318,7 +318,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
@@ -356,7 +356,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = true\n" +
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
-        "SafeBccConversionThreshold = 5\n" +
+        "BccConversionRecommendationDomainsThreshold = 5\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
@@ -390,7 +390,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
@@ -428,7 +428,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = true\n" +
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
-        "SafeBccConversionThreshold = 5\n" +
+        "BccConversionRecommendationDomainsThreshold = 5\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
         "ConvertToBccEnabled = true\n" +
@@ -459,7 +459,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: false,
         CountSeconds: 2,
         SafeBccThreshold: 2,
-        SafeBccConversionThreshold: 3,
+        BccConversionRecommendationDomainsThreshold: 3,
         SafeBccReconfirmationThreshold: 1,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 10,
@@ -497,7 +497,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = false\n" +
         "CountSeconds = 2\n" +
         "SafeBccThreshold = 2\n" +
-        "SafeBccConversionThreshold = 3\n" +
+        "BccConversionRecommendationDomainsThreshold = 3\n" +
         "SafeBccReconfirmationThreshold = 1\n" +
         "DelayDeliveryEnabled = false\n" +
         "DelayDeliverySeconds = 10\n" +
@@ -530,7 +530,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: false,
         CountSeconds: 2,
         SafeBccThreshold: 2,
-        SafeBccConversionThreshold: 3,
+        BccConversionRecommendationDomainsThreshold: 3,
         SafeBccReconfirmationThreshold: 1,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 10,
@@ -573,7 +573,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = false\n" +
         "CountSeconds = 2\n" +
         "SafeBccThreshold = 2\n" +
-        "SafeBccConversionThreshold = 3\n" +
+        "BccConversionRecommendationDomainsThreshold = 3\n" +
         "SafeBccReconfirmationThreshold = 1\n" +
         "DelayDeliveryEnabled = false\n" +
         "DelayDeliverySeconds = 10\n" +
@@ -614,7 +614,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
@@ -635,7 +635,7 @@ test_merge.parameters = {
           "SafeNewDomainsEnabled",
           "CountSeconds",
           "SafeBccThreshold",
-          "SafeBccConversionThreshold",
+          "BccConversionRecommendationDomainsThreshold",
           "SafeBccReconfirmationThreshold",
           "DelayDeliveryEnabled",
           "DelayDeliverySeconds",
@@ -677,7 +677,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = true\n" +
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
-        "SafeBccConversionThreshold = 5\n" +
+        "BccConversionRecommendationDomainsThreshold = 5\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
@@ -696,7 +696,7 @@ test_merge.parameters = {
             "SafeNewDomainsEnabled," +
             "CountSeconds," +
             "SafeBccThreshold," +
-            "SafeBccConversionThreshold," +
+            "BccConversionRecommendationDomainsThreshold," +
             "SafeBccReconfirmationThreshold," +
             "DelayDeliveryEnabled," +
             "DelayDeliverySeconds," +
@@ -732,7 +732,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: false,
         CountSeconds: 2,
         SafeBccThreshold: 2,
-        SafeBccConversionThreshold: 3,
+        BccConversionRecommendationDomainsThreshold: 3,
         SafeBccReconfirmationThreshold: 1,
         DelayDeliveryEnabled: false,
         DelayDeliverySeconds: 10,
@@ -765,7 +765,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = false\n" +
         "CountSeconds = 2\n" +
         "SafeBccThreshold = 2\n" +
-        "SafeBccConversionThreshold = 3\n" +
+        "BccConversionRecommendationDomainsThreshold = 3\n" +
         "SafeBccReconfirmationThreshold = 1\n" +
         "DelayDeliveryEnabled = false\n" +
         "DelayDeliverySeconds = 10\n" +
@@ -795,7 +795,7 @@ test_merge.parameters = {
         SafeNewDomainsEnabled: true,
         CountSeconds: 3,
         SafeBccThreshold: 4,
-        SafeBccConversionThreshold: 5,
+        BccConversionRecommendationDomainsThreshold: 5,
         SafeBccReconfirmationThreshold: 0,
         DelayDeliveryEnabled: true,
         DelayDeliverySeconds: 60,
@@ -816,7 +816,7 @@ test_merge.parameters = {
           "SafeNewDomainsEnabled",
           "CountSeconds",
           "SafeBccThreshold",
-          "SafeBccConversionThreshold",
+          "BccConversionRecommendationDomainsThreshold",
           "SafeBccReconfirmationThreshold",
           "DelayDeliveryEnabled",
           "DelayDeliverySeconds",
@@ -858,7 +858,7 @@ test_merge.parameters = {
         "SafeNewDomainsEnabled = true\n" +
         "CountSeconds = 3\n" +
         "SafeBccThreshold = 4\n" +
-        "SafeBccConversionThreshold = 5\n" +
+        "BccConversionRecommendationDomainsThreshold = 5\n" +
         "SafeBccReconfirmationThreshold = 0\n" +
         "DelayDeliveryEnabled = true\n" +
         "DelayDeliverySeconds = 60\n" +
@@ -879,7 +879,7 @@ test_merge.parameters = {
           "SafeNewDomainsEnabled," +
           "CountSeconds," +
           "SafeBccThreshold," +
-          "SafeBccConversionThreshold," +
+          "BccConversionRecommendationDomainsThreshold," +
           "SafeBccReconfirmationThreshold," +
           "DelayDeliveryEnabled," +
           "DelayDeliverySeconds," +

@@ -14,10 +14,10 @@ export class SafeBccConfirmation {
     this.locale = L10n.get(language);
     this.ready = this.locale.ready;
     this.needToConfirm = false;
-    this.needToConversionConfirm = false;
+    this.needToConversionRecommendationConfirm = false;
     this.needToReconfirm = false;
     this.threshold = 0;
-    this.conversionThreshold = 0;
+    this.conversionRecommendationThreshold = 0;
     this.reconfirmationThreshold = 0;
     this.itemType = Office.MailboxEnums.ItemType.Message;
     this.initialized = false;
@@ -32,7 +32,7 @@ export class SafeBccConfirmation {
       return;
     }
     this.threshold = data.config.common.SafeBccThreshold;
-    this.conversionThreshold = data.config.common.SafeBccConversionThreshold;
+    this.conversionRecommendationThreshold = data.config.common.BccConversionRecommendationDomainsThreshold;
     this.reconfirmationThreshold = data.config.common.SafeBccReconfirmationThreshold;
     const to = data.target.to ?? [];
     const cc = data.target.cc ?? [];
@@ -43,8 +43,8 @@ export class SafeBccConfirmation {
     if (this.threshold >= 1) {
       this.needToConfirm = domains.size >= this.threshold;
     }
-    if (this.conversionThreshold >= 1) {
-      this.needToConversionConfirm = domains.size >= this.conversionThreshold;
+    if (this.conversionRecommendationThreshold >= 1) {
+      this.needToConversionRecommendationConfirm = domains.size >= this.conversionRecommendationThreshold;
     }
     if (this.reconfirmationThreshold >= 1) {
       this.needToReconfirm = domains.size >= this.reconfirmationThreshold;
@@ -99,7 +99,7 @@ export class SafeBccConfirmation {
   }
 
   get warningConversionConfirmationItems() {
-    if (!this.needToConversionConfirm) {
+    if (!this.needToConversionRecommendationConfirm) {
       return [];
     }
 
@@ -107,8 +107,8 @@ export class SafeBccConfirmation {
       case Office.MailboxEnums.ItemType.Message:
         return [
           {
-            label: this.locale.get("confirmation_safeBccConversionThresholdCheckboxLabel", {
-              threshold: this.conversionThreshold,
+            label: this.locale.get("confirmation_bccConversionRecommendationDomainsThresholdCheckboxLabel", {
+              threshold: this.conversionRecommendationThreshold,
             }),
           },
         ];
@@ -119,7 +119,7 @@ export class SafeBccConfirmation {
         return [
           {
             label: this.locale.get("confirmation_safeBccThresholdForAttendeesCheckboxLabel", {
-              threshold: this.conversionThreshold,
+              threshold: this.conversionRecommendationThreshold,
             }),
           },
         ];

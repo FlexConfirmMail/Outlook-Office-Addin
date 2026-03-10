@@ -241,7 +241,7 @@ export function test_shouldConfirm({ data, warnings }) {
   );
 }
 
-test_shouldConversionConfirm.parameters = {
+test_shouldConversionRecommendationConfirm.parameters = {
   MoreThanThreshold: {
     data: {
       target: {
@@ -252,7 +252,7 @@ test_shouldConversionConfirm.parameters = {
       config: {
         common: {
           SafeBccEnabled: true,
-          SafeBccConversionThreshold: 1,
+          BccConversionRecommendationDomainsThreshold: 1,
         },
       },
       itemType: Office.MailboxEnums.ItemType.Message,
@@ -271,7 +271,7 @@ test_shouldConversionConfirm.parameters = {
       config: {
         common: {
           SafeBccEnabled: true,
-          SafeBccConversionThreshold: 2,
+          BccConversionRecommendationDomainsThreshold: 2,
         },
       },
       itemType: Office.MailboxEnums.ItemType.Message
@@ -289,7 +289,7 @@ test_shouldConversionConfirm.parameters = {
       config: {
         common: {
           SafeBccEnabled: true,
-          SafeBccConversionThreshold: 1,
+          BccConversionRecommendationDomainsThreshold: 1,
         },
       },
       itemType: Office.MailboxEnums.ItemType.Appointoment,
@@ -307,7 +307,7 @@ test_shouldConversionConfirm.parameters = {
       config: {
         common: {
           SafeBccEnabled: true,
-          SafeBccConversionThreshold: 2,
+          BccConversionRecommendationDomainsThreshold: 2,
         },
       },
       itemType: Office.MailboxEnums.ItemType.Appointoment,
@@ -317,9 +317,9 @@ test_shouldConversionConfirm.parameters = {
     ]
   },
 };
-export function test_shouldConversionConfirm({ data, warnings }) {
+export function test_shouldConversionRecommendationConfirm({ data, warnings }) {
   confirmation.init(data);
-  ok(confirmation.needToConversionConfirm);
+  ok(confirmation.needToConversionRecommendationConfirm);
   is(
     warnings.map((label) => ({label})),
     confirmation.warningConversionConfirmationItems

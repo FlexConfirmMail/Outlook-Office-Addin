@@ -288,9 +288,9 @@ function updateDialogSetting(policy, user) {
   document.getElementById("countSeconds").disabled = fixedParametersSet.has("CountSeconds");
   document.getElementById("safeBccThreshold").value = common.SafeBccThreshold;
   document.getElementById("safeBccThreshold").disabled = fixedParametersSet.has("SafeBccThreshold");
-  document.getElementById("safeBccConversionThreshold").value = common.SafeBccConversionThreshold;
-  document.getElementById("safeBccConversionThreshold").disabled = fixedParametersSet.has(
-    "SafeBccConversionThreshold"
+  document.getElementById("bccConversionRecommendationDomainsThreshold").value = common.BccConversionRecommendationDomainsThreshold;
+  document.getElementById("bccConversionRecommendationDomainsThreshold").disabled = fixedParametersSet.has(
+    "BccConversionRecommendationDomainsThreshold"
   );
   document.getElementById("safeBccReconfirmationThreshold").value =
     common.SafeBccReconfirmationThreshold;
@@ -343,7 +343,7 @@ function serializeCommonConfigs() {
   const countSeconds = document.getElementById("countSeconds").value;
   const safeBccEnabled = document.getElementById("safeBccEnabled").checked;
   const safeBccThreshold = document.getElementById("safeBccThreshold").value;
-  const safeBccConversionThreshold = document.getElementById("safeBccConversionThreshold").value;
+  const bccConversionRecommendationDomainsThreshold = document.getElementById("bccConversionRecommendationDomainsThreshold").value;
   const safeBccReconfirmationThreshold = document.getElementById(
     "safeBccReconfirmationThreshold"
   ).value;
@@ -369,8 +369,8 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("SafeBccEnabled", safeBccEnabled);
   commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
   commonConfigString += serializeCommonConfig(
-    "SafeBccConversionThreshold",
-    safeBccConversionThreshold
+    "BccConversionRecommendationDomainsThreshold",
+    bccConversionRecommendationDomainsThreshold
   );
   commonConfigString += serializeCommonConfig(
     "SafeBccReconfirmationThreshold",

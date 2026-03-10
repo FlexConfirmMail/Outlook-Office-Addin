@@ -9,7 +9,7 @@
   "confirmation_cancelButtonLabel": "取消",
 
   "confirmation_safeBccThresholdCheckboxLabel": "[警告] To/Cc 包含${threshold}个以上的域。",
-  "confirmation_safeBccConversionThresholdCheckboxLabel": "[警告] To/Cc 包含${threshold}个以上的域。请确认是否需要更改为密送（Bcc）。",
+  "confirmation_bccConversionRecommendationDomainsThresholdCheckboxLabel": "[警告] To/Cc 包含${threshold}个以上的域。请确认是否需要更改为密送（Bcc）。",
   "confirmation_safeBccThresholdForAttendeesCheckboxLabel": "[警告] 与会者 包含${threshold}个以上的域",
   "confirmation_unsafeDomainRecipientCheckboxLabel": "[警告] 包含不安全的域 (${domain})",
   "confirmation_unsafeRecipientCheckboxLabel": "[警告] 包含不安全地址 (${address})",
@@ -82,7 +82,7 @@
   "setting_configAppointmentConfirmationEnabled": "通过日程预定表发送日程预定时也进行确认",
   "setting_configSafeBccEnabled": "当To/Cc包含许多域时发出警告",
   "setting_configSafeBccThreshold": "警告的阈值:",
-  "setting_configSafeBccConversionThreshold": "转换为BCC警告的阈值:",
+  "setting_configBccConversionRecommendationDomainsThreshold": "转换为BCC警告的阈值:",
   "setting_configSafeBccReconfirmationThreshold": "需要再次警告的域名阈值:",
   "setting_configConvertToBccEnabled": "当To/CC达到一定数量时转换为BCC",
   "setting_configConvertToBccThreshold": "需转换为BCC的To/CC阈值:",
