@@ -13,12 +13,12 @@ export class SafeBccConfirmation {
   constructor(language) {
     this.locale = L10n.get(language);
     this.ready = this.locale.ready;
-    this.needToConfirm = false;
-    this.needToConversionRecommendationConfirm = false;
-    this.needToReconfirm = false;
-    this.threshold = 0;
-    this.conversionRecommendationThreshold = 0;
-    this.reconfirmationThreshold = 0;
+    this.needToConfirmTooManyDomains = false;
+    this.needToConfirmConversionRecommendation = false;
+    this.needToReconfirmTooManyDomains = false;
+    this.tooManyDomainsThreshold = 0;
+    this.conversionRecommendationDomainsThreshold = 0;
+    this.reconfirmationTooManyDomainsThreshold = 0;
     this.itemType = Office.MailboxEnums.ItemType.Message;
     this.initialized = false;
   }
@@ -31,25 +31,25 @@ export class SafeBccConfirmation {
     if (!data.config.common.SafeBccEnabled) {
       return;
     }
-    this.threshold = data.config.common.SafeBccThreshold;
-    this.conversionRecommendationThreshold =
+    this.tooManyDomainsThreshold = data.config.common.SafeBccThreshold;
+    this.conversionRecommendationDomainsThreshold =
       data.config.common.BccConversionRecommendationDomainsThreshold;
-    this.reconfirmationThreshold = data.config.common.SafeBccReconfirmationThreshold;
+    this.reconfirmationTooManyDomainsThreshold = data.config.common.SafeBccReconfirmationThreshold;
     const to = data.target.to ?? [];
     const cc = data.target.cc ?? [];
     const requiredAttendees = data.target.requiredAttendees ?? [];
     const optionalAttendees = data.target.optionalAttendees ?? [];
     const recipients = [...to, ...cc, ...requiredAttendees, ...optionalAttendees];
     const domains = new Set(recipients.map((recipient) => recipient.domain));
-    if (this.threshold >= 1) {
-      this.needToConfirm = domains.size >= this.threshold;
+    if (this.tooManyDomainsThreshold >= 1) {
+      this.needToConfirmTooManyDomains = domains.size >= this.tooManyDomainsThreshold;
     }
-    if (this.conversionRecommendationThreshold >= 1) {
-      this.needToConversionRecommendationConfirm =
-        domains.size >= this.conversionRecommendationThreshold;
+    if (this.conversionRecommendationDomainsThreshold >= 1) {
+      this.needToConfirmConversionRecommendation =
+        domains.size >= this.conversionRecommendationDomainsThreshold;
     }
-    if (this.reconfirmationThreshold >= 1) {
-      this.needToReconfirm = domains.size >= this.reconfirmationThreshold;
+    if (this.reconfirmationTooManyDomainsThreshold >= 1) {
+      this.needToReconfirmTooManyDomains = domains.size >= this.reconfirmationTooManyDomainsThreshold;
     }
     this.itemType = data.itemType;
   }
@@ -59,10 +59,10 @@ export class SafeBccConfirmation {
     strongElement.textContent =
       this.itemType === Office.MailboxEnums.ItemType.Message
         ? this.locale.get("Reconfirmation_safeBccReconfirmationThresholdWarning", {
-            threshold: this.reconfirmationThreshold,
+            threshold: this.reconfirmationTooManyDomainsThreshold,
           })
         : this.locale.get("Reconfirmation_safeBccReconfirmationThresholdAttendeesWarning", {
-            threshold: this.reconfirmationThreshold,
+            threshold: this.reconfirmationTooManyDomainsThreshold,
           });
     const messageAfterElement = document.createElement("p");
     messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
@@ -74,8 +74,8 @@ export class SafeBccConfirmation {
     return [contentElement];
   }
 
-  get warningConfirmationItems() {
-    if (!this.needToConfirm) {
+  get warningTooManyDomainsConfirmationItems() {
+    if (!this.needToConfirmTooManyDomains) {
       return [];
     }
 
@@ -84,7 +84,7 @@ export class SafeBccConfirmation {
         return [
           {
             label: this.locale.get("confirmation_safeBccThresholdCheckboxLabel", {
-              threshold: this.threshold,
+              threshold: this.tooManyDomainsThreshold,
             }),
           },
         ];
@@ -93,15 +93,15 @@ export class SafeBccConfirmation {
         return [
           {
             label: this.locale.get("confirmation_safeBccThresholdForAttendeesCheckboxLabel", {
-              threshold: this.threshold,
+              threshold: this.tooManyDomainsThreshold,
             }),
           },
         ];
     }
   }
 
-  get warningConversionConfirmationItems() {
-    if (!this.needToConversionRecommendationConfirm) {
+  get warningConversionRecommendationConfirmationItems() {
+    if (!this.needToConfirmConversionRecommendation) {
       return [];
     }
 
@@ -112,7 +112,7 @@ export class SafeBccConfirmation {
             label: this.locale.get(
               "confirmation_bccConversionRecommendationDomainsThresholdCheckboxLabel",
               {
-                threshold: this.conversionRecommendationThreshold,
+                threshold: this.conversionRecommendationDomainsThreshold,
               }
             ),
           },
@@ -124,7 +124,7 @@ export class SafeBccConfirmation {
         return [
           {
             label: this.locale.get("confirmation_safeBccThresholdForAttendeesCheckboxLabel", {
-              threshold: this.conversionRecommendationThreshold,
+              threshold: this.conversionRecommendationDomainsThreshold,
             }),
           },
         ];

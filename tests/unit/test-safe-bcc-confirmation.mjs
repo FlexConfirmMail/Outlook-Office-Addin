@@ -151,12 +151,14 @@ test_shouldNotConfirm.parameters = {
 };
 export function test_shouldNotConfirm({ data }) {
   confirmation.init(data);
-  ng(confirmation.shouldConfirm);
-  ng(confirmation.shouldReconfirm);
-  is([], confirmation.warningConfirmationItems);
+  ng(confirmation.needToConfirmTooManyDomains);
+  ng(confirmation.needToConfirmConversionRecommendation);
+  ng(confirmation.needToReconfirmTooManyDomains);
+  is([], confirmation.warningTooManyDomainsConfirmationItems);
+  is([], confirmation.warningConversionRecommendationConfirmationItems);
 }
 
-test_shouldConfirm.parameters = {
+test_shouldConfirmTooManyDomains.parameters = {
   MoreThanThreshold: {
     data: {
       target: {
@@ -232,16 +234,16 @@ test_shouldConfirm.parameters = {
     ],
   },
 };
-export function test_shouldConfirm({ data, warnings }) {
+export function test_shouldConfirmTooManyDomains({ data, warnings }) {
   confirmation.init(data);
-  ok(confirmation.needToConfirm);
+  ok(confirmation.needToConfirmTooManyDomains);
   is(
     warnings.map((label) => ({label})),
-    confirmation.warningConfirmationItems
+    confirmation.warningTooManyDomainsConfirmationItems
   );
 }
 
-test_shouldConversionRecommendationConfirm.parameters = {
+test_shouldConfirmConversionRecommendation.parameters = {
   MoreThanThreshold: {
     data: {
       target: {
@@ -317,16 +319,16 @@ test_shouldConversionRecommendationConfirm.parameters = {
     ]
   },
 };
-export function test_shouldConversionRecommendationConfirm({ data, warnings }) {
+export function test_shouldConfirmConversionRecommendation({ data, warnings }) {
   confirmation.init(data);
-  ok(confirmation.needToConversionRecommendationConfirm);
+  ok(confirmation.needToConfirmConversionRecommendation);
   is(
     warnings.map((label) => ({label})),
-    confirmation.warningConversionConfirmationItems
+    confirmation.warningConversionRecommendationConfirmationItems
   );
 }
 
-test_shouldReconfirm.parameters = {
+test_shouldReconfirmTooManyDomains.parameters = {
   MoreThanThreshold: {
     data: {
       target: {
@@ -394,9 +396,9 @@ test_shouldReconfirm.parameters = {
     textContents: ["出席者に2件以上のドメインが含まれています。送信してよろしいですか？"],
   },
 };
-export function test_shouldReconfirm({ data, textContents }) {
+export function test_shouldReconfirmTooManyDomains({ data, textContents }) {
   confirmation.init(data);
-  ok(confirmation.needToReconfirm);
+  ok(confirmation.needToReconfirmTooManyDomains);
   is(
     textContents,
     confirmation.generateReconfirmationContentElements().map(content => content.textContent)

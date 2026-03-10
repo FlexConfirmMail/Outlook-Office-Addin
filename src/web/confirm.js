@@ -243,9 +243,12 @@ async function onMessageFromParent(arg) {
   }
 
   safeBccConfirmation.init(data);
-  appendMiscCheckboxes({ items: safeBccConfirmation.warningConfirmationItems, warning: true });
   appendMiscCheckboxes({
-    items: safeBccConfirmation.warningConversionConfirmationItems,
+    items: safeBccConfirmation.warningTooManyDomainsConfirmationItems,
+    warning: true,
+  });
+  appendMiscCheckboxes({
+    items: safeBccConfirmation.warningConversionRecommendationConfirmationItems,
     warning: true,
     emphasize: true,
   });
