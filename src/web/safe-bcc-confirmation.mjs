@@ -49,7 +49,8 @@ export class SafeBccConfirmation {
         domains.size >= this.conversionRecommendationDomainsThreshold;
     }
     if (this.reconfirmationTooManyDomainsThreshold >= 1) {
-      this.needToReconfirmTooManyDomains = domains.size >= this.reconfirmationTooManyDomainsThreshold;
+      this.needToReconfirmTooManyDomains =
+        domains.size >= this.reconfirmationTooManyDomainsThreshold;
     }
     this.itemType = data.itemType;
   }
