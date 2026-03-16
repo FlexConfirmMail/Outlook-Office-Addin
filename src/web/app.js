@@ -23,14 +23,7 @@ function sleepAsync(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function openDialog({
-  url,
-  data,
-  asyncContext,
-  promptBeforeOpen,
-  retryCount = 5,
-  ...params
-}) {
+async function openDialogInner({ url, data, asyncContext, promptBeforeOpen, ...params }) {
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
@@ -43,51 +36,13 @@ async function openDialog({
       resolve
     );
   });
-  asyncContext = asyncResult.asyncContext;
   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-    console.log(`Failed to open dialog: ${asyncResult.error.code}`);
-    if (retryCount <= 0) {
-      console.log("exhausted all retries to open dialog.");
-      return {
-        status: null,
-        asyncContext,
-      };
-    }
-    const restRetryCount = retryCount - 1;
-    switch (asyncResult.error.code) {
-      case 12007:
-        console.log(
-          "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
-        );
-        await sleepAsync(200);
-        return openDialog({ url, data, asyncContext, retryCount: restRetryCount, ...params });
-
-      case 12011:
-        // Maybe we never reach this case because we specify displayInIframe = true at the
-        // first time and then displayDialogAsync does not open a new popup dialog.
-        console.log("failed due to the browser's popup blocker.");
-        if (promptBeforeOpen) {
-          break;
-        }
-        console.log("retrying with prompt.");
-        return openDialog({
-          url,
-          data,
-          asyncContext,
-          retryCount: restRetryCount,
-          ...params,
-          promptBeforeOpen: true,
-        });
-
-      default:
-        break;
-    }
     return {
-      status: null,
-      asyncContext,
+      status: asyncResult.status,
+      asyncContext: asyncResult.asyncContext,
+      errorCode: asyncResult.error.code,
     };
   }
-
   const dialog = asyncResult.value;
   return new Promise((resolve) => {
     dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
@@ -116,13 +71,13 @@ async function openDialog({
             dialog.close();
             resolve({
               status: messageFromDialog.status,
-              asyncContext,
+              asyncContext: asyncResult.asyncContext,
             });
           } else {
             console.error("Error saving settings:", saveResult.error.message);
             resolve({
               status: Office.AsyncResultStatus.Failed,
-              asyncContext,
+              asyncContext: asyncResult.asyncContext,
             });
           }
         });
@@ -130,7 +85,7 @@ async function openDialog({
         dialog.close();
         resolve({
           status: messageFromDialog.status,
-          asyncContext,
+          asyncContext: asyncResult.asyncContext,
         });
       }
     });
@@ -139,11 +94,67 @@ async function openDialog({
         // Closed with the up-right "X" button.
         resolve({
           status: null,
-          asyncContext,
+          asyncContext: asyncResult.asyncContext,
         });
       }
     });
   });
+}
+
+async function openDialog({
+  url,
+  data,
+  asyncContext,
+  promptBeforeOpen,
+  retryCount = 5,
+  ...params
+}) {
+  let status, updatedAsyncContext, errorCode;
+  ({
+    status,
+    asyncContext: updatedAsyncContext,
+    errorCode,
+  } = await openDialogInner({ url, data, asyncContext, promptBeforeOpen, ...params }));
+  if (status !== Office.AsyncResultStatus.Failed) {
+    return { status, asyncContext: updatedAsyncContext };
+  }
+  for (let i = 0; i < retryCount; i++) {
+    console.log(`retrying to open dialog, attempt ${i + 1} of ${retryCount}...`);
+    if (errorCode == 12007) {
+      console.log(
+        "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
+      );
+      await sleepAsync(200);
+      ({
+        status,
+        asyncContext: updatedAsyncContext,
+        errorCode,
+      } = await openDialogInner({ url, data, asyncContext, promptBeforeOpen, ...params }));
+    } else if (errorCode == 12011) {
+      // Maybe we never reach this case because we specify displayInIframe = true at the
+      // first time and then displayDialogAsync does not open a new popup dialog.
+      console.log("failed due to the browser's popup blocker.");
+      if (promptBeforeOpen) {
+        break;
+      }
+      console.log("retrying with prompt.");
+      ({
+        status,
+        asyncContext: updatedAsyncContext,
+        errorCode,
+      } = await openDialogInner({
+        url,
+        data,
+        asyncContext,
+        ...params,
+        promptBeforeOpen: true,
+      }));
+    } else {
+      console.log(`do not retry to open dialog due to error code ${errorCode}`);
+      break;
+    }
+  }
+  return { status, asyncContext: updatedAsyncContext, errorCode };
 }
 
 function charsToPercentage(chars, maxSize) {
