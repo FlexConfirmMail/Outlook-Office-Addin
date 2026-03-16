@@ -23,7 +23,14 @@ function sleepAsync(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params }) {
+async function openDialog({
+  url,
+  data,
+  asyncContext,
+  promptBeforeOpen,
+  retryCount = 5,
+  ...params
+}) {
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
@@ -39,13 +46,21 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
   asyncContext = asyncResult.asyncContext;
   if (asyncResult.status === Office.AsyncResultStatus.Failed) {
     console.log(`Failed to open dialog: ${asyncResult.error.code}`);
+    if (retryCount <= 0) {
+      console.log("exhausted all retries to open dialog.");
+      return {
+        status: null,
+        asyncContext,
+      };
+    }
+    const restRetryCount = retryCount - 1;
     switch (asyncResult.error.code) {
       case 12007:
         console.log(
           "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
         );
         await sleepAsync(200);
-        return openDialog({ url, data, asyncContext, ...params });
+        return openDialog({ url, data, asyncContext, retryCount: restRetryCount, ...params });
 
       case 12011:
         // Maybe we never reach this case because we specify displayInIframe = true at the
@@ -59,6 +74,7 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
           url,
           data,
           asyncContext,
+          retryCount: restRetryCount,
           ...params,
           promptBeforeOpen: true,
         });
