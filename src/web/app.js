@@ -23,14 +23,14 @@ function sleepAsync(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params }) {
+async function openDialog({ url, data, asyncContext, ...params }) {
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
       {
         asyncContext,
-        displayInIframe: !promptBeforeOpen,
-        promptBeforeOpen: promptBeforeOpen || false,
+        displayInIframe: true,
+        promptBeforeOpen: false,
         ...params,
       },
       resolve
@@ -46,23 +46,6 @@ async function openDialog({ url, data, asyncContext, promptBeforeOpen, ...params
         );
         await sleepAsync(200);
         return openDialog({ url, data, asyncContext, ...params });
-
-      case 12011:
-        // Maybe we never reach this case because we specify displayInIframe = true at the
-        // first time and then displayDialogAsync does not open a new popup dialog.
-        console.log("failed due to the browser's popup blocker.");
-        if (promptBeforeOpen) {
-          break;
-        }
-        console.log("retrying with prompt.");
-        return openDialog({
-          url,
-          data,
-          asyncContext,
-          ...params,
-          promptBeforeOpen: true,
-        });
-
       default:
         break;
     }
