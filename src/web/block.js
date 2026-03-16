@@ -24,9 +24,11 @@ Office.onReady(() => {
 
   Office.context.ui.addHandlerAsync(
     Office.EventType.DialogParentMessageReceived,
-    onMessageFromParent
+    onMessageFromParent,
+    () => {
+      sendStatusToParent("ready");
+    }
   );
-  sendStatusToParent("ready");
 });
 
 function sendStatusToParent(status) {
