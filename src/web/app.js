@@ -49,7 +49,7 @@ async function openDialog({
     switch (asyncResult.error.code) {
       case 12007:
         console.log(
-          "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
+          `could not open dialog before the previous dialog is not closed completely, so we need to retry it manually. retryCount: ${retryCount}`
         );
         if (retryCount <= 0) {
           console.log("exceeded maximum retry count.");
