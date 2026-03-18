@@ -23,7 +23,13 @@ function sleepAsync(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function openDialog({ url, data, asyncContext, ...params }) {
+async function openDialog({
+  url,
+  data,
+  asyncContext,
+  retryCount = 5,
+  ...params
+}) {
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
@@ -42,10 +48,15 @@ async function openDialog({ url, data, asyncContext, ...params }) {
     switch (asyncResult.error.code) {
       case 12007:
         console.log(
-          "could not open dialog before the previous dialog is not closed completely, so we need to retry it manually."
+          `could not open dialog before the previous dialog is not closed completely, so we need to retry it manually. retryCount: ${retryCount}`
         );
+        if (retryCount <= 0) {
+          console.log("exceeded maximum retry count.");
+          break;
+        }
         await sleepAsync(200);
-        return openDialog({ url, data, asyncContext, ...params });
+        return openDialog({ url, data, asyncContext, retryCount: retryCount - 1, ...params });
+
       default:
         break;
     }
