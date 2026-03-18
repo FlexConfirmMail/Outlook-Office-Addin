@@ -289,7 +289,11 @@ async function onItemSend(event) {
   try {
     return await onItemSendInner(event);
   } catch (error) {
-    console.error("Error occurred while sending item:", error);
+    try {
+      console.error("Error occurred while sending item:", error);
+    } catch {
+      // We should ignore an error occurs on logging.
+    }
     event.completed({ allowEvent: false });
   }
 }
@@ -314,7 +318,11 @@ async function onNewMessageComposeCreated(event) {
       );
     }
   } catch (error) {
-    console.error("Error occurred while creating new message compose:", error);
+    try {
+      console.error("Error occurred while creating new message compose:", error);
+    } catch {
+      // We should ignore an error occurs on logging.
+    }
   }
   event.completed();
 }
@@ -353,7 +361,11 @@ async function onAppointmentOrganizer(event) {
       );
     }
   } catch (error) {
-    console.error("Error occurred while creating new appointment:", error);
+    try {
+      console.error("Error occurred while creating new appointment:", error);
+    } catch {
+      // We should ignore an error occurs on logging.
+    }
   }
   event.completed();
 }
@@ -378,7 +390,11 @@ async function onOpenSettingDialog(event) {
     console.debug(`onOpensettingDialog: ${status}`);
     updatedAsyncContext.completed({ allowEvent: true });
   } catch (error) {
-    console.error("Error occurred while opening setting dialog:", error);
+    try {
+      console.error("Error occurred while opening setting dialog:", error);
+    } catch {
+      // We should ignore an error occurs on logging.
+    }
     event.completed({ allowEvent: false });
   }
 }
