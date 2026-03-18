@@ -353,7 +353,7 @@ async function onAppointmentOrganizer(event) {
       );
     }
   } catch (error) {
-    console.error("Error occurred while creating new appointment compose:", error);
+    console.error("Error occurred while creating new appointment:", error);
   }
   event.completed();
 }
