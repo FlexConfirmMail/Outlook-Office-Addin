@@ -292,7 +292,7 @@ async function onItemSend(event) {
     try {
       console.error("Error occurred while sending item:", error);
     } catch {
-      // We should ignore an error occurs on logging.
+      console.error("Error occurred while logging the exception error contents.");
     }
     event.completed({ allowEvent: false });
   }
@@ -321,7 +321,7 @@ async function onNewMessageComposeCreated(event) {
     try {
       console.error("Error occurred while creating new message compose:", error);
     } catch {
-      // We should ignore an error occurs on logging.
+      console.error("Error occurred while logging the exception error contents.");
     }
   }
   event.completed();
@@ -364,7 +364,7 @@ async function onAppointmentOrganizer(event) {
     try {
       console.error("Error occurred while creating new appointment:", error);
     } catch {
-      // We should ignore an error occurs on logging.
+      console.error("Error occurred while logging the exception error contents.");
     }
   }
   event.completed();
@@ -393,7 +393,7 @@ async function onOpenSettingDialog(event) {
     try {
       console.error("Error occurred while opening setting dialog:", error);
     } catch {
-      // We should ignore an error occurs on logging.
+      console.error("Error occurred while logging the exception error contents.");
     }
     event.completed({ allowEvent: false });
   }
