@@ -27,7 +27,6 @@ async function openDialog({
   url,
   data,
   asyncContext,
-  promptBeforeOpen,
   retryCount = 5,
   ...params
 }) {
@@ -36,8 +35,8 @@ async function openDialog({
       url,
       {
         asyncContext,
-        displayInIframe: !promptBeforeOpen,
-        promptBeforeOpen: promptBeforeOpen || false,
+        displayInIframe: true,
+        promptBeforeOpen: false,
         ...params,
       },
       resolve
@@ -57,22 +56,6 @@ async function openDialog({
         }
         await sleepAsync(200);
         return openDialog({ url, data, asyncContext, retryCount: retryCount - 1, ...params });
-
-      case 12011:
-        // Maybe we never reach this case because we specify displayInIframe = true at the
-        // first time and then displayDialogAsync does not open a new popup dialog.
-        console.log("failed due to the browser's popup blocker.");
-        if (promptBeforeOpen) {
-          break;
-        }
-        console.log("retrying with prompt.");
-        return openDialog({
-          url,
-          data,
-          asyncContext,
-          ...params,
-          promptBeforeOpen: true,
-        });
 
       default:
         break;
