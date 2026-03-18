@@ -23,13 +23,7 @@ function sleepAsync(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function openDialog({
-  url,
-  data,
-  asyncContext,
-  retryCount = 5,
-  ...params
-}) {
+async function openDialog({ url, data, asyncContext, retryCount = 5, ...params }) {
   const asyncResult = await new Promise((resolve) => {
     Office.context.ui.displayDialogAsync(
       url,
@@ -234,7 +228,7 @@ async function tryConvertToBcc(data, asyncContext) {
   return false;
 }
 
-async function onItemSend(event) {
+async function onItemSendInner(event) {
   let asyncContext = event;
   const data = await ConfirmData.getCurrentDataAsync(Office.context.mailbox.item.itemType, locale);
   console.debug(data);
@@ -290,81 +284,119 @@ async function onItemSend(event) {
   await OfficeDataAccessHelper.removeOriginalRecipientsSessionDataAsync(data.itemType);
   asyncContext.completed({ allowEvent: true });
 }
+
+async function onItemSend(event) {
+  try {
+    return await onItemSendInner(event);
+  } catch (error) {
+    try {
+      console.error("Error occurred while sending item:", error);
+    } catch {
+      console.error("Error occurred while logging the exception error contents.");
+    }
+    event.completed({ allowEvent: false });
+  }
+}
 window.onItemSend = onItemSend;
 
 async function onNewMessageComposeCreated(event) {
-  const [to, cc, bcc] = await Promise.all([
-    OfficeDataAccessHelper.getToAsync(),
-    OfficeDataAccessHelper.getCcAsync(),
-    OfficeDataAccessHelper.getBccAsync(),
-  ]);
-  if (to.length > 0 || cc.length > 0 || bcc.length > 0) {
-    const originalRecipients = {
-      to,
-      cc,
-      bcc,
-    };
-    await OfficeDataAccessHelper.setOriginalRecipientsSessionDataAsync(
-      Office.context.mailbox.item.itemType,
-      JSON.stringify(originalRecipients)
-    );
+  try {
+    const [to, cc, bcc] = await Promise.all([
+      OfficeDataAccessHelper.getToAsync(),
+      OfficeDataAccessHelper.getCcAsync(),
+      OfficeDataAccessHelper.getBccAsync(),
+    ]);
+    if (to.length > 0 || cc.length > 0 || bcc.length > 0) {
+      const originalRecipients = {
+        to,
+        cc,
+        bcc,
+      };
+      await OfficeDataAccessHelper.setOriginalRecipientsSessionDataAsync(
+        Office.context.mailbox.item.itemType,
+        JSON.stringify(originalRecipients)
+      );
+    }
+  } catch (error) {
+    try {
+      console.error("Error occurred while creating new message compose:", error);
+    } catch {
+      console.error("Error occurred while logging the exception error contents.");
+    }
   }
   event.completed();
 }
 window.onNewMessageComposeCreated = onNewMessageComposeCreated;
 
 async function onAppointmentOrganizer(event) {
-  const [requiredAttendees, optionalAttendees] = await Promise.all([
-    OfficeDataAccessHelper.getRequiredAttendeeAsync(),
-    OfficeDataAccessHelper.getOptionalAttendeeAsync(),
-  ]);
+  try {
+    const [requiredAttendees, optionalAttendees] = await Promise.all([
+      OfficeDataAccessHelper.getRequiredAttendeeAsync(),
+      OfficeDataAccessHelper.getOptionalAttendeeAsync(),
+    ]);
 
-  if (Office.context.platform == Office.PlatformType.PC) {
-    // On classic Outlook, requiredAttendees has a current user even if
-    // this is a new appointment, in that case, subsequent processing
-    // erroneously determines that there are existing attendees.
-    // This function has nothing to do if this is a new appointment
-    // because there is no existing attendees. So return if this is a
-    // new appointment.
-    const id = await OfficeDataAccessHelper.getItemIdAsync();
-    if (!id) {
-      // On classic Outlook, if the id is not defined, this is a new appointment.
-      event.completed();
-      return;
+    if (Office.context.platform == Office.PlatformType.PC) {
+      // On classic Outlook, requiredAttendees has a current user even if
+      // this is a new appointment, in that case, subsequent processing
+      // erroneously determines that there are existing attendees.
+      // This function has nothing to do if this is a new appointment
+      // because there is no existing attendees. So return if this is a
+      // new appointment.
+      const id = await OfficeDataAccessHelper.getItemIdAsync();
+      if (!id) {
+        // On classic Outlook, if the id is not defined, this is a new appointment.
+        event.completed();
+        return;
+      }
     }
-  }
 
-  if (requiredAttendees.length > 0 || optionalAttendees.length > 0) {
-    const originalAttendees = {
-      requiredAttendees,
-      optionalAttendees,
-    };
-    await OfficeDataAccessHelper.setOriginalRecipientsSessionDataAsync(
-      Office.context.mailbox.item.itemType,
-      JSON.stringify(originalAttendees)
-    );
+    if (requiredAttendees.length > 0 || optionalAttendees.length > 0) {
+      const originalAttendees = {
+        requiredAttendees,
+        optionalAttendees,
+      };
+      await OfficeDataAccessHelper.setOriginalRecipientsSessionDataAsync(
+        Office.context.mailbox.item.itemType,
+        JSON.stringify(originalAttendees)
+      );
+    }
+  } catch (error) {
+    try {
+      console.error("Error occurred while creating new appointment:", error);
+    } catch {
+      console.error("Error occurred while logging the exception error contents.");
+    }
   }
   event.completed();
 }
 window.onAppointmentOrganizer = onAppointmentOrganizer;
 
 async function onOpenSettingDialog(event) {
-  const policyConfig = await ConfigLoader.loadFileConfig();
-  const userConfig = await ConfigLoader.loadUserConfig();
-  const data = {
-    policy: policyConfig,
-    user: userConfig,
-  };
-  const asyncContext = event;
-  const { status, asyncContext: updatedAsyncContext } = await openDialog({
-    url: window.location.origin + "/setting.html",
-    data,
-    asyncContext,
-    height: Math.min(80, charsToPercentage(70, screen.availHeight)),
-    width: Math.min(80, charsToPercentage(80, screen.availWidth)),
-  });
-  console.debug(`onOpensettingDialog: ${status}`);
-  updatedAsyncContext.completed({ allowEvent: true });
+  try {
+    const policyConfig = await ConfigLoader.loadFileConfig();
+    const userConfig = await ConfigLoader.loadUserConfig();
+    const data = {
+      policy: policyConfig,
+      user: userConfig,
+    };
+    const asyncContext = event;
+    const { status, asyncContext: updatedAsyncContext } = await openDialog({
+      url: window.location.origin + "/setting.html",
+      data,
+      asyncContext,
+      height: Math.min(80, charsToPercentage(70, screen.availHeight)),
+      width: Math.min(80, charsToPercentage(80, screen.availWidth)),
+    });
+    console.debug(`onOpensettingDialog: ${status}`);
+    updatedAsyncContext.completed({ allowEvent: true });
+  } catch (error) {
+    try {
+      console.error("Error occurred while opening setting dialog:", error);
+    } catch {
+      console.error("Error occurred while logging the exception error contents.");
+    }
+    event.completed({ allowEvent: false });
+  }
 }
 window.onOpenSettingDialog = onOpenSettingDialog;
 
