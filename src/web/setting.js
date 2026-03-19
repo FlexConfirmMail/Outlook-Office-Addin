@@ -337,7 +337,7 @@ function serializeCommonConfig(opt, cur) {
   return "";
 }
 
-function serializeCommonConfigs() {
+function serializeCommonConfigs({ includeFixedParameters = false }) {
   const countEnabled = document.getElementById("countEnabled").checked;
   const countAllowSkip = document.getElementById("countAllowSkip").checked;
   const countSeconds = document.getElementById("countSeconds").value;
@@ -394,14 +394,20 @@ function serializeCommonConfigs() {
   commonConfigString += serializeCommonConfig("ConvertToBccThreshold", convertToBccThreshold);
   commonConfigString += serializeCommonConfig("BlockDistributionLists", blockDistributionLists);
   commonConfigString += serializeCommonConfig("EmphasizeUntrustedToCc", emphasizeUntrustedToCc);
-  // FixedParameters is for policy setting.
-  // Do not serialize FixedParameters for user setting.
+  if (includeFixedParameters) {
+    const fixedParameters = policyConfig.common.FixedParameters ?? [];
+    if (fixedParameters.length > 0) {
+      commonConfigString += `FixedParameters=${fixedParameters.join(",")}\n`;
+    }
+  }
   return commonConfigString;
 }
 
 window.onSave = () => {
   console.debug("onSave");
-  const commonString = serializeCommonConfigs();
+  // FixedParameters is for policy setting.
+  // Do not serialize FixedParameters for user setting.
+  const commonString = serializeCommonConfigs({ includeFixedParameters: false });
   const trustedDomainsString = serializeTrustedDomains();
   const unsafeDomainsString = serializeUnsafeDomains();
   const unsafeFilesString = serializeUnsafeFiles();
@@ -434,4 +440,53 @@ window.onReset = () => {
   userConfig = Config.createEmptyConfig();
   effectiveConfig = Config.createEmptyConfig();
   updateDialogSetting(currentPolocyConfig, userConfig);
+};
+
+window.onDownload = () => {
+  console.debug("onDownload");
+  const commonString = serializeCommonConfigs({ includeFixedParameters: true });
+  const trustedDomainsString = serializeTrustedDomains();
+  const unsafeDomainsString = serializeUnsafeDomains();
+  const unsafeFilesString = serializeUnsafeFiles();
+  const unsafeBodiesString = serializeUnsafeBodies();
+
+  const targets = [
+    {
+      name: "Common.txt",
+      content: commonString,
+    },
+    {
+      name: "TrustedDomains.txt",
+      content: trustedDomainsString,
+    },
+    {
+      name: "UnsafeDomains.txt",
+      content: unsafeDomainsString,
+    },
+    {
+      name: "UnsafeFiles.txt",
+      content: unsafeFilesString,
+    },
+    {
+      name: "UnsafeBodies.txt",
+      content: unsafeBodiesString,
+    },
+  ];
+
+  // BOM UTF-8
+  const bom = "\uFEFF";
+  for (const { name, content } of targets) {
+    console.log(`Start downloading file: ${name}.`);
+    const blob = new Blob([bom + content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    console.log(`File downloaded successfully: ${name}.`);
+  }
 };

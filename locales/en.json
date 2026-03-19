@@ -93,6 +93,7 @@
   "setting_configUnsafeBodies" : "Unsafe Bodies",
   "setting_configWarning": "Warning",
   "setting_configWindowTitle": "FlexConfirmMail Options",
+  "setting_downloadSetting": "Download current settings as files",
   "setting_aboutAddon": "Version",
   "setting_resetSetting": "Reset to Default",
   "setting_saveAndQuit": "Save and Exit",
