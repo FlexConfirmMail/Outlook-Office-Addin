@@ -13,6 +13,13 @@ let policyConfig;
 let userConfig;
 let effectiveConfig;
 
+class Setting {
+  static SerializationMode = {
+    User: 0,
+    Download: 1,
+  };
+}
+
 Office.onReady(() => {
   if (window !== window.parent) {
     // Inframe mode
@@ -98,7 +105,7 @@ function createDisplayTrustedDomains() {
   }
 }
 
-function serializeTrustedDomains() {
+function serializeTrustedDomains({ mode = Setting.SerializationMode.User }) {
   let trustedDomainsString = document.getElementById("trustedDomainsTextArea").value ?? "";
   if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
     const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
@@ -110,7 +117,12 @@ function serializeTrustedDomains() {
       .trim();
     trustedDomainsString = trustedDomainsString.replace(template, "");
   }
-  trustedDomainsString = trustedDomainsString.trim();
+  if (mode === Setting.SerializationMode.User) {
+    trustedDomainsString = trustedDomainsString.trim();
+  } else {
+    trustedDomainsString =
+      `${policyConfig.trustedDomainsString.trim()}\n${trustedDomainsString}`.trim();
+  }
   return trustedDomainsString;
 }
 
@@ -135,7 +147,7 @@ function createDisplayUnsafeDomains() {
   }
 }
 
-function serializeUnsafeDomains() {
+function serializeUnsafeDomains({ mode = Setting.SerializationMode.User }) {
   let unsafeDomainsString = document.getElementById("unsafeDomainsTextArea").value ?? "";
   const policyUnsafeDomainsString = createSectionableArrayConfigComment(policyConfig.unsafeDomains);
   if (policyUnsafeDomainsString) {
@@ -147,7 +159,12 @@ function serializeUnsafeDomains() {
       .trim();
     unsafeDomainsString = unsafeDomainsString.replace(template, "");
   }
-  unsafeDomainsString = unsafeDomainsString.trim();
+  if (mode === Setting.SerializationMode.User) {
+    unsafeDomainsString = unsafeDomainsString.trim();
+  } else {
+    unsafeDomainsString =
+      `${policyConfig.unsafeDomainsString.trim()}\n${unsafeDomainsString}`.trim();
+  }
   return unsafeDomainsString;
 }
 
@@ -169,7 +186,7 @@ function createDisplayUnsafeFiles() {
   }
 }
 
-function serializeUnsafeFiles() {
+function serializeUnsafeFiles({ mode = Setting.SerializationMode.User }) {
   const policyUnsafeFilesString = createSectionableArrayConfigComment(
     policyConfig.unsafeFiles,
     Config.defaultUnsafeDomainsConfigSection
@@ -184,7 +201,11 @@ function serializeUnsafeFiles() {
       .trim();
     unsafeFilesString = unsafeFilesString.replace(template, "");
   }
-  unsafeFilesString = unsafeFilesString.trim();
+  if (mode === Setting.SerializationMode.User) {
+    unsafeFilesString = unsafeFilesString.trim();
+  } else {
+    unsafeFilesString = `${policyConfig.unsafeFilesString.trim()}\n${unsafeFilesString}`.trim();
+  }
   return unsafeFilesString;
 }
 
@@ -206,7 +227,7 @@ function createDisplayUnsafeBodies() {
   }
 }
 
-function serializeUnsafeBodies() {
+function serializeUnsafeBodies({ mode = Setting.SerializationMode.User }) {
   const policyUnsafeBodiesString = createUnsafeBodiesConfigComment(policyConfig.unsafeBodies);
   let unsafeBodiesString = document.getElementById("unsafeBodiesTextArea").value ?? "";
   if (policyUnsafeBodiesString) {
@@ -218,7 +239,11 @@ function serializeUnsafeBodies() {
       .trim();
     unsafeBodiesString = unsafeBodiesString.replace(template, "");
   }
-  unsafeBodiesString = unsafeBodiesString.trim();
+  if (mode === Setting.SerializationMode.User) {
+    unsafeBodiesString = unsafeBodiesString.trim();
+  } else {
+    unsafeBodiesString = `${policyConfig.unsafeBodiesString.trim()}\n${unsafeBodiesString}`.trim();
+  }
   return unsafeBodiesString;
 }
 
@@ -329,7 +354,10 @@ function sendConfigToParent(config) {
   Office.context.ui.messageParent(jsonMessage);
 }
 
-function serializeCommonConfig(opt, cur) {
+function serializeCommonConfig(mode, opt, cur) {
+  if (mode === Setting.SerializationMode.Download) {
+    return `${opt}=${cur}\n`;
+  }
   const def = policyConfig.common[opt];
   if (Object.hasOwn(userConfig.common, opt) || cur != def) {
     return `${opt}=${cur}\n`;
@@ -337,7 +365,7 @@ function serializeCommonConfig(opt, cur) {
   return "";
 }
 
-function serializeCommonConfigs() {
+function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
   const countEnabled = document.getElementById("countEnabled").checked;
   const countAllowSkip = document.getElementById("countAllowSkip").checked;
   const countSeconds = document.getElementById("countSeconds").value;
@@ -365,47 +393,69 @@ function serializeCommonConfigs() {
   const blockDistributionLists = document.getElementById("blockDistributionLists").checked;
   const emphasizeUntrustedToCc = document.getElementById("emphasizeUntrustedToCc").checked;
   let commonConfigString = "";
-  commonConfigString += serializeCommonConfig("CountEnabled", countEnabled);
-  commonConfigString += serializeCommonConfig("CountSeconds", countSeconds);
-  commonConfigString += serializeCommonConfig("CountAllowSkip", countAllowSkip);
-  commonConfigString += serializeCommonConfig("SafeBccEnabled", safeBccEnabled);
-  commonConfigString += serializeCommonConfig("SafeBccThreshold", safeBccThreshold);
+  commonConfigString += serializeCommonConfig(mode, "CountEnabled", countEnabled);
+  commonConfigString += serializeCommonConfig(mode, "CountSeconds", countSeconds);
+  commonConfigString += serializeCommonConfig(mode, "CountAllowSkip", countAllowSkip);
+  commonConfigString += serializeCommonConfig(mode, "SafeBccEnabled", safeBccEnabled);
+  commonConfigString += serializeCommonConfig(mode, "SafeBccThreshold", safeBccThreshold);
   commonConfigString += serializeCommonConfig(
+    mode,
     "BccConversionRecommendationDomainsThreshold",
     bccConversionRecommendationDomainsThreshold
   );
   commonConfigString += serializeCommonConfig(
+    mode,
     "SafeBccReconfirmationThreshold",
     safeBccReconfirmationThreshold
   );
-  commonConfigString += serializeCommonConfig("SafeNewDomainsEnabled", safeNewDomainsEnabled);
-  commonConfigString += serializeCommonConfig("RequireCheckSubject", requireCheckSubject);
-  commonConfigString += serializeCommonConfig("RequireCheckBody", requireCheckBody);
-  commonConfigString += serializeCommonConfig("MainSkipIfNoExt", mainSkipIfNoExt);
-  commonConfigString += serializeCommonConfig("CountSkipIfNoExt", countSkipIfNoExt);
-  commonConfigString += serializeCommonConfig("UntrustUnsafeRecipients", untrustUnsafeRecipients);
+  commonConfigString += serializeCommonConfig(mode, "SafeNewDomainsEnabled", safeNewDomainsEnabled);
+  commonConfigString += serializeCommonConfig(mode, "RequireCheckSubject", requireCheckSubject);
+  commonConfigString += serializeCommonConfig(mode, "RequireCheckBody", requireCheckBody);
+  commonConfigString += serializeCommonConfig(mode, "MainSkipIfNoExt", mainSkipIfNoExt);
+  commonConfigString += serializeCommonConfig(mode, "CountSkipIfNoExt", countSkipIfNoExt);
   commonConfigString += serializeCommonConfig(
+    mode,
+    "UntrustUnsafeRecipients",
+    untrustUnsafeRecipients
+  );
+  commonConfigString += serializeCommonConfig(
+    mode,
     "AppointmentConfirmationEnabled",
     appointmentConfirmationEnabled
   );
-  commonConfigString += serializeCommonConfig("DelayDeliveryEnabled", delayDeliveryEnabled);
-  commonConfigString += serializeCommonConfig("DelayDeliverySeconds", delayDeliverySeconds);
-  commonConfigString += serializeCommonConfig("ConvertToBccEnabled", convertToBccEnabled);
-  commonConfigString += serializeCommonConfig("ConvertToBccThreshold", convertToBccThreshold);
-  commonConfigString += serializeCommonConfig("BlockDistributionLists", blockDistributionLists);
-  commonConfigString += serializeCommonConfig("EmphasizeUntrustedToCc", emphasizeUntrustedToCc);
+  commonConfigString += serializeCommonConfig(mode, "DelayDeliveryEnabled", delayDeliveryEnabled);
+  commonConfigString += serializeCommonConfig(mode, "DelayDeliverySeconds", delayDeliverySeconds);
+  commonConfigString += serializeCommonConfig(mode, "ConvertToBccEnabled", convertToBccEnabled);
+  commonConfigString += serializeCommonConfig(mode, "ConvertToBccThreshold", convertToBccThreshold);
+  commonConfigString += serializeCommonConfig(
+    mode,
+    "BlockDistributionLists",
+    blockDistributionLists
+  );
+  commonConfigString += serializeCommonConfig(
+    mode,
+    "EmphasizeUntrustedToCc",
+    emphasizeUntrustedToCc
+  );
   // FixedParameters is for policy setting.
   // Do not serialize FixedParameters for user setting.
+  if (mode === Setting.SerializationMode.Download) {
+    const fixedParameters = policyConfig.common.FixedParameters ?? [];
+    if (fixedParameters.length > 0) {
+      commonConfigString += `FixedParameters=${fixedParameters.join(",")}\n`;
+    }
+  }
   return commonConfigString;
 }
 
 window.onSave = () => {
   console.debug("onSave");
-  const commonString = serializeCommonConfigs();
-  const trustedDomainsString = serializeTrustedDomains();
-  const unsafeDomainsString = serializeUnsafeDomains();
-  const unsafeFilesString = serializeUnsafeFiles();
-  const unsafeBodiesString = serializeUnsafeBodies();
+  const mode = Setting.SerializationMode.User;
+  const commonString = serializeCommonConfigs({ mode });
+  const trustedDomainsString = serializeTrustedDomains({ mode });
+  const unsafeDomainsString = serializeUnsafeDomains({ mode });
+  const unsafeFilesString = serializeUnsafeFiles({ mode });
+  const unsafeBodiesString = serializeUnsafeBodies({ mode });
   console.debug("commonString: ", commonString);
   console.debug("trustedDomainsString: ", trustedDomainsString);
   console.debug("unsafeDomainsString: ", unsafeDomainsString);
@@ -434,4 +484,55 @@ window.onReset = () => {
   userConfig = Config.createEmptyConfig();
   effectiveConfig = Config.createEmptyConfig();
   updateDialogSetting(currentPolocyConfig, userConfig);
+};
+
+window.onDownload = () => {
+  console.debug("onDownload");
+  const mode = Setting.SerializationMode.Download;
+  const commonString = serializeCommonConfigs({ mode });
+  // Add policy config to downloaded config, because user may want to use policy config as reference when edit downloaded config.
+  const trustedDomainsString = serializeTrustedDomains({ mode });
+  const unsafeDomainsString = serializeUnsafeDomains({ mode });
+  const unsafeFilesString = serializeUnsafeFiles({ mode });
+  const unsafeBodiesString = serializeUnsafeBodies({ mode });
+
+  const targets = [
+    {
+      name: "Common.txt",
+      content: commonString,
+    },
+    {
+      name: "TrustedDomains.txt",
+      content: trustedDomainsString,
+    },
+    {
+      name: "UnsafeDomains.txt",
+      content: unsafeDomainsString,
+    },
+    {
+      name: "UnsafeFiles.txt",
+      content: unsafeFilesString,
+    },
+    {
+      name: "UnsafeBodies.txt",
+      content: unsafeBodiesString,
+    },
+  ];
+
+  // BOM UTF-8
+  const bom = "\uFEFF";
+  for (const { name, content } of targets) {
+    console.log(`Start downloading file: ${name}.`);
+    const blob = new Blob([bom + content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    console.log(`File downloaded successfully: ${name}.`);
+  }
 };

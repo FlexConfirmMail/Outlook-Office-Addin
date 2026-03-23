@@ -94,6 +94,7 @@
   "setting_configWarning": "警告設定",
   "setting_configWindowTitle": "设置FlexConfirmMail",
   "setting_aboutAddon": "版本",
+  "setting_downloadSetting": "Download current settings as files",
   "setting_resetSetting": "重置设置",
   "setting_saveAndQuit": "保存并退出",
   "setting_cancel": "取消",
