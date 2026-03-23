@@ -437,6 +437,8 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
     "EmphasizeUntrustedToCc",
     emphasizeUntrustedToCc
   );
+  // FixedParameters is for policy setting.
+  // Do not serialize FixedParameters for user setting.
   if (mode === Setting.SerializationMode.Download) {
     const fixedParameters = policyConfig.common.FixedParameters ?? [];
     if (fixedParameters.length > 0) {
@@ -448,13 +450,12 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
 
 window.onSave = () => {
   console.debug("onSave");
-  // FixedParameters is for policy setting.
-  // Do not serialize FixedParameters for user setting.
-  const commonString = serializeCommonConfigs({ mode: Setting.SerializationMode.User });
-  const trustedDomainsString = serializeTrustedDomains({ mode: Setting.SerializationMode.User });
-  const unsafeDomainsString = serializeUnsafeDomains({ mode: Setting.SerializationMode.User });
-  const unsafeFilesString = serializeUnsafeFiles({ mode: Setting.SerializationMode.User });
-  const unsafeBodiesString = serializeUnsafeBodies({ mode: Setting.SerializationMode.User });
+  const mode = Setting.SerializationMode.User;
+  const commonString = serializeCommonConfigs({ mode });
+  const trustedDomainsString = serializeTrustedDomains({ mode });
+  const unsafeDomainsString = serializeUnsafeDomains({ mode });
+  const unsafeFilesString = serializeUnsafeFiles({ mode });
+  const unsafeBodiesString = serializeUnsafeBodies({ mode });
   console.debug("commonString: ", commonString);
   console.debug("trustedDomainsString: ", trustedDomainsString);
   console.debug("unsafeDomainsString: ", unsafeDomainsString);
@@ -487,14 +488,13 @@ window.onReset = () => {
 
 window.onDownload = () => {
   console.debug("onDownload");
-  const commonString = serializeCommonConfigs({ mode: Setting.SerializationMode.Download });
+  const mode = Setting.SerializationMode.Download;
+  const commonString = serializeCommonConfigs({ mode });
   // Add policy config to downloaded config, because user may want to use policy config as reference when edit downloaded config.
-  const trustedDomainsString = serializeTrustedDomains({
-    mode: Setting.SerializationMode.Download,
-  });
-  const unsafeDomainsString = serializeUnsafeDomains({ mode: Setting.SerializationMode.Download });
-  const unsafeFilesString = serializeUnsafeFiles({ mode: Setting.SerializationMode.Download });
-  const unsafeBodiesString = serializeUnsafeBodies({ mode: Setting.SerializationMode.Download });
+  const trustedDomainsString = serializeTrustedDomains({ mode });
+  const unsafeDomainsString = serializeUnsafeDomains({ mode });
+  const unsafeFilesString = serializeUnsafeFiles({ mode });
+  const unsafeBodiesString = serializeUnsafeBodies({ mode });
 
   const targets = [
     {
