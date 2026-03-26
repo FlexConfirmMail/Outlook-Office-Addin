@@ -228,10 +228,61 @@ async function tryConvertToBcc(data, asyncContext) {
   return false;
 }
 
+/**
+ * Determines whether a ZIP file is password-protected by inspecting its raw bytes.
+ * Based on the ZIP local file header specification.
+ * General Purpose Bit Flag at offset +6: bit0 = 1 → encrypted
+ */
+function isPasswordProtectedZip(bytes) {
+  if (
+    bytes[0] !== 0x50 || bytes[1] !== 0x4B ||
+    bytes[2] !== 0x03 || bytes[3] !== 0x04
+  ) {
+    return null; // not a ZIP file
+  }
+
+  const flagByte = bytes[6];
+  return (flagByte & 0x01) === 1;
+}
+
+async function checkAttachments(attachments) {
+  for (const att of attachments) {
+    if (!att.name.toLowerCase().endsWith('.zip')) continue;
+    const item = Office.context.mailbox.item;
+    item.getAttachmentContentAsync(att.id, (result) => {
+      console.log(`result.status: ${result.status}`);
+      if (result.status !== Office.AsyncResultStatus.Succeeded) return;
+
+      const content = result.value.content;
+      const format  = result.value.format;
+
+      if (format !== Office.MailboxEnums.AttachmentContentFormat.Base64) return;
+
+      const binary = atob(content);
+      const bytes  = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+
+      const isEncrypted = isPasswordProtectedZip(bytes);
+
+      if (isEncrypted === null) {
+        console.log(`${att.name}: not ZIP`);
+      } else if (isEncrypted) {
+        console.log(`${att.name}: Password-protected ZIP`);
+      } else {
+        console.log(`${att.name}: not password-protected ZIP`);
+      }
+    });
+  }
+}
+
 async function onItemSendInner(event) {
   let asyncContext = event;
   const data = await ConfirmData.getCurrentDataAsync(Office.context.mailbox.item.itemType, locale);
   console.debug(data);
+
+  await checkAttachments(data.target.attachments);
 
   if (data.skipAll) {
     asyncContext.completed({ allowEvent: true });
