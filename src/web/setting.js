@@ -264,7 +264,8 @@ function serializeUnsafeFiles({ mode = Setting.SerializationMode.User }) {
     //     b@example.com
     //
     // In this case, b@example.com is in [WARNING] as expected.
-    unsafeFilesString = `${policyConfig.unsafeFilesString.trim()}\n\n[${Config.defaultUnsafeFilesConfigSection}]\n${unsafeFilesString.trim()}`.trim();
+    unsafeFilesString =
+      `${policyConfig.unsafeFilesString.trim()}\n\n[${Config.defaultUnsafeFilesConfigSection}]\n${unsafeFilesString.trim()}`.trim();
   }
   return unsafeFilesString;
 }
@@ -302,7 +303,8 @@ function serializeUnsafeBodies({ mode = Setting.SerializationMode.User }) {
   if (mode === Setting.SerializationMode.User) {
     unsafeBodiesString = unsafeBodiesString.trim();
   } else {
-    unsafeBodiesString = `${policyConfig.unsafeBodiesString.trim()}\n\n${unsafeBodiesString.trim()}`.trim();
+    unsafeBodiesString =
+      `${policyConfig.unsafeBodiesString.trim()}\n\n${unsafeBodiesString.trim()}`.trim();
   }
   return unsafeBodiesString;
 }
