@@ -121,7 +121,7 @@ function serializeTrustedDomains({ mode = Setting.SerializationMode.User }) {
     trustedDomainsString = trustedDomainsString.trim();
   } else {
     trustedDomainsString =
-      `${policyConfig.trustedDomainsString.trim()}\n${trustedDomainsString}`.trim();
+      `${policyConfig.trustedDomainsString.trim()}\n\n${trustedDomainsString.trim()}`.trim();
   }
   return trustedDomainsString;
 }
@@ -162,8 +162,38 @@ function serializeUnsafeDomains({ mode = Setting.SerializationMode.User }) {
   if (mode === Setting.SerializationMode.User) {
     unsafeDomainsString = unsafeDomainsString.trim();
   } else {
+    // We must add [WARNING] just before right (user's) string.
+    // We can ommit [WARNING] section declaration, so when right ommits [WARNING] section declaration,
+    // the right [WARNING] section may be in the wrong section after merged.
+    //
+    // If [WARNING] is not added:
+    //   left:
+    //     [BLOCK]
+    //     a@example.com
+    //   right:
+    //     b@example.com
+    //   merged:
+    //     [BLOCK]
+    //     a@example.com
+    //     b@example.com
+    //
+    // In this case, b@example.com is expected in [WARNING] but in [BLOCK].
+    //
+    // By adding [WARNING]:
+    //   left:
+    //     [BLOCK]
+    //     a@example.com
+    //   right:
+    //     b@example.com
+    //   merged:
+    //     [BLOCK]
+    //     a@example.com
+    //     [WARNING]
+    //     b@example.com
+    //
+    // In this case, b@example.com is in [WARNING] as expected.
     unsafeDomainsString =
-      `${policyConfig.unsafeDomainsString.trim()}\n${unsafeDomainsString}`.trim();
+      `${policyConfig.unsafeDomainsString.trim()}\n\n[${Config.defaultUnsafeDomainsConfigSection}]\n${unsafeDomainsString.trim()}`.trim();
   }
   return unsafeDomainsString;
 }
@@ -204,7 +234,38 @@ function serializeUnsafeFiles({ mode = Setting.SerializationMode.User }) {
   if (mode === Setting.SerializationMode.User) {
     unsafeFilesString = unsafeFilesString.trim();
   } else {
-    unsafeFilesString = `${policyConfig.unsafeFilesString.trim()}\n${unsafeFilesString}`.trim();
+    // We must add [WARNING] just before right (user's) string.
+    // We can ommit [WARNING] section declaration, so when right ommits [WARNING] section declaration,
+    // the right [WARNING] section may be in the wrong section after merged.
+    //
+    // If [WARNING] is not added:
+    //   left:
+    //     [BLOCK]
+    //     a@example.com
+    //   right:
+    //     b@example.com
+    //   merged:
+    //     [BLOCK]
+    //     a@example.com
+    //     b@example.com
+    //
+    // In this case, b@example.com is expected in [WARNING] but in [BLOCK].
+    //
+    // By adding [WARNING]:
+    //   left:
+    //     [BLOCK]
+    //     a@example.com
+    //   right:
+    //     b@example.com
+    //   merged:
+    //     [BLOCK]
+    //     a@example.com
+    //     [WARNING]
+    //     b@example.com
+    //
+    // In this case, b@example.com is in [WARNING] as expected.
+    unsafeFilesString =
+      `${policyConfig.unsafeFilesString.trim()}\n\n[${Config.defaultUnsafeFilesConfigSection}]\n${unsafeFilesString.trim()}`.trim();
   }
   return unsafeFilesString;
 }
@@ -242,7 +303,8 @@ function serializeUnsafeBodies({ mode = Setting.SerializationMode.User }) {
   if (mode === Setting.SerializationMode.User) {
     unsafeBodiesString = unsafeBodiesString.trim();
   } else {
-    unsafeBodiesString = `${policyConfig.unsafeBodiesString.trim()}\n${unsafeBodiesString}`.trim();
+    unsafeBodiesString =
+      `${policyConfig.unsafeBodiesString.trim()}\n\n${unsafeBodiesString.trim()}`.trim();
   }
   return unsafeBodiesString;
 }
