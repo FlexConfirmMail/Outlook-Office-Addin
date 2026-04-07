@@ -15,6 +15,7 @@ import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation
 import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
 import { UnsafeBodiesConfirmation } from "./unsafe-bodies-confirmation.mjs";
 import * as Dialog from "./dialog.mjs";
+import DOMPurify from "dompurify";
 
 let l10n;
 let safeBccConfirmation;

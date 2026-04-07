@@ -5,6 +5,8 @@
 */
 "use strict";
 
+import DOMPurify from "dompurify";
+
 export class L10n {
   static cache = {};
   static requests = {};
@@ -92,7 +94,14 @@ export class L10n {
   }
 
   get(key, params = {}) {
-    let message =
+    const { message } = this.getWithType(key, params);
+    return message;
+  }
+
+  getWithType(key, params = {}) {
+    let type = "string";
+    let message = "";
+    const messageEntry =
       key in this.locale
         ? this.locale[key]
         : key in this.fallbackLocale
@@ -100,20 +109,34 @@ export class L10n {
           : key in this.defaultLocale
             ? this.defaultLocale[key]
             : null;
+    if (messageEntry === null) {
+      return { message: key, type };
+    }
+    if (typeof messageEntry === "string") {
+      message = messageEntry;
+    } else {
+      type = messageEntry.type || type;
+      message = messageEntry.message || key;
+    }
     if (message === null) {
-      return key;
+      return { message: key, type };
     }
     if (params) {
       for (const [placeholder, value] of Object.entries(params)) {
         message = message.replace("${" + placeholder + "}", value || "");
       }
     }
-    return message;
+    return { message, type };
   }
 
   translateAll() {
     for (const element of document.querySelectorAll("[data-l10n-text-content]")) {
-      element.textContent = this.get(element.dataset.l10nTextContent);
+      const { message, type } = this.getWithType(element.dataset.l10nTextContent);
+      if (type === "html") {
+        element.innerHTML = DOMPurify.sanitize(message);
+      } else {
+        element.textContent = message;
+      }
     }
   }
 }

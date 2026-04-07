@@ -4,5 +4,6 @@
   "messageWithPlaceholders": "JP：プレースホルダーを含むメッセージ：${one}, ${two}, ${three}",
   "_missingFallbackMessage": "JP：フォールバック先で定義されているメッセージ",
   "_missingMessage": "JP：未定義のメッセージ",
-  "customOverrideMessage": "JP：カスタムロケールに上書きされるメッセージ"
+  "customOverrideMessage": "JP：カスタムロケールに上書きされるメッセージ",
+  "htmlMessage": { "message": "JP：<strong>HTML形式のメッセージ</strong>" , "type": "html" }
 }
