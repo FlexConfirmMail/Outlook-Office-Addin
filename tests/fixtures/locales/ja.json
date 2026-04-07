@@ -3,5 +3,6 @@
   "blankMessage": "空のメッセージ",
   "messageWithPlaceholders": "プレースホルダーを含むメッセージ：${one}, ${two}",
   "missingFallbackMessage": "フォールバック先で定義されているメッセージ",
-  "_missingMessage": "未定義のメッセージ"
+  "_missingMessage": "未定義のメッセージ",
+  "htmlMessage": { "message": "<strong>HTML形式のメッセージ</strong>" , "type": "html" }
 }

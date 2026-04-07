@@ -3,5 +3,6 @@
   "blankMessage": "Blank message",
   "messageWithPlaceholders": "Message with placeholders: ${one}, ${two}",
   "missingFallbackMessage": "Message defined in fallback locales",
-  "missingMessage": "Message not defined in non-default locales"
+  "missingMessage": "Message not defined in non-default locales",
+  "htmlMessage": { "message": "<strong>HTML format message</strong>" , "type": "html" }
 }
