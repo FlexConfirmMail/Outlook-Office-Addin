@@ -29,6 +29,11 @@ fluent-card {
   height: auto;
 }
 
+fluent-card h4 {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 #mail-subject-card fluent-checkbox::part(label) {
   font-size: initial;
 }
