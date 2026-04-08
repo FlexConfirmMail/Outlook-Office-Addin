@@ -53,6 +53,23 @@ Office.onReady(() => {
   );
 });
 
+async function loadCustomCssIfExists() {
+  try {
+    const path = "custom-css/confirm.css";
+    const res = await fetch(path, { method: "HEAD" });
+    if (!res.ok) {
+      console.debug("No custom CSS found, skipping loading custom-css/confirm.css");
+      return;
+    }
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = path;
+    document.head.appendChild(link);
+  } catch (error) {
+    console.debug("Failed to load custom CSS.", error);
+  }
+}
+
 let counter = 0;
 function generateTempId() {
   return `fcm_temp_${counter++}_${Date.now()}`;
@@ -190,6 +207,7 @@ function appendCheckbox({ container, id, label, warning, emphasize }) {
 async function onMessageFromParent(arg) {
   const receivedData = JSON.parse(arg.message);
   console.log(receivedData);
+  await loadCustomCssIfExists();
   const data = new ConfirmData(receivedData);
   await Promise.all([
     l10n.ready,

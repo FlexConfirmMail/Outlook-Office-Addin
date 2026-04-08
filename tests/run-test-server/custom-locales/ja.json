@@ -1,0 +1,3 @@
+{
+  "confirmation_untrustedCaption": {"message": "外部ドメインのメールアドレス<br/><span class=\"warning-icon\">⚠</span><u><strong>社外の宛先</strong>が指定されています！<strong>再確認</strong>してください！</u>", "type": "html"}
+}
