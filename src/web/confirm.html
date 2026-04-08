@@ -21,7 +21,7 @@ Copyright (c) 2025 ClearCode Inc.
     <div class="dialog-content">
         <div class="card-container">
             <div class="cards">
-                <fluent-card>
+                <fluent-card id="trusted-domains-card">
                     <div class="heading-container">
                         <h3 data-l10n-text-content="confirmation_trustedCaption"></h3>
                         <fluent-button id="check-all-trusted" onclick="onCheckAllTrusted()"
@@ -31,7 +31,7 @@ Copyright (c) 2025 ClearCode Inc.
                     <div id="trusted-domains">
                     </div>
                 </fluent-card>
-                <fluent-card>
+                <fluent-card id="untrusted-domains-card">
                     <h3 data-l10n-text-content="confirmation_untrustedCaption"></h3>
                     <fluent-divider></fluent-divider>
                     <div id="untrusted-domains"></div>
@@ -50,7 +50,7 @@ Copyright (c) 2025 ClearCode Inc.
                     <fluent-divider></fluent-divider>
                     <div id="mail-body"></div>
                 </fluent-card>
-                <fluent-card>
+                <fluent-card id="misc-card">
                     <h3 data-l10n-text-content="confirmation_miscCaption"></h3>
                     <fluent-divider></fluent-divider>
                     <div id="attachment-and-others"></div>
