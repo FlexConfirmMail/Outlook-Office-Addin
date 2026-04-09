@@ -322,6 +322,28 @@ async function onMessageFromParent(arg) {
   updateDialogSetting(configs.policy, configs.user);
 }
 
+function swapOptionContents(a, b) {
+  // Swapping DOM elements doesn't update the listbox's internal state,
+  // so swap the contents instead.
+  const tmpValue = a.value;
+  const tmpText = a.textContent;
+  a.value = b.value;
+  a.textContent = b.textContent;
+  b.value = tmpValue;
+  b.textContent = tmpText;
+}
+
+function reorderListbox(order) {
+  const listbox = document.getElementById("card-order-list");
+  const options = [...listbox.querySelectorAll("fluent-option")];
+
+  order.forEach((value, i) => {
+    const sourceIdx = options.findIndex((opt) => opt.value === value);
+    if (sourceIdx < 0 || sourceIdx === i) return;
+    swapOptionContents(options[i], options[sourceIdx]);
+  });
+}
+
 function updateDialogSetting(policy, user) {
   policyConfig = policyConfig.merge(policy);
   userConfig = userConfig.merge(user);
@@ -402,6 +424,16 @@ function updateDialogSetting(policy, user) {
   document.getElementById("emphasizeUntrustedToCc").checked = common.EmphasizeUntrustedToCc;
   document.getElementById("emphasizeUntrustedToCc").disabled =
     fixedParametersSet.has("EmphasizeUntrustedToCc");
+  reorderListbox(common.ConfirmationDialogCardsOrder ?? []);
+  document.getElementById("card-order-list").disabled = fixedParametersSet.has(
+    "ConfirmationDialogCardsOrder"
+  );
+  document.getElementById("moveUpButton").disabled = fixedParametersSet.has(
+    "ConfirmationDialogCardsOrder"
+  );
+  document.getElementById("moveDownButton").disabled = fixedParametersSet.has(
+    "ConfirmationDialogCardsOrder"
+  );
 }
 
 function sendStatusToParent(status) {
@@ -454,6 +486,11 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
   const convertToBccThreshold = document.getElementById("convertToBccThreshold").value;
   const blockDistributionLists = document.getElementById("blockDistributionLists").checked;
   const emphasizeUntrustedToCc = document.getElementById("emphasizeUntrustedToCc").checked;
+  const confirmationDialogCardsOrder = [
+    ...document.querySelectorAll("#card-order-list fluent-option"),
+  ]
+    .map((opt) => opt.value)
+    .join(",");
   let commonConfigString = "";
   commonConfigString += serializeCommonConfig(mode, "CountEnabled", countEnabled);
   commonConfigString += serializeCommonConfig(mode, "CountSeconds", countSeconds);
@@ -498,6 +535,16 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
     mode,
     "EmphasizeUntrustedToCc",
     emphasizeUntrustedToCc
+  );
+  commonConfigString += serializeCommonConfig(
+    mode,
+    "SafeBccReconfirmationThreshold",
+    safeBccReconfirmationThreshold
+  );
+  commonConfigString += serializeCommonConfig(
+    mode,
+    "ConfirmationDialogCardsOrder",
+    confirmationDialogCardsOrder
   );
   // FixedParameters is for policy setting.
   // Do not serialize FixedParameters for user setting.
@@ -557,7 +604,6 @@ window.onDownload = () => {
   const unsafeDomainsString = serializeUnsafeDomains({ mode });
   const unsafeFilesString = serializeUnsafeFiles({ mode });
   const unsafeBodiesString = serializeUnsafeBodies({ mode });
-
   const targets = [
     {
       name: "Common.txt",
@@ -598,3 +644,17 @@ window.onDownload = () => {
     console.log(`File downloaded successfully: ${name}.`);
   }
 };
+
+function moveCard(direction) {
+  const listbox = document.getElementById("card-order-list");
+  const options = [...listbox.querySelectorAll("fluent-option")];
+  const idx = options.findIndex((_) => _.getAttribute("aria-selected") === "true");
+  const targetIdx = idx + direction;
+  if (idx < 0 || targetIdx < 0 || targetIdx >= options.length) return;
+
+  swapOptionContents(options[idx], options[targetIdx]);
+  options[targetIdx].click();
+}
+
+window.onMoveUpCard = () => moveCard(-1);
+window.onMoveDownCard = () => moveCard(1);
