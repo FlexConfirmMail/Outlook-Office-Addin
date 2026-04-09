@@ -35,7 +35,6 @@ const CARD_ID_MAP = {
 };
 const DEFAULT_ORDER = ["TrustedDomains", "UntrustedDomains", "Subject", "Body", "Misc"];
 
-
 Office.onReady(() => {
   if (window !== window.parent) {
     // Inframe mode
@@ -202,12 +201,12 @@ function reorderCards(confirmationDialogCardsOrder) {
     return;
   }
 
-  const container = document.querySelector('.cards');
+  const container = document.querySelector(".cards");
   if (!container) {
     return;
   }
-  const specified = confirmationDialogCardsOrder.filter(k => k in CARD_ID_MAP);
-  const rest = DEFAULT_ORDER.filter(k => !specified.includes(k));
+  const specified = confirmationDialogCardsOrder.filter((_) => _ in CARD_ID_MAP);
+  const rest = DEFAULT_ORDER.filter((_) => !specified.includes(_));
   const order = [...specified, ...rest];
 
   for (const key of order) {
