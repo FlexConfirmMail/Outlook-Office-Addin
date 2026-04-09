@@ -33,6 +33,7 @@ export function test_createDefaultConfig() {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
+        ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
       trustedDomains: [],
@@ -103,6 +104,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 3,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
+        ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -139,7 +141,7 @@ test_merge.parameters = {
         "ConvertToBccEnabled = true\n" +
         "ConvertToBccThreshold = 3\n" +
         "BlockDistributionLists = true\n" +
-        "EmphasizeUntrustedToCc = true",
+        "EmphasizeUntrustedToCc = true\n",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -172,6 +174,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 3,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
+        ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -244,6 +247,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 3,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
+        ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -326,6 +330,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 3,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
+        ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain"],
@@ -398,6 +403,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 4,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
+        ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
       trustedDomains: ["trustedDomain_left"],
@@ -467,6 +473,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: false,
         EmphasizeUntrustedToCc: false,
+        ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
@@ -505,6 +512,7 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 2\n" +
         "BlockDistributionLists = false\n" +
         "EmphasizeUntrustedToCc = false\n" +
+        "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
@@ -538,6 +546,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: false,
         EmphasizeUntrustedToCc: false,
+        ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_left", "trustedDomain_right"],
@@ -581,6 +590,7 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 2\n" +
         "BlockDistributionLists = false\n" +
         "EmphasizeUntrustedToCc = false\n" +
+        "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
       unsafeDomainsString: "unsafeDomain_left\n[WARNING]\nunsafeDomain_right",
@@ -622,6 +632,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 3,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
+        ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: [
           "CountEnabled",
           "CountAllowSkip",
@@ -646,7 +657,8 @@ test_merge.parameters = {
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
-          "UnsafeBodies"
+          "UnsafeBodies",
+          "ConfirmationDialogCardsOrder"
         ],
       },
       trustedDomains: ["trustedDomain_left"],
@@ -685,6 +697,7 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 3\n" +
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
+        "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = " + 
             "CountEnabled," +
             "CountAllowSkip," +
@@ -707,7 +720,8 @@ test_merge.parameters = {
             "TrustedDomains," +
             "UnsafeDomains," +
             "UnsafeFiles," + 
-            "UnsafeBodies",
+            "UnsafeBodies," +
+            "ConfirmationDialogCardsOrder",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
@@ -740,6 +754,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: false,
         EmphasizeUntrustedToCc: false,
+        ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: ["CountSeconds"],
       },
       trustedDomains: ["trustedDomain_right"],
@@ -773,6 +788,7 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 2\n" +
         "BlockDistributionLists = false\n" +
         "EmphasizeUntrustedToCc = false\n" +
+        "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
       unsafeDomainsString: "unsafeDomain_right",
@@ -803,6 +819,7 @@ test_merge.parameters = {
         ConvertToBccThreshold: 3,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
+        ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: [
           "CountEnabled",
           "CountAllowSkip",
@@ -827,7 +844,8 @@ test_merge.parameters = {
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
-          "UnsafeBodies"
+          "UnsafeBodies",
+          "ConfirmationDialogCardsOrder"
         ],
       },
       trustedDomains: ["trustedDomain_left"],
@@ -866,6 +884,7 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 3\n" +
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
+        "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = " + 
           "CountEnabled," +
           "CountAllowSkip," +
@@ -890,7 +909,8 @@ test_merge.parameters = {
           "TrustedDomains," +
           "UnsafeDomains," +
           "UnsafeFiles," + 
-          "UnsafeBodies",
+          "UnsafeBodies," +
+          "ConfirmationDialogCardsOrder",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",

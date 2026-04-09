@@ -144,7 +144,7 @@ export class Config {
     }
     let commonString = "";
     for (const [key, value] of Object.entries(this.common)) {
-      if (key === "FixedParameters") {
+      if (Config.commonParamDefs[key] === "commaSeparatedValues") {
         if (value.length > 0) {
           commonString += `${key} = ${value.join(",")}\n`;
         }
@@ -177,6 +177,7 @@ export class Config {
     ConvertToBccThreshold: "number",
     BlockDistributionLists: "boolean",
     EmphasizeUntrustedToCc: "boolean",
+    ConfirmationDialogCardsOrder: "commaSeparatedValues",
     FixedParameters: "commaSeparatedValues",
   };
   static unsafeBodiesParamDefs = {
@@ -213,6 +214,7 @@ export class Config {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
+        ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
       trustedDomains: [],

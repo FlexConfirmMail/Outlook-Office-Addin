@@ -26,6 +26,16 @@ let unsafeAddressesReconfirmation;
 let unsafeFilesReconfirmation;
 let unsafeBodiesConfirmation;
 
+const CARD_ID_MAP = {
+  UntrustedDomains: "untrusted-domains-card",
+  TrustedDomains: "trusted-domains-card",
+  Subject: "mail-subject-card",
+  Body: "mail-body-card",
+  Misc: "misc-card",
+};
+const DEFAULT_ORDER = ["TrustedDomains", "UntrustedDomains", "Subject", "Body", "Misc"];
+
+
 Office.onReady(() => {
   if (window !== window.parent) {
     // Inframe mode
@@ -187,6 +197,27 @@ function appendCheckbox({ container, id, label, warning, emphasize }) {
   container.appendChild(checkbox);
 }
 
+function reorderCards(confirmationDialogCardsOrder) {
+  if (!confirmationDialogCardsOrder?.length) {
+    return;
+  }
+
+  const container = document.querySelector('.cards');
+  if (!container) {
+    return;
+  }
+  const specified = confirmationDialogCardsOrder.filter(k => k in CARD_ID_MAP);
+  const rest = DEFAULT_ORDER.filter(k => !specified.includes(k));
+  const order = [...specified, ...rest];
+
+  for (const key of order) {
+    const card = document.getElementById(CARD_ID_MAP[key]);
+    if (card) {
+      container.appendChild(card);
+    }
+  }
+}
+
 async function onMessageFromParent(arg) {
   const receivedData = JSON.parse(arg.message);
   console.log(receivedData);
@@ -314,5 +345,6 @@ async function onMessageFromParent(arg) {
       reconfirmation.appendContent(content);
     }
   }
+  reorderCards(data.config.common.ConfirmationDialogCardsOrder);
   Dialog.resizeToContent();
 }
