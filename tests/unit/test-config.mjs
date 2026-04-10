@@ -33,7 +33,7 @@ export function test_createDefaultConfig() {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
-        ConfirmationDialogCardsOrder: [],
+        ConfirmationDialogCardsOrder: [...Config.CARD_DEFAULT_ORDER],
         FixedParameters: [],
       },
       trustedDomains: [],

@@ -17,6 +17,8 @@ export class Config {
   unsafeFilesString = "";
   unsafeBodiesString = "";
 
+  static CARD_DEFAULT_ORDER = ["TrustedDomains", "UntrustedDomains", "Subject", "Body", "Misc"];
+
   constructor({
     common,
     trustedDomains,
@@ -220,7 +222,7 @@ export class Config {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
-        ConfirmationDialogCardsOrder: [],
+        ConfirmationDialogCardsOrder: [...Config.CARD_DEFAULT_ORDER],
         FixedParameters: [],
       },
       trustedDomains: [],

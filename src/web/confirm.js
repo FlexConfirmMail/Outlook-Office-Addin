@@ -14,6 +14,7 @@ import { UnsafeDomainsReconfirmation } from "./unsafe-domains-reconfirmation.mjs
 import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation.mjs";
 import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
 import { UnsafeBodiesConfirmation } from "./unsafe-bodies-confirmation.mjs";
+import { Config } from "./config.mjs";
 import * as Dialog from "./dialog.mjs";
 import DOMPurify from "dompurify";
 
@@ -33,7 +34,6 @@ const CARD_ID_MAP = {
   Body: "mail-body-card",
   Misc: "misc-card",
 };
-const DEFAULT_ORDER = ["TrustedDomains", "UntrustedDomains", "Subject", "Body", "Misc"];
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -206,7 +206,7 @@ function reorderCards(confirmationDialogCardsOrder) {
     return;
   }
   const specified = confirmationDialogCardsOrder.filter((_) => _ in CARD_ID_MAP);
-  const rest = DEFAULT_ORDER.filter((_) => !specified.includes(_));
+  const rest = Config.CARD_DEFAULT_ORDER.filter((_) => !specified.includes(_));
   const order = [...specified, ...rest];
 
   for (const key of order) {
