@@ -48,6 +48,16 @@ fluent-tabs {
   margin-left: 10px;
 }
 
+.button-container.card-order-buttons {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.button-container.card-order-buttons fluent-button {
+  margin-left: 0;
+  margin-right: 10px;
+}
+
 fluent-text-area {
   height: 100%;
   width: 100%;

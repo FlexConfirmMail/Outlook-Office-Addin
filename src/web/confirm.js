@@ -14,6 +14,7 @@ import { UnsafeDomainsReconfirmation } from "./unsafe-domains-reconfirmation.mjs
 import { UnsafeAddressesReconfirmation } from "./unsafe-addresses-reconfirmation.mjs";
 import { UnsafeFilesReconfirmation } from "./unsafe-files-reconfirmation.mjs";
 import { UnsafeBodiesConfirmation } from "./unsafe-bodies-confirmation.mjs";
+import { Config } from "./config.mjs";
 import * as Dialog from "./dialog.mjs";
 import DOMPurify from "dompurify";
 
@@ -25,6 +26,14 @@ let unsafeDomainsReconfirmation;
 let unsafeAddressesReconfirmation;
 let unsafeFilesReconfirmation;
 let unsafeBodiesConfirmation;
+
+const CARD_ID_MAP = {
+  UntrustedDomains: "untrusted-domains-card",
+  TrustedDomains: "trusted-domains-card",
+  Subject: "mail-subject-card",
+  Body: "mail-body-card",
+  Misc: "misc-card",
+};
 
 Office.onReady(() => {
   if (window !== window.parent) {
@@ -187,6 +196,27 @@ function appendCheckbox({ container, id, label, warning, emphasize }) {
   container.appendChild(checkbox);
 }
 
+function reorderCards(confirmationDialogCardsOrder) {
+  if (!confirmationDialogCardsOrder?.length) {
+    return;
+  }
+
+  const container = document.querySelector(".cards");
+  if (!container) {
+    return;
+  }
+  const specified = confirmationDialogCardsOrder.filter((_) => _ in CARD_ID_MAP);
+  const rest = Config.CARD_DEFAULT_ORDER.filter((_) => !specified.includes(_));
+  const order = [...specified, ...rest];
+
+  for (const key of order) {
+    const card = document.getElementById(CARD_ID_MAP[key]);
+    if (card) {
+      container.appendChild(card);
+    }
+  }
+}
+
 async function onMessageFromParent(arg) {
   const receivedData = JSON.parse(arg.message);
   console.log(receivedData);
@@ -314,5 +344,6 @@ async function onMessageFromParent(arg) {
       reconfirmation.appendContent(content);
     }
   }
+  reorderCards(data.config.common.ConfirmationDialogCardsOrder);
   Dialog.resizeToContent();
 }

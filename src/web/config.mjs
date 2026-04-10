@@ -17,6 +17,8 @@ export class Config {
   unsafeFilesString = "";
   unsafeBodiesString = "";
 
+  static CARD_DEFAULT_ORDER = ["TrustedDomains", "UntrustedDomains", "Subject", "Body", "Misc"];
+
   constructor({
     common,
     trustedDomains,
@@ -57,10 +59,16 @@ export class Config {
           this.common[paramName] = other.common[paramName];
           break;
         case "commaSeparatedValues": {
-          const thisParamValue = this.common[paramName] ?? [];
-          const otherParamValue = other.common[paramName] ?? [];
-          const newParamValueSet = new Set([...thisParamValue, ...otherParamValue]);
-          this.common[paramName] = [...newParamValueSet];
+          if (paramName === "FixedParameters") {
+            // For FixedParameters, the merged value is a union of both values, and duplicates are removed.
+            const thisParamValue = this.common[paramName] ?? [];
+            const otherParamValue = other.common[paramName] ?? [];
+            const newParamValueSet = new Set([...thisParamValue, ...otherParamValue]);
+            this.common[paramName] = [...newParamValueSet];
+          } else if (paramName === "ConfirmationDialogCardsOrder") {
+            // For ConfirmationDialogCardsOrder, the merged value is the value of other if it's not empty, otherwise the value of this.
+            this.common[paramName] = other.common[paramName];
+          }
           break;
         }
         default:
@@ -144,7 +152,7 @@ export class Config {
     }
     let commonString = "";
     for (const [key, value] of Object.entries(this.common)) {
-      if (key === "FixedParameters") {
+      if (Config.commonParamDefs[key] === "commaSeparatedValues") {
         if (value.length > 0) {
           commonString += `${key} = ${value.join(",")}\n`;
         }
@@ -177,6 +185,7 @@ export class Config {
     ConvertToBccThreshold: "number",
     BlockDistributionLists: "boolean",
     EmphasizeUntrustedToCc: "boolean",
+    ConfirmationDialogCardsOrder: "commaSeparatedValues",
     FixedParameters: "commaSeparatedValues",
   };
   static unsafeBodiesParamDefs = {
@@ -213,6 +222,7 @@ export class Config {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
+        ConfirmationDialogCardsOrder: [...Config.CARD_DEFAULT_ORDER],
         FixedParameters: [],
       },
       trustedDomains: [],

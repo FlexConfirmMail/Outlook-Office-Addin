@@ -51,6 +51,23 @@ Copyright (c) 2025 ClearCode Inc.
                         id="safeNewDomainsEnabled" data-l10n-text-content="setting_configSafeNewDomainsEnabled"></fluent-checkbox><br />
                 </fluent-card>
                 <fluent-card>
+                    <strong data-l10n-text-content="setting_configConfirmationDialogCardsOrder"></strong>
+                    <fluent-divider></fluent-divider>
+                    <div id="card-order-settings">
+                        <fluent-listbox id="cardOrderList" size="5">
+                            <fluent-option value="TrustedDomains" data-l10n-text-content="confirmation_trustedCaption"></fluent-option>
+                            <fluent-option value="UntrustedDomains" data-l10n-text-content="confirmation_untrustedCaption" ></fluent-option>
+                            <fluent-option value="Subject" data-l10n-text-content="confirmation_subjectCaption"></fluent-option>
+                            <fluent-option value="Body" data-l10n-text-content="confirmation_bodyCaption"></fluent-option>
+                            <fluent-option value="Misc" data-l10n-text-content="confirmation_miscCaption"></fluent-option>
+                        </fluent-listbox>
+                        <div id="card-order-buttons" class="button-container card-order-buttons">
+                            <fluent-button id="moveUpButton" onclick="onMoveUpCard()" data-l10n-text-content="setting_moveUp"></fluent-button>
+                            <fluent-button id="moveDownButton" onclick="onMoveDownCard()" data-l10n-text-content="setting_moveDown"></fluent-button>
+                        </div>
+                    </div>
+                </fluent-card>
+                <fluent-card>
                     <strong data-l10n-text-content="setting_configMisc"></strong>
                     <fluent-divider></fluent-divider>
                     <fluent-checkbox id="requireCheckSubject" data-l10n-text-content="setting_requireCheckSubject"></fluent-checkbox><br />
