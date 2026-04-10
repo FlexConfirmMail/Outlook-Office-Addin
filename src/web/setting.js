@@ -334,7 +334,7 @@ function swapOptionContents(a, b) {
 }
 
 function reorderListbox(order) {
-  const listbox = document.getElementById("card-order-list");
+  const listbox = document.getElementById("cardOrderList");
   const options = [...listbox.querySelectorAll("fluent-option")];
 
   order.forEach((value, i) => {
@@ -425,15 +425,15 @@ function updateDialogSetting(policy, user) {
   document.getElementById("emphasizeUntrustedToCc").disabled =
     fixedParametersSet.has("EmphasizeUntrustedToCc");
   reorderListbox(common.ConfirmationDialogCardsOrder ?? []);
-  document.getElementById("card-order-list").disabled = fixedParametersSet.has(
-    "ConfirmationDialogCardsOrder"
-  );
-  document.getElementById("moveUpButton").disabled = fixedParametersSet.has(
-    "ConfirmationDialogCardsOrder"
-  );
-  document.getElementById("moveDownButton").disabled = fixedParametersSet.has(
-    "ConfirmationDialogCardsOrder"
-  );
+  if (fixedParametersSet.has("ConfirmationDialogCardsOrder")) {
+    const listbox = document.getElementById("cardOrderList");
+    listbox.disabled = true;
+    listbox.querySelectorAll("fluent-option").forEach((opt) => {
+      opt.disabled = true;
+    });
+    document.getElementById("moveUpButton").disabled = true;
+    document.getElementById("moveDownButton").disabled = true;
+  }
 }
 
 function sendStatusToParent(status) {
@@ -487,7 +487,7 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
   const blockDistributionLists = document.getElementById("blockDistributionLists").checked;
   const emphasizeUntrustedToCc = document.getElementById("emphasizeUntrustedToCc").checked;
   const confirmationDialogCardsOrder = [
-    ...document.querySelectorAll("#card-order-list fluent-option"),
+    ...document.querySelectorAll("#cardOrderList fluent-option"),
   ]
     .map((opt) => opt.value)
     .join(",");
@@ -646,7 +646,7 @@ window.onDownload = () => {
 };
 
 function moveCard(direction) {
-  const listbox = document.getElementById("card-order-list");
+  const listbox = document.getElementById("cardOrderList");
   const options = [...listbox.querySelectorAll("fluent-option")];
   const idx = options.findIndex((_) => _.getAttribute("aria-selected") === "true");
   const targetIdx = idx + direction;
