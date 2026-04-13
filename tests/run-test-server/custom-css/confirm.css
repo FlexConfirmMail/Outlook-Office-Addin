@@ -1,0 +1,15 @@
+#untrusted-domains-card {
+  background-color: lemonchiffon;
+  border-color: red;
+}
+
+#untrusted-domains-card .warning-icon {
+  color: red; 
+  font-size: 48px;
+}
+
+#untrusted-domains-card strong {
+  font-size: 36px;
+  font-weight: bold;
+  color: red;
+}
