@@ -538,11 +538,6 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
   );
   commonConfigString += serializeCommonConfig(
     mode,
-    "SafeBccReconfirmationThreshold",
-    safeBccReconfirmationThreshold
-  );
-  commonConfigString += serializeCommonConfig(
-    mode,
     "ConfirmationDialogCardsOrder",
     confirmationDialogCardsOrder
   );
