@@ -106,6 +106,11 @@
   "setting_configBlockDistributionLists":	"Block sending if unexpanded distribution lists or contact groups are included",
   "setting_configEmphasizeUntrustedToCc": "Emphasize external domains in To/Cc fields",
   "setting_configConfirmationDialogCardsOrder": "Confirmation Dialog Items Order",
+  "setting_cardsOrderTrustedCaption": "Internal Recipients",
+  "setting_cardsOrderUntrustedCaption": "External Recipients",
+  "setting_cardsOrderSubjectCaption": "Subject",
+  "setting_cardsOrderBodyCaption": "Body",
+  "setting_cardsOrderMiscCaption": "Attachments / Warnings",
   "setting_moveUp": "Move Up",
   "setting_moveDown": "Move Down"
 }
