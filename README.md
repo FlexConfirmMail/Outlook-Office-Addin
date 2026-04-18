@@ -127,6 +127,74 @@ npm run watch:run-test-server
 なお、現状では、設定用のリボンのボタンなども存在しない。
 設定はWebサーバーのconfigsフォルダー配下のファイルを直接編集する。
 
+### E2E自動テスト（Playwright）
+
+Playwright を使用して、実際の Outlook on the web 上でアドインの動作を自動テストできます。
+
+#### 前提条件
+
+- Node.js および npm がインストール済みであること
+- アドインのマニフェストが Outlook on the web に登録済みであること
+- テスト用の Microsoft 365 アカウントを持っていること
+
+#### 初回セットアップ
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+#### テストの実行手順
+
+**1. 既存の Edge ウィンドウをすべて閉じる**
+
+**2. リモートデバッグを有効にして Edge を起動する**
+
+```cmd
+"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
+  --remote-debugging-port=9222 ^
+  --user-data-dir="%LOCALAPPDATA%\Microsoft\Edge\E2ETestProfile"
+```
+
+**3. 起動した Edge で Outlook on the web にログインする**
+
+https://outlook.office365.com/mail/
+
+**4. テストを実行する**
+
+```bash
+npm run test:e2e
+```
+
+#### テスト実行コマンド一覧
+
+| コマンド | 説明 |
+|----------|------|
+| `npm run test:e2e` | 全テストを実行 |
+| `npm run test:e2e:debug` | デバッグモードで実行（ステップ実行可能） |
+| `npx playwright test --grep "テスト名"` | 特定のテストのみ実行 |
+| `npx playwright show-report` | テスト結果レポートをブラウザで表示 |
+
+#### ログイン中のメールアドレスが自動取得できない場合
+
+環境変数 `OUTLOOK_EMAIL` にテストアカウントのメールアドレスを設定して実行します。
+
+コマンドプロンプト:
+```cmd
+set OUTLOOK_EMAIL=yourname@example.com && npm run test:e2e
+```
+
+PowerShell:
+```powershell
+$env:OUTLOOK_EMAIL="yourname@example.com"; npm run test:e2e
+```
+
+#### テスト一覧
+
+| テストファイル | テスト対象機能 |
+|----------------|---------------|
+| `tests/e2e/countdown.spec.mjs` | メール送信前のカウントダウン機能 |
+
 ### デバッグ方法
 
 #### Web版
