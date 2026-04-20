@@ -21,6 +21,9 @@ const mockData = {
     ItemType: {
       Message: "message",
       Appointment: "appointment"
+    },
+    RecipientType: {
+      DistributionList: "distributionList"
     }
   }
 };
