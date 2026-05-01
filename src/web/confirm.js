@@ -194,8 +194,8 @@ function appendMiscCheckboxes({ items, warning, emphasize }) {
 
 function displayCardsHaveCheckboxes() {
   ["trusted-domains-card", "untrusted-domains-card", "misc-card"]
-    .map(id => document.querySelector(`#${id}`))
-    .forEach(card => {
+    .map((id) => document.querySelector(`#${id}`))
+    .forEach((card) => {
       if (card?.querySelector("fluent-checkbox.check-target")) {
         card.hidden = false;
       }
