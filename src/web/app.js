@@ -155,7 +155,7 @@ async function tryConfirm(data, asyncContext) {
     data,
     asyncContext,
     height: Math.min(60, charsToPercentage(50, screen.availHeight)),
-    width: Math.min(80, charsToPercentage(60, screen.availWidth)),
+    width: Math.min(90, charsToPercentage(90, screen.availWidth)),
   });
   console.debug("status: ", status);
 
