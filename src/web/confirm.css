@@ -7,7 +7,12 @@ Copyright (c) 2025 ClearCode Inc.
 */
 .heading-container {
   display: flex;
-  align-items: center;
+  align-items: end;
+  margin-bottom: 0;
+}
+
+.heading-container h3 {
+  margin-bottom: 0;
 }
 
 .heading-container fluent-button {
@@ -167,4 +172,20 @@ pre {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+#trusted-domains-card {
+    container-type: inline-size;
+}
+
+@container (max-width: 430px) {
+    #trusted-domains-card .heading-container {
+        flex-direction: column-reverse; /* DOM 順は h3 → button、視覚順を逆転 */
+        align-items: flex-start;
+    }
+
+    #check-all-trusted {
+        margin-top: 10px;
+        margin-left: 0;
+    }
 }
