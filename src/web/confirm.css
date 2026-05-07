@@ -173,3 +173,19 @@ pre {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+#trusted-domains-card {
+    container-type: inline-size;
+}
+
+@container (max-width: 430px) {
+    #trusted-domains-card .heading-container {
+        flex-direction: column-reverse; /* DOM 順は h3 → button、視覚順を逆転 */
+        align-items: flex-start;
+    }
+
+    #check-all-trusted {
+        margin-top: 10px;
+        margin-left: 0;
+    }
+}
