@@ -105,7 +105,7 @@
   "setting_requireCheckBody": "要求确认电子邮件的文本",
   "setting_configBlockDistributionLists":	"如果包含未展开的分发列表、联系人组，则禁止发送",
   "setting_configEmphasizeUntrustedToCc": "将外部域名的收件人（To）・抄送（CC）高亮显示",
-  "setting_configConfirmationDialogCardsOrder": "确认框中项目的显示顺序设置",
+  "setting_configConfirmationDialogCardsOrder": "确认对话框的确认项目的显示顺序设置",
   "setting_cardsOrderTrustedCaption": "信任域，地址",
   "setting_cardsOrderUntrustedCaption": "外部目的地",
   "setting_cardsOrderSubjectCaption": "主题",
