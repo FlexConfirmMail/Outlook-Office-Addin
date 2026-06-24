@@ -14,6 +14,7 @@ export class OfficeDataAccessHelper {
     // Office.MailboxEnums are not accessible before initialized.
     "cloud", // Office.MailboxEnums.AttachmentType.Cloud,
     "file", // Office.MailboxEnums.AttachmentType.File,
+    "item", // Office.MailboxEnums.AttachmentType.Item,
   ]);
 
   static getBccAsync() {
