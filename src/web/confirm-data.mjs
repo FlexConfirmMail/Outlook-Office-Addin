@@ -44,6 +44,11 @@ import { OfficeDataAccessHelper } from "./office-data-access-helper.mjs";
 //   itemType: Office.MailboxEnums.ItemType.Message,
 // }
 export class ConfirmData {
+  // Compose mode does not provide the content type of attachments, so inline
+  // image attachments are detected by their file name extensions.
+  static INLINE_IMAGE_EXTENSIONS =
+    /\.(a?png|jpe?g|jpe|jfif|pjpe?g|pjp|gif|bmp|dib|rle|svgz?|webp|tiff?|ico|cur|emf|wmf|emz|wmz|avif|heic|heif|jxl|jxr|hdp|wdp|tga|psd|pcx|xbm|pbm|pgm|ppm|pnm)$/i;
+
   target;
   config;
   originalRecipients;
@@ -176,9 +181,10 @@ export class ConfirmData {
     messageData.locale = locale;
     const confirmData = new ConfirmData(messageData);
     confirmData.config = await ConfigLoader.loadEffectiveConfig();
-    if (confirmData.config.common.IgnoreInlineAttachments) {
+    if (confirmData.config.common.IgnoreInlineImageAttachments) {
       confirmData.target.attachments = (confirmData.target.attachments || []).filter(
-        (attachment) => !attachment.isInline
+        (attachment) =>
+          !(attachment.isInline && ConfirmData.INLINE_IMAGE_EXTENSIONS.test(attachment.name))
       );
     }
     confirmData.classifyTarget();
