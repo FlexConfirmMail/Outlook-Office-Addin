@@ -424,9 +424,11 @@ function updateDialogSetting(policy, user) {
   document.getElementById("emphasizeUntrustedToCc").checked = common.EmphasizeUntrustedToCc;
   document.getElementById("emphasizeUntrustedToCc").disabled =
     fixedParametersSet.has("EmphasizeUntrustedToCc");
-  document.getElementById("ignoreInlineAttachments").checked = common.IgnoreInlineAttachments;
-  document.getElementById("ignoreInlineAttachments").disabled =
-    fixedParametersSet.has("IgnoreInlineAttachments");
+  document.getElementById("ignoreInlineImageAttachments").checked =
+    common.IgnoreInlineImageAttachments;
+  document.getElementById("ignoreInlineImageAttachments").disabled = fixedParametersSet.has(
+    "IgnoreInlineImageAttachments"
+  );
   reorderListbox(common.ConfirmationDialogCardsOrder ?? []);
   if (fixedParametersSet.has("ConfirmationDialogCardsOrder")) {
     const listbox = document.getElementById("cardOrderList");
@@ -489,7 +491,9 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
   const convertToBccThreshold = document.getElementById("convertToBccThreshold").value;
   const blockDistributionLists = document.getElementById("blockDistributionLists").checked;
   const emphasizeUntrustedToCc = document.getElementById("emphasizeUntrustedToCc").checked;
-  const ignoreInlineAttachments = document.getElementById("ignoreInlineAttachments").checked;
+  const ignoreInlineImageAttachments = document.getElementById(
+    "ignoreInlineImageAttachments"
+  ).checked;
   const confirmationDialogCardsOrder = [
     ...document.querySelectorAll("#cardOrderList fluent-option"),
   ]
@@ -542,8 +546,8 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
   );
   commonConfigString += serializeCommonConfig(
     mode,
-    "IgnoreInlineAttachments",
-    ignoreInlineAttachments
+    "IgnoreInlineImageAttachments",
+    ignoreInlineImageAttachments
   );
   commonConfigString += serializeCommonConfig(
     mode,
