@@ -425,9 +425,8 @@ function updateDialogSetting(policy, user) {
   document.getElementById("emphasizeUntrustedToCc").disabled =
     fixedParametersSet.has("EmphasizeUntrustedToCc");
   document.getElementById("ignoreInlineAttachments").checked = common.IgnoreInlineAttachments;
-  document.getElementById("ignoreInlineAttachments").disabled = fixedParametersSet.has(
-    "IgnoreInlineAttachments"
-  );
+  document.getElementById("ignoreInlineAttachments").disabled =
+    fixedParametersSet.has("IgnoreInlineAttachments");
   reorderListbox(common.ConfirmationDialogCardsOrder ?? []);
   if (fixedParametersSet.has("ConfirmationDialogCardsOrder")) {
     const listbox = document.getElementById("cardOrderList");
