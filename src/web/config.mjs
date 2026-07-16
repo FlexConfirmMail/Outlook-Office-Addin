@@ -185,6 +185,7 @@ export class Config {
     ConvertToBccThreshold: "number",
     BlockDistributionLists: "boolean",
     EmphasizeUntrustedToCc: "boolean",
+    IgnoreInlineAttachments: "boolean",
     ConfirmationDialogCardsOrder: "commaSeparatedValues",
     FixedParameters: "commaSeparatedValues",
   };
@@ -222,6 +223,7 @@ export class Config {
         ConvertToBccThreshold: 2,
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
+        IgnoreInlineAttachments: false,
         ConfirmationDialogCardsOrder: [...Config.CARD_DEFAULT_ORDER],
         FixedParameters: [],
       },

@@ -176,6 +176,11 @@ export class ConfirmData {
     messageData.locale = locale;
     const confirmData = new ConfirmData(messageData);
     confirmData.config = await ConfigLoader.loadEffectiveConfig();
+    if (confirmData.config.common.IgnoreInlineAttachments) {
+      confirmData.target.attachments = (confirmData.target.attachments || []).filter(
+        (attachment) => !attachment.isInline
+      );
+    }
     confirmData.classifyTarget();
     confirmData.setUnsafeBodiesBlockStatus(locale.language);
     return confirmData;
