@@ -105,6 +105,7 @@
   "setting_requireCheckBody": "Require to check the message body",
   "setting_configBlockDistributionLists":	"Block sending if unexpanded distribution lists or contact groups are included",
   "setting_configEmphasizeUntrustedToCc": "Emphasize external domains in To/Cc fields",
+  "setting_configIgnoreInlineAttachments": "Exclude inline attachments",
   "setting_configConfirmationDialogCardsOrder": "Confirmation Dialog Items Order",
   "setting_cardsOrderTrustedCaption": "Internal Recipients",
   "setting_cardsOrderUntrustedCaption": "External Recipients",

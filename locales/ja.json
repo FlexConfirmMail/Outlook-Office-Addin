@@ -105,6 +105,7 @@
   "setting_requireCheckBody": "メール本文の確認を求める",
   "setting_configBlockDistributionLists": "未展開の配布リスト、連絡グループが含まれる場合、送信を禁止する",
   "setting_configEmphasizeUntrustedToCc": "社外ドメインのTo・CCを強調表示する",
+  "setting_configIgnoreInlineAttachments": "本文に挿入されたインライン添付ファイルを確認対象から除外する",
   "setting_configConfirmationDialogCardsOrder": "確認ダイアログの確認項目の表示順設定",
   "setting_cardsOrderTrustedCaption": "登録済みドメインのメールアドレス",
   "setting_cardsOrderUntrustedCaption": "外部ドメインのメールアドレス",
