@@ -34,6 +34,8 @@ export function test_createDefaultConfig() {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
         IgnoreInlineImageAttachments: false,
+        ResolveRecipientsWithGraphApi: false,
+        GraphApiClientId: "",
         ConfirmationDialogCardsOrder: [...Config.CARD_DEFAULT_ORDER],
         FixedParameters: [],
       },
@@ -106,6 +108,8 @@ test_merge.parameters = {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
         IgnoreInlineImageAttachments: true,
+        ResolveRecipientsWithGraphApi: true,
+        GraphApiClientId: "client-id",
         ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
@@ -144,7 +148,9 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 3\n" +
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
-        "IgnoreInlineImageAttachments = true\n",
+        "IgnoreInlineImageAttachments = true\n" +
+        "ResolveRecipientsWithGraphApi = true\n" +
+        "GraphApiClientId = client-id\n",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -178,6 +184,8 @@ test_merge.parameters = {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
         IgnoreInlineImageAttachments: true,
+        ResolveRecipientsWithGraphApi: true,
+        GraphApiClientId: "client-id",
         ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
@@ -217,7 +225,9 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 3\n" +
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
-        "IgnoreInlineImageAttachments = true",
+        "IgnoreInlineImageAttachments = true\n" +
+        "ResolveRecipientsWithGraphApi = true\n" +
+        "GraphApiClientId = client-id",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -253,6 +263,8 @@ test_merge.parameters = {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
         IgnoreInlineImageAttachments: true,
+        ResolveRecipientsWithGraphApi: true,
+        GraphApiClientId: "client-id",
         ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
@@ -292,7 +304,9 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 3\n" +
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
-        "IgnoreInlineImageAttachments = true",
+        "IgnoreInlineImageAttachments = true\n" +
+        "ResolveRecipientsWithGraphApi = true\n" +
+        "GraphApiClientId = client-id",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -338,6 +352,8 @@ test_merge.parameters = {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
         IgnoreInlineImageAttachments: true,
+        ResolveRecipientsWithGraphApi: true,
+        GraphApiClientId: "client-id",
         ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
@@ -377,7 +393,9 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 3\n" +
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
-        "IgnoreInlineImageAttachments = true",
+        "IgnoreInlineImageAttachments = true\n" +
+        "ResolveRecipientsWithGraphApi = true\n" +
+        "GraphApiClientId = client-id",
       trustedDomainsString: "trustedDomain",
       unsafeDomainsString: "unsafeDomain",
       unsafeFilesString: "unsafeFile",
@@ -413,6 +431,8 @@ test_merge.parameters = {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
         IgnoreInlineImageAttachments: true,
+        ResolveRecipientsWithGraphApi: true,
+        GraphApiClientId: "client-id",
         ConfirmationDialogCardsOrder: [],
         FixedParameters: [],
       },
@@ -451,7 +471,9 @@ test_merge.parameters = {
         "ConvertToBccThreshold = 4\n" +
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
-        "IgnoreInlineImageAttachments = true",
+        "IgnoreInlineImageAttachments = true\n" +
+        "ResolveRecipientsWithGraphApi = true\n" +
+        "GraphApiClientId = client-id",
       trustedDomainsString: "trustedDomain_left",
       unsafeDomainsString: "unsafeDomain_left",
       unsafeFilesString: "unsafeFile_left",
@@ -485,6 +507,8 @@ test_merge.parameters = {
         BlockDistributionLists: false,
         EmphasizeUntrustedToCc: false,
         IgnoreInlineImageAttachments: false,
+        ResolveRecipientsWithGraphApi: false,
+        GraphApiClientId: "client-id-right",
         ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: ["CountSeconds"],
       },
@@ -525,6 +549,8 @@ test_merge.parameters = {
         "BlockDistributionLists = false\n" +
         "EmphasizeUntrustedToCc = false\n" +
         "IgnoreInlineImageAttachments = false\n" +
+        "ResolveRecipientsWithGraphApi = false\n" +
+        "GraphApiClientId = client-id-right\n" +
         "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
@@ -560,6 +586,8 @@ test_merge.parameters = {
         BlockDistributionLists: false,
         EmphasizeUntrustedToCc: false,
         IgnoreInlineImageAttachments: false,
+        ResolveRecipientsWithGraphApi: false,
+        GraphApiClientId: "client-id-right",
         ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: ["CountSeconds"],
       },
@@ -605,6 +633,8 @@ test_merge.parameters = {
         "BlockDistributionLists = false\n" +
         "EmphasizeUntrustedToCc = false\n" +
         "IgnoreInlineImageAttachments = false\n" +
+        "ResolveRecipientsWithGraphApi = false\n" +
+        "GraphApiClientId = client-id-right\n" +
         "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_left\ntrustedDomain_right",
@@ -648,6 +678,8 @@ test_merge.parameters = {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
         IgnoreInlineImageAttachments: true,
+        ResolveRecipientsWithGraphApi: true,
+        GraphApiClientId: "client-id",
         ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: [
           "CountEnabled",
@@ -671,6 +703,8 @@ test_merge.parameters = {
           "BlockDistributionLists",
           "EmphasizeUntrustedToCc",
           "IgnoreInlineImageAttachments",
+          "ResolveRecipientsWithGraphApi",
+          "GraphApiClientId",
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
@@ -715,6 +749,8 @@ test_merge.parameters = {
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
         "IgnoreInlineImageAttachments = true\n" +
+        "ResolveRecipientsWithGraphApi = true\n" +
+        "GraphApiClientId = client-id\n" +
         "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = " + 
             "CountEnabled," +
@@ -736,6 +772,8 @@ test_merge.parameters = {
             "BlockDistributionLists," +
             "EmphasizeUntrustedToCc," +
             "IgnoreInlineImageAttachments," +
+            "ResolveRecipientsWithGraphApi," +
+            "GraphApiClientId," +
             "TrustedDomains," +
             "UnsafeDomains," +
             "UnsafeFiles," + 
@@ -774,6 +812,8 @@ test_merge.parameters = {
         BlockDistributionLists: false,
         EmphasizeUntrustedToCc: false,
         IgnoreInlineImageAttachments: false,
+        ResolveRecipientsWithGraphApi: false,
+        GraphApiClientId: "client-id-right",
         ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: ["CountSeconds"],
       },
@@ -809,6 +849,8 @@ test_merge.parameters = {
         "BlockDistributionLists = false\n" +
         "EmphasizeUntrustedToCc = false\n" +
         "IgnoreInlineImageAttachments = false\n" +
+        "ResolveRecipientsWithGraphApi = false\n" +
+        "GraphApiClientId = client-id-right\n" +
         "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = CountSeconds",
       trustedDomainsString: "trustedDomain_right",
@@ -841,6 +883,8 @@ test_merge.parameters = {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: true,
         IgnoreInlineImageAttachments: true,
+        ResolveRecipientsWithGraphApi: true,
+        GraphApiClientId: "client-id",
         ConfirmationDialogCardsOrder: ["UntrustedDomains", "TrustedDomains", "Subject", "Body", "Misc"],
         FixedParameters: [
           "CountEnabled",
@@ -864,6 +908,8 @@ test_merge.parameters = {
           "BlockDistributionLists",
           "EmphasizeUntrustedToCc",
           "IgnoreInlineImageAttachments",
+          "ResolveRecipientsWithGraphApi",
+          "GraphApiClientId",
           "TrustedDomains",
           "UnsafeDomains",
           "UnsafeFiles",
@@ -908,6 +954,8 @@ test_merge.parameters = {
         "BlockDistributionLists = true\n" +
         "EmphasizeUntrustedToCc = true\n" +
         "IgnoreInlineImageAttachments = true\n" +
+        "ResolveRecipientsWithGraphApi = true\n" +
+        "GraphApiClientId = client-id\n" +
         "ConfirmationDialogCardsOrder = UntrustedDomains,TrustedDomains,Subject,Body,Misc\n" +
         "FixedParameters = " + 
           "CountEnabled," +
@@ -931,6 +979,8 @@ test_merge.parameters = {
           "BlockDistributionLists," +
           "EmphasizeUntrustedToCc," +
           "IgnoreInlineImageAttachments," +
+          "ResolveRecipientsWithGraphApi," +
+          "GraphApiClientId," +
           "TrustedDomains," +
           "UnsafeDomains," +
           "UnsafeFiles," + 

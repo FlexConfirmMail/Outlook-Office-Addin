@@ -147,6 +147,15 @@
           </bt:String>
         </bt:LongStrings>
       </Resources>
+     <WebApplicationInfo>
+        <Id>ClientID</Id>
+        <Resource>api://127.0.0.1:10041/ClientID</Resource>
+        <Scopes>
+          <Scope>openid</Scope>
+          <Scope>profile</Scope>
+          <Scope>User.Read.All</Scope>
+        </Scopes>
+    </WebApplicationInfo>
     </VersionOverrides>
   </VersionOverrides>
 </OfficeApp>

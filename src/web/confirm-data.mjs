@@ -6,6 +6,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 Copyright (c) 2025 ClearCode Inc.
 */
 import { RecipientClassifier } from "./recipient-classifier.mjs";
+import { RecipientResolver } from "./recipient-resolver.mjs";
 import { AttachmentClassifier } from "./attachment-classifier.mjs";
 import { UnsafeBodiesConfirmation } from "./unsafe-bodies-confirmation.mjs";
 import { ConfigLoader } from "./config-loader.mjs";
@@ -65,6 +66,19 @@ export class ConfirmData {
     this.classified = classified;
     this.locale = locale;
     this.bodyBlockTargetWords = [];
+  }
+
+  // Recipients added from personal contacts in the Exchange (EX) format have no
+  // SMTP address, so they can't be matched against trustedDomains. Ask the
+  // directory for their SMTP addresses before classifying them.
+  async resolveRecipientsAsync() {
+    const common = this.config.common;
+    if (!common?.ResolveRecipientsWithGraphApi) {
+      return;
+    }
+    const resolver = new RecipientResolver({ clientId: common.GraphApiClientId });
+    const { to, cc, bcc, requiredAttendees, optionalAttendees } = this.target;
+    await resolver.resolveAllAsync([to, cc, bcc, requiredAttendees, optionalAttendees]);
   }
 
   classifyTarget() {
@@ -187,6 +201,7 @@ export class ConfirmData {
           !(attachment.isInline && ConfirmData.INLINE_IMAGE_EXTENSIONS.test(attachment.name))
       );
     }
+    await confirmData.resolveRecipientsAsync();
     confirmData.classifyTarget();
     confirmData.setUnsafeBodiesBlockStatus(locale.language);
     return confirmData;
