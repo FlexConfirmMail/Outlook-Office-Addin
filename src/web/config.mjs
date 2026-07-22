@@ -186,6 +186,8 @@ export class Config {
     BlockDistributionLists: "boolean",
     EmphasizeUntrustedToCc: "boolean",
     IgnoreInlineImageAttachments: "boolean",
+    ResolveRecipientsWithGraphApi: "boolean",
+    GraphApiClientId: "text",
     ConfirmationDialogCardsOrder: "commaSeparatedValues",
     FixedParameters: "commaSeparatedValues",
   };
@@ -224,6 +226,8 @@ export class Config {
         BlockDistributionLists: true,
         EmphasizeUntrustedToCc: false,
         IgnoreInlineImageAttachments: false,
+        ResolveRecipientsWithGraphApi: false,
+        GraphApiClientId: "",
         ConfirmationDialogCardsOrder: [...Config.CARD_DEFAULT_ORDER],
         FixedParameters: [],
       },

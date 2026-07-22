@@ -429,6 +429,13 @@ function updateDialogSetting(policy, user) {
   document.getElementById("ignoreInlineImageAttachments").disabled = fixedParametersSet.has(
     "IgnoreInlineImageAttachments"
   );
+  document.getElementById("resolveRecipientsWithGraphApi").checked =
+    common.ResolveRecipientsWithGraphApi;
+  document.getElementById("resolveRecipientsWithGraphApi").disabled = fixedParametersSet.has(
+    "ResolveRecipientsWithGraphApi"
+  );
+  document.getElementById("graphApiClientId").value = common.GraphApiClientId ?? "";
+  document.getElementById("graphApiClientId").disabled = fixedParametersSet.has("GraphApiClientId");
   reorderListbox(common.ConfirmationDialogCardsOrder ?? []);
   if (fixedParametersSet.has("ConfirmationDialogCardsOrder")) {
     const listbox = document.getElementById("cardOrderList");
@@ -494,6 +501,10 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
   const ignoreInlineImageAttachments = document.getElementById(
     "ignoreInlineImageAttachments"
   ).checked;
+  const resolveRecipientsWithGraphApi = document.getElementById(
+    "resolveRecipientsWithGraphApi"
+  ).checked;
+  const graphApiClientId = document.getElementById("graphApiClientId").value;
   const confirmationDialogCardsOrder = [
     ...document.querySelectorAll("#cardOrderList fluent-option"),
   ]
@@ -549,6 +560,12 @@ function serializeCommonConfigs({ mode = Setting.SerializationMode.User }) {
     "IgnoreInlineImageAttachments",
     ignoreInlineImageAttachments
   );
+  commonConfigString += serializeCommonConfig(
+    mode,
+    "ResolveRecipientsWithGraphApi",
+    resolveRecipientsWithGraphApi
+  );
+  commonConfigString += serializeCommonConfig(mode, "GraphApiClientId", graphApiClientId);
   commonConfigString += serializeCommonConfig(
     mode,
     "ConfirmationDialogCardsOrder",
