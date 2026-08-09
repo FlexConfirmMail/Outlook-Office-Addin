@@ -4,15 +4,12 @@ import officeAddins from "eslint-plugin-office-addins";
 import { fixupPluginRules } from "@eslint/compat";
 import globals from "globals";
 import tsParser from "@typescript-eslint/parser";
-import tsEsLint from "typescript-eslint";
 
 export default defineConfig([
-    ...tsEsLint.configs.recommended,
     ...officeAddins.configs.recommended,
     globalIgnores(["dist/*"]), {
     plugins: {
         import: fixupPluginRules(_import),
-        "office-addins": officeAddins,
     },
 
     languageOptions: {
