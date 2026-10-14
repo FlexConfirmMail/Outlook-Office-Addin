@@ -72,7 +72,17 @@ test_get.parameters = {
     language: "en",
     key: "undefinedMessage",
     expected: "undefinedMessage",
-  }
+  },
+  // A message written directly in UnsafeDomains.txt is passed as a key,
+  // and it is returned as is without replacing placeholders.
+  undefinedMessageWithPlaceholders: {
+    language: "ja-JP",
+    key: "取引先（${domain}）宛です",
+    params: {
+      domain: "example.com",
+    },
+    expected: "取引先（${domain}）宛です",
+  },
 };
 export async function test_get({ language, key, params, expected }) {
   const l10n = await prepare(language);
