@@ -193,7 +193,7 @@ function appendMiscCheckboxes({ items, warning, emphasize }) {
 }
 
 // The custom message of the unsafe domains config can be a message ID defined in
-// locales or custom-locales. If it is not a message ID, L10n returns it as is.
+// locales or custom-locales. If it is not a message ID, L10n returns it with placeholders replaced.
 function getUnsafeRecipientLabel(recipient, defaultMessageId, params) {
   let messageId = defaultMessageId;
   if (recipient.unsafeMessage) {
