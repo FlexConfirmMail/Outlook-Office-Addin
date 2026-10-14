@@ -21,15 +21,22 @@ export class RecipientClassifier {
   // Split a line of the unsafe domains config to the pattern and its optional message.
   //   "example.com = message" => { pattern: "example.com", message: "message" }
   //   "example.com"           => { pattern: "example.com", message: "" }
+  // "=" in the pattern must be escaped as "\=".
+  //   "a\=b@example.com = message" => { pattern: "a=b@example.com", message: "message" }
   static parsePatternLine(line) {
-    const separatorIndex = line.indexOf("=");
-    if (separatorIndex < 0) {
-      return { pattern: line.trim(), message: "" };
+    // A backslash is always consumed with the next character, so an escaped "=" never becomes the separator.
+    const match = line.match(/^((?:\\.|[^=\\])*)=(.*)$/);
+    if (!match) {
+      return { pattern: RecipientClassifier.unescapePattern(line).trim(), message: "" };
     }
     return {
-      pattern: line.slice(0, separatorIndex).trim(),
-      message: line.slice(separatorIndex + 1).trim(),
+      pattern: RecipientClassifier.unescapePattern(match[1]).trim(),
+      message: match[2].trim(),
     };
+  }
+
+  static unescapePattern(pattern) {
+    return pattern.replace(/\\=/g, "=");
   }
 
   generateMatchers(patterns) {
