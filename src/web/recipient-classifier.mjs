@@ -18,13 +18,33 @@ export class RecipientClassifier {
     this.commonConfig = commonConfig;
   }
 
+  // Split a line of the unsafe domains config to the pattern and its optional message.
+  //   "example.com = message" => { pattern: "example.com", message: "message" }
+  //   "example.com"           => { pattern: "example.com", message: "" }
+  static parsePatternLine(line) {
+    const separatorIndex = line.indexOf("=");
+    if (separatorIndex < 0) {
+      return { pattern: line.trim(), message: "" };
+    }
+    return {
+      pattern: line.slice(0, separatorIndex).trim(),
+      message: line.slice(separatorIndex + 1).trim(),
+    };
+  }
+
   generateMatchers(patterns) {
+    const messages = new Map();
     const uniquePatterns = new Set(
       (patterns || [])
-        .filter((pattern) => !pattern.startsWith("#")) // reject commented out items
-        .map(
-          (pattern) => pattern.toLowerCase().replace(/^(-?)@/, "$1") // delete needless "@" from domain only patterns: "@example.com" => "example.com"
-        )
+        .filter((line) => !line.startsWith("#")) // reject commented out items
+        .map((line) => {
+          const parsed = RecipientClassifier.parsePatternLine(line);
+          const pattern = parsed.pattern.toLowerCase().replace(/^(-?)@/, "$1"); // delete needless "@" from domain only patterns: "@example.com" => "example.com"
+          if (parsed.message && !messages.has(pattern)) {
+            messages.set(pattern, parsed.message);
+          }
+          return pattern;
+        })
     );
     const negativeItems = new Set(
       [...uniquePatterns]
@@ -38,11 +58,21 @@ export class RecipientClassifier {
 
     const domainPatterns = new Set("(?!)");
     const fullPatterns = new Set("(?!)");
+    const domainMessages = [];
+    const fullMessages = [];
     for (const pattern of uniquePatterns) {
+      let targetPatterns = domainPatterns;
+      let targetMessages = domainMessages;
       if (pattern.includes("@")) {
-        fullPatterns.add(pattern);
-      } else {
-        domainPatterns.add(pattern);
+        targetPatterns = fullPatterns;
+        targetMessages = fullMessages;
+      }
+      targetPatterns.add(pattern);
+      if (messages.has(pattern)) {
+        targetMessages.push({
+          matcher: new RegExp(`^(${wildcardToRegexp(pattern)})$`, "i"),
+          message: messages.get(pattern),
+        });
       }
     }
     return {
@@ -54,7 +84,18 @@ export class RecipientClassifier {
         `^(${Array.from(fullPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`,
         "i"
       ),
+      domainMessages,
+      fullMessages,
     };
+  }
+
+  // Find the message of the first matched pattern.
+  // The message for the address takes precedence over the one for the domain.
+  findMessage(matchers, { address, domain }) {
+    return (
+      matchers.fullMessages.find(({ matcher }) => matcher.test(address)) ||
+      matchers.domainMessages.find(({ matcher }) => matcher.test(domain))
+    )?.message;
   }
 
   classify(recipients) {
@@ -87,6 +128,10 @@ export class RecipientClassifier {
           unsafeWithDomain.add(classifiedRecipient);
         } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
           unsafe.add(classifiedRecipient);
+        }
+        const unsafeMessage = this.findMessage(this.$unsafePatternsMatchers, classifiedRecipient);
+        if (unsafeMessage) {
+          classifiedRecipient.unsafeMessage = unsafeMessage;
         }
 
         if (this.$blockPatternsMatchers.domain.test(classifiedRecipient.domain)) {

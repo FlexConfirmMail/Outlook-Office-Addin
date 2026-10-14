@@ -730,6 +730,96 @@ export function test_classifyAddresses({ recipients, trustedDomains, unsafeDomai
   );
 }
 
+test_unsafeMessage.parameters = {
+  'no message': {
+    recipients: ['aaa@example.com'],
+    unsafeDomains: { "WARNING": ['example.com'] },
+    expected: {
+      unsafeWithDomain: [undefined],
+    },
+  },
+  'message for domain': {
+    recipients: ['aaa@example.com', 'bbb@example.org'],
+    unsafeDomains: { "WARNING": ['example.com = message for example.com', 'example.org'] },
+    expected: {
+      unsafeWithDomain: ['message for example.com', undefined],
+    },
+  },
+  'message for address': {
+    recipients: ['aaa@example.com', 'bbb@example.com'],
+    unsafeDomains: { "WARNING": ['aaa@example.com=message for aaa'] },
+    expected: {
+      unsafe: ['message for aaa'],
+    },
+  },
+  'message can contain "="': {
+    recipients: ['aaa@example.com'],
+    unsafeDomains: { "WARNING": ['example.com = a = b'] },
+    expected: {
+      unsafeWithDomain: ['a = b'],
+    },
+  },
+  'message must not be lower-cased': {
+    recipients: ['aaa@example.com'],
+    unsafeDomains: { "WARNING": ['EXAMPLE.com = Message For Example'] },
+    expected: {
+      unsafeWithDomain: ['Message For Example'],
+    },
+  },
+  'wildcard': {
+    recipients: ['aaa@sub.example.com'],
+    unsafeDomains: { "WARNING": ['*.example.com = message for subdomains'] },
+    expected: {
+      unsafeWithDomain: ['message for subdomains'],
+    },
+  },
+  'first matched pattern wins': {
+    recipients: ['aaa@sub.example.com'],
+    unsafeDomains: { "WARNING": ['*.example.com = first', 'sub.example.com = second'] },
+    expected: {
+      unsafeWithDomain: ['first'],
+    },
+  },
+  'message for address takes precedence over message for domain': {
+    recipients: ['aaa@example.com', 'bbb@example.com'],
+    unsafeDomains: { "WARNING": ['example.com = for domain', 'aaa@example.com = for address'] },
+    expected: {
+      unsafeWithDomain: ['for address', 'for domain'],
+    },
+  },
+  'pattern with message can be excluded': {
+    recipients: ['aaa@example.com'],
+    unsafeDomains: { "WARNING": ['example.com = message', '-example.com'] },
+    expected: {},
+  },
+  'messages in other sections are ignored but patterns are effective': {
+    recipients: ['aaa@example.com', 'bbb@example.org'],
+    unsafeDomains: {
+      "BLOCK": ['example.com = block message'],
+      "REWARNING": ['example.org = rewarning message'],
+    },
+    expected: {
+      blockWithDomain: [undefined],
+      rewarningWithDomain: [undefined],
+    },
+  },
+};
+export function test_unsafeMessage({ recipients, unsafeDomains, expected }) {
+  const classifier = new RecipientClassifier({ trustedDomains: [], unsafeDomains });
+  const classified = classifier.classify(recipients);
+  is(
+    Object.assign({ unsafeWithDomain: [], unsafe: [], blockWithDomain: [], block: [], rewarningWithDomain: [], rewarning: [] }, expected),
+    {
+      unsafeWithDomain: classified.unsafeWithDomain.map(recipient => recipient.unsafeMessage),
+      unsafe: classified.unsafe.map(recipient => recipient.unsafeMessage),
+      blockWithDomain: classified.blockWithDomain.map(recipient => recipient.unsafeMessage),
+      block: classified.block.map(recipient => recipient.unsafeMessage),
+      rewarningWithDomain: classified.rewarningWithDomain.map(recipient => recipient.unsafeMessage),
+      rewarning: classified.rewarning.map(recipient => recipient.unsafeMessage),
+    }
+  );
+}
+
 test_classifyAll.parameters = {
   'multiple slots': {
     params: {
