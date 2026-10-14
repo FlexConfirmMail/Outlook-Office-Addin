@@ -773,6 +773,20 @@ test_unsafeMessage.parameters = {
       unsafeWithDomain: ['message for subdomains'],
     },
   },
+  'escaped "=" in address without message': {
+    recipients: ['a=b@example.com'],
+    unsafeDomains: { "WARNING": ['a\\=b@example.com'] },
+    expected: {
+      unsafe: [undefined],
+    },
+  },
+  'escaped "=" in address with message': {
+    recipients: ['a=b@example.com'],
+    unsafeDomains: { "WARNING": ['a\\=b@example.com = message for a=b'] },
+    expected: {
+      unsafe: ['message for a=b'],
+    },
+  },
   'first matched pattern wins': {
     recipients: ['aaa@sub.example.com'],
     unsafeDomains: { "WARNING": ['*.example.com = first', 'sub.example.com = second'] },
