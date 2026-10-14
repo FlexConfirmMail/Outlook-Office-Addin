@@ -10,6 +10,8 @@ import { L10n } from "./l10n.mjs";
 export class UnsafeAddressesReconfirmation {
   needToReconfirm = false;
   rewarningAddresses = new Set();
+  // Addresses with custom messages: Map of message => Set of addresses.
+  rewarningAddressesByMessage = new Map();
   initialized = false;
   locale = "jp";
   ready = null;
@@ -25,39 +27,67 @@ export class UnsafeAddressesReconfirmation {
       return;
     }
     this.initialized = true;
-    this.rewarningAddresses = new Set(
-      data.classified.recipients.rewarning.map((recipient) => {
-        let target = recipient.address;
-        if (!target || target === "") {
-          target = recipient.displayName;
-        }
-        if (!target || target === "") {
-          target = "Unknown";
-        }
-        return target;
-      })
-    );
-    this.needToReconfirm = this.rewarningAddresses.size > 0;
+    for (const recipient of data.classified.recipients.rewarning) {
+      let target = recipient.address;
+      if (!target || target === "") {
+        target = recipient.displayName;
+      }
+      if (!target || target === "") {
+        target = "Unknown";
+      }
+      if (!recipient.rewarningMessage) {
+        this.rewarningAddresses.add(target);
+        continue;
+      }
+      // The custom message can be a message ID defined in locales or custom-locales.
+      // If it is not a message ID, L10n returns it as is.
+      const message = this.locale.get(recipient.rewarningMessage, {
+        domain: recipient.domain.toLowerCase(),
+        address: recipient.address,
+      });
+      if (!this.rewarningAddressesByMessage.has(message)) {
+        this.rewarningAddressesByMessage.set(message, new Set());
+      }
+      this.rewarningAddressesByMessage.get(message).add(target);
+    }
+    this.needToReconfirm =
+      this.rewarningAddresses.size > 0 || this.rewarningAddressesByMessage.size > 0;
   }
 
   generateReconfirmationContentElements() {
+    const contentElements = [];
+    if (this.rewarningAddresses.size > 0) {
+      contentElements.push(
+        this.generateContentElement(
+          this.locale.get("Reconfirmation_unsafeAddresses"),
+          this.rewarningAddresses
+        )
+      );
+    }
+    for (const [message, addresses] of this.rewarningAddressesByMessage) {
+      contentElements.push(this.generateContentElement(message, addresses));
+    }
+    return contentElements;
+  }
+
+  generateContentElement(messageBefore, addresses) {
     const messageBeforeElement = document.createElement("p");
     const listElement = document.createElement("ul");
     listElement.classList.add("reconfirmation-list");
     const messageAfterElement = document.createElement("p");
-    for (const address of this.rewarningAddresses) {
+    for (const address of addresses) {
       const itemElement = document.createElement("li");
       const strongElement = document.createElement("strong");
       strongElement.textContent = address;
       itemElement.appendChild(strongElement);
       listElement.appendChild(itemElement);
     }
-    messageBeforeElement.textContent = this.locale.get("Reconfirmation_unsafeAddresses");
+    messageBeforeElement.textContent = messageBefore;
     messageAfterElement.textContent = this.locale.get("Reconfirmation_confirmToSend");
     const contentElement = document.createElement("div");
     contentElement.appendChild(messageBeforeElement);
     contentElement.appendChild(listElement);
     contentElement.appendChild(messageAfterElement);
-    return [contentElement];
+    return contentElement;
   }
 }
