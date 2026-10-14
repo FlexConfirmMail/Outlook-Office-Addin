@@ -315,20 +315,22 @@ async function onMessageFromParent(arg) {
   unsafeBodiesConfirmation.init(data);
   appendMiscCheckboxes({ items: unsafeBodiesConfirmation.warningConfirmationItems, warning: true });
 
+  // Labels are deduplicated by appendMiscCheckboxes.
   appendMiscCheckboxes({
-    items: Array.from(
-      new Set(
-        data.classified.recipients.unsafeWithDomain.map((recipient) =>
-          recipient.domain.toLowerCase()
-        )
-      ),
-      (domain) => l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
+    items: data.classified.recipients.unsafeWithDomain.map(
+      (recipient) =>
+        recipient.unsafeMessage ||
+        l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", {
+          domain: recipient.domain.toLowerCase(),
+        })
     ),
     warning: true,
   });
   appendMiscCheckboxes({
-    items: data.classified.recipients.unsafe.map((recipient) =>
-      l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
+    items: data.classified.recipients.unsafe.map(
+      (recipient) =>
+        recipient.unsafeMessage ||
+        l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
     ),
     warning: true,
   });
