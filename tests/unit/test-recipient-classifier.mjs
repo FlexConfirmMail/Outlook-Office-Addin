@@ -806,15 +806,30 @@ test_unsafeMessage.parameters = {
     unsafeDomains: { "WARNING": ['example.com = message', '-example.com'] },
     expected: {},
   },
-  'messages in other sections are ignored but patterns are effective': {
-    recipients: ['aaa@example.com', 'bbb@example.org'],
+  'messages for each section': {
+    recipients: ['aaa@example.com', 'bbb@example.org', 'ccc@example.net'],
     unsafeDomains: {
-      "BLOCK": ['example.com = block message'],
-      "REWARNING": ['example.org = rewarning message'],
+      "WARNING": ['example.com = warning message'],
+      "BLOCK": ['example.org = block message'],
+      "REWARNING": ['ccc@example.net = rewarning message'],
     },
     expected: {
+      unsafeWithDomain: ['warning message'],
+      blockWithDomain: ['block message'],
+      rewarning: ['rewarning message'],
+    },
+  },
+  'messages are not shared between sections': {
+    recipients: ['aaa@example.com'],
+    unsafeDomains: {
+      "WARNING": ['example.com = warning message'],
+      "BLOCK": ['example.com'],
+      "REWARNING": ['example.com = rewarning message'],
+    },
+    expected: {
+      unsafeWithDomain: ['warning message'],
       blockWithDomain: [undefined],
-      rewarningWithDomain: [undefined],
+      rewarningWithDomain: ['rewarning message'],
     },
   },
 };
@@ -826,10 +841,10 @@ export function test_unsafeMessage({ recipients, unsafeDomains, expected }) {
     {
       unsafeWithDomain: classified.unsafeWithDomain.map(recipient => recipient.unsafeMessage),
       unsafe: classified.unsafe.map(recipient => recipient.unsafeMessage),
-      blockWithDomain: classified.blockWithDomain.map(recipient => recipient.unsafeMessage),
-      block: classified.block.map(recipient => recipient.unsafeMessage),
-      rewarningWithDomain: classified.rewarningWithDomain.map(recipient => recipient.unsafeMessage),
-      rewarning: classified.rewarning.map(recipient => recipient.unsafeMessage),
+      blockWithDomain: classified.blockWithDomain.map(recipient => recipient.blockMessage),
+      block: classified.block.map(recipient => recipient.blockMessage),
+      rewarningWithDomain: classified.rewarningWithDomain.map(recipient => recipient.rewarningMessage),
+      rewarning: classified.rewarning.map(recipient => recipient.rewarningMessage),
     }
   );
 }

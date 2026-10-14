@@ -105,6 +105,15 @@ export class RecipientClassifier {
     )?.message;
   }
 
+  // Set the custom message to the recipient only when it is specified,
+  // to keep the classified result same as before for configs without messages.
+  setMessage(classifiedRecipient, propertyName, matchers) {
+    const message = this.findMessage(matchers, classifiedRecipient);
+    if (message) {
+      classifiedRecipient[propertyName] = message;
+    }
+  }
+
   classify(recipients) {
     const trusted = new Set();
     const untrusted = new Set();
@@ -136,22 +145,21 @@ export class RecipientClassifier {
         } else if (this.$unsafePatternsMatchers.full.test(classifiedRecipient.address)) {
           unsafe.add(classifiedRecipient);
         }
-        const unsafeMessage = this.findMessage(this.$unsafePatternsMatchers, classifiedRecipient);
-        if (unsafeMessage) {
-          classifiedRecipient.unsafeMessage = unsafeMessage;
-        }
+        this.setMessage(classifiedRecipient, "unsafeMessage", this.$unsafePatternsMatchers);
 
         if (this.$blockPatternsMatchers.domain.test(classifiedRecipient.domain)) {
           blockWithDomain.add(classifiedRecipient);
         } else if (this.$blockPatternsMatchers.full.test(classifiedRecipient.address)) {
           block.add(classifiedRecipient);
         }
+        this.setMessage(classifiedRecipient, "blockMessage", this.$blockPatternsMatchers);
 
         if (this.$rewarningPatternsMatchers.domain.test(classifiedRecipient.domain)) {
           rewarningWithDomain.add(classifiedRecipient);
         } else if (this.$rewarningPatternsMatchers.full.test(classifiedRecipient.address)) {
           rewarning.add(classifiedRecipient);
         }
+        this.setMessage(classifiedRecipient, "rewarningMessage", this.$rewarningPatternsMatchers);
 
         if (
           classifiedRecipient.recipientType ===
