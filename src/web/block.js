@@ -96,7 +96,7 @@ async function onMessageFromParent(arg) {
         continue;
       }
       // The custom message can be a message ID defined in locales or custom-locales.
-      // If it is not a message ID, L10n returns it as is.
+      // If it is not a message ID, L10n returns it with placeholders replaced.
       const message = l10n.get(recipient.blockMessage, {
         domain: recipient.domain.toLowerCase(),
         address: recipient.address,

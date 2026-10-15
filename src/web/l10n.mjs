@@ -110,16 +110,14 @@ export class L10n {
             ? this.defaultLocale[key]
             : null;
     if (messageEntry === null) {
-      return { message: key, type };
-    }
-    if (typeof messageEntry === "string") {
+      // An undefined key (ex. a message written directly in UnsafeDomains.txt)
+      // is used as the message itself, and placeholders in it are also replaced.
+      message = key;
+    } else if (typeof messageEntry === "string") {
       message = messageEntry;
     } else {
       type = messageEntry.type || type;
       message = messageEntry.message || key;
-    }
-    if (message === null) {
-      return { message: key, type };
     }
     if (params) {
       for (const [placeholder, value] of Object.entries(params)) {
