@@ -40,7 +40,7 @@ export class UnsafeAddressesReconfirmation {
         continue;
       }
       // The custom message can be a message ID defined in locales or custom-locales.
-      // If it is not a message ID, L10n returns it as is.
+      // If it is not a message ID, L10n returns it with placeholders replaced.
       const message = this.locale.get(recipient.rewarningMessage, {
         domain: recipient.domain.toLowerCase(),
         address: recipient.address,
