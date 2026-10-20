@@ -192,12 +192,12 @@ function appendMiscCheckboxes({ items, warning, emphasize }) {
   }
 }
 
-// The custom message of the unsafe domains config can be a message ID defined in
+// The custom message of the unsafe domains/files config can be a message ID defined in
 // locales or custom-locales. If it is not a message ID, L10n returns it with placeholders replaced.
-function getUnsafeRecipientLabel(recipient, defaultMessageId, params) {
+function getUnsafeLabel(customMessage, defaultMessageId, params) {
   let messageId = defaultMessageId;
-  if (recipient.unsafeMessage) {
-    messageId = recipient.unsafeMessage;
+  if (customMessage) {
+    messageId = customMessage;
   }
   return l10n.get(messageId, params);
 }
@@ -328,7 +328,7 @@ async function onMessageFromParent(arg) {
   // Labels are deduplicated by appendMiscCheckboxes.
   appendMiscCheckboxes({
     items: data.classified.recipients.unsafeWithDomain.map((recipient) =>
-      getUnsafeRecipientLabel(recipient, "confirmation_unsafeDomainRecipientCheckboxLabel", {
+      getUnsafeLabel(recipient.unsafeMessage, "confirmation_unsafeDomainRecipientCheckboxLabel", {
         domain: recipient.domain.toLowerCase(),
         address: recipient.address,
       })
@@ -337,7 +337,7 @@ async function onMessageFromParent(arg) {
   });
   appendMiscCheckboxes({
     items: data.classified.recipients.unsafe.map((recipient) =>
-      getUnsafeRecipientLabel(recipient, "confirmation_unsafeRecipientCheckboxLabel", {
+      getUnsafeLabel(recipient.unsafeMessage, "confirmation_unsafeRecipientCheckboxLabel", {
         domain: recipient.domain.toLowerCase(),
         address: recipient.address,
       })
@@ -358,7 +358,9 @@ async function onMessageFromParent(arg) {
   });
 
   const attachmentWarningLabels = data.classified.attachments.unsafe.map((attachment) =>
-    l10n.get("confirmation_unsafeAttachmentCheckboxLabel", { name: attachment.name })
+    getUnsafeLabel(attachment.unsafeMessage, "confirmation_unsafeAttachmentCheckboxLabel", {
+      name: attachment.name,
+    })
   );
   const attachmentLabels =
     data.target.attachments?.map((attachment) =>

@@ -8,9 +8,40 @@ Copyright (c) 2025 ClearCode Inc.
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class AttachmentClassifier {
-  static generateMatcher(patterns) {
+  // Split a line of the unsafe files config to the pattern and its optional message.
+  //   "secret = message" => { pattern: "secret", message: "message" }
+  //   "secret"           => { pattern: "secret", message: "" }
+  // "=" in the pattern must be escaped as "\=".
+  //   "a\=b = message" => { pattern: "a=b", message: "message" }
+  static parsePatternLine(line) {
+    // A backslash is always consumed with the next character, so an escaped "=" never becomes the separator.
+    const match = line.match(/^((?:\\.|[^=\\])*)=(.*)$/);
+    if (!match) {
+      return { pattern: AttachmentClassifier.unescapePattern(line).trim(), message: "" };
+    }
+    return {
+      pattern: AttachmentClassifier.unescapePattern(match[1]).trim(),
+      message: match[2].trim(),
+    };
+  }
+
+  static unescapePattern(pattern) {
+    return pattern.replace(/\\=/g, "=");
+  }
+
+  static generateMatchers(patterns) {
+    const messages = new Map();
     const uniquePatterns = new Set(
-      (patterns || []).filter((pattern) => !pattern.startsWith("#")) // reject commented out items
+      (patterns || [])
+        .filter((line) => !line.startsWith("#")) // reject commented out items
+        .map((line) => {
+          const parsed = AttachmentClassifier.parsePatternLine(line);
+          if (parsed.message && !messages.has(parsed.pattern)) {
+            messages.set(parsed.pattern, parsed.message);
+          }
+          return parsed.pattern;
+        })
+        .filter((pattern) => pattern !== "") // reject patterns matching to anything
     );
     const negativeItems = new Set(
       [...uniquePatterns]
@@ -22,13 +53,36 @@ export class AttachmentClassifier {
       uniquePatterns.delete(`-${negativeItem}`);
     }
     const matcher =
-      patterns.length > 0
+      uniquePatterns.size > 0
         ? new RegExp(
             Array.from(uniquePatterns, (pattern) => wildcardToRegexp(pattern)).join("|"),
             "i"
           )
         : null;
-    return matcher;
+    const patternMessages = [];
+    for (const pattern of uniquePatterns) {
+      if (messages.has(pattern)) {
+        patternMessages.push({
+          matcher: new RegExp(wildcardToRegexp(pattern), "i"),
+          message: messages.get(pattern),
+        });
+      }
+    }
+    return { matcher, messages: patternMessages };
+  }
+
+  // Find the message of the first matched pattern.
+  static findMessage(matchers, name) {
+    return matchers.messages.find(({ matcher }) => matcher.test(name))?.message;
+  }
+
+  // Set the custom message to the attachment only when it is specified,
+  // to keep the classified result same as before for configs without messages.
+  static setMessage(attachment, propertyName, matchers) {
+    const message = this.findMessage(matchers, attachment.name);
+    if (message) {
+      attachment[propertyName] = message;
+    }
   }
 
   static classify(data) {
@@ -40,23 +94,26 @@ export class AttachmentClassifier {
     const warningFilesConfig = unsafeFilesConfig?.["WARNING"] || [];
     const blockFilesConfig = unsafeFilesConfig?.["BLOCK"] || [];
     const rewarningFilesConfig = unsafeFilesConfig?.["REWARNING"] || [];
-    const warningAttachmentMatcher = this.generateMatcher(warningFilesConfig);
-    const blockAttachmentMatcher = this.generateMatcher(blockFilesConfig);
-    const rewarningAttachmentMatcher = this.generateMatcher(rewarningFilesConfig);
+    const warningAttachmentMatchers = this.generateMatchers(warningFilesConfig);
+    const blockAttachmentMatchers = this.generateMatchers(blockFilesConfig);
+    const rewarningAttachmentMatchers = this.generateMatchers(rewarningFilesConfig);
 
     const trusted = new Set(attachments);
     for (const attachment of attachments) {
-      if (warningAttachmentMatcher && warningAttachmentMatcher.test(attachment.name)) {
+      if (warningAttachmentMatchers.matcher?.test(attachment.name)) {
         unsafe.add(attachment);
         trusted.delete(attachment);
+        this.setMessage(attachment, "unsafeMessage", warningAttachmentMatchers);
       }
-      if (blockAttachmentMatcher && blockAttachmentMatcher.test(attachment.name)) {
+      if (blockAttachmentMatchers.matcher?.test(attachment.name)) {
         block.add(attachment);
         trusted.delete(attachment);
+        this.setMessage(attachment, "blockMessage", blockAttachmentMatchers);
       }
-      if (rewarningAttachmentMatcher && rewarningAttachmentMatcher.test(attachment.name)) {
+      if (rewarningAttachmentMatchers.matcher?.test(attachment.name)) {
         rewarning.add(attachment);
         trusted.delete(attachment);
+        this.setMessage(attachment, "rewarningMessage", rewarningAttachmentMatchers);
       }
     }
     return {
