@@ -135,13 +135,33 @@ async function onMessageFromParent(arg) {
     warningContents.push({ targets, messageBefore, messageAfter });
   }
   if (attachments.length > 0) {
-    const targets = attachments.map((attachment) => attachment.name);
-    const messageBefore =
-      data.itemType == Office.MailboxEnums.ItemType.Message
-        ? l10n.get("block_messageBeforeForMailAttachments")
-        : l10n.get("block_messageBeforeForAppointmentAttachments");
+    const targets = new Set();
+    // Attachments with custom messages: Map of message => Set of targets.
+    const targetsByMessage = new Map();
+    for (const attachment of attachments) {
+      if (!attachment.blockMessage) {
+        targets.add(attachment.name);
+        continue;
+      }
+      // The custom message can be a message ID defined in locales or custom-locales.
+      // If it is not a message ID, L10n returns it with placeholders replaced.
+      const message = l10n.get(attachment.blockMessage, { name: attachment.name });
+      if (!targetsByMessage.has(message)) {
+        targetsByMessage.set(message, new Set());
+      }
+      targetsByMessage.get(message).add(attachment.name);
+    }
     const messageAfter = l10n.get("block_messageAfterForAttachments");
-    warningContents.push({ targets, messageBefore, messageAfter });
+    if (targets.size > 0) {
+      const messageBefore =
+        data.itemType == Office.MailboxEnums.ItemType.Message
+          ? l10n.get("block_messageBeforeForMailAttachments")
+          : l10n.get("block_messageBeforeForAppointmentAttachments");
+      warningContents.push({ targets, messageBefore, messageAfter });
+    }
+    for (const [messageBefore, targetsWithMessage] of targetsByMessage) {
+      warningContents.push({ targets: targetsWithMessage, messageBefore, messageAfter });
+    }
   }
   if (bodyMatchedWords.length > 0) {
     const targets = new Set();
