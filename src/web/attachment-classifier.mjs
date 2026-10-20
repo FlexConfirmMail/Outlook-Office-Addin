@@ -5,37 +5,17 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 Copyright (c) 2025 ClearCode Inc.
 */
+import { parsePatternLine } from "./unsafe-pattern.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class AttachmentClassifier {
-  // Split a line of the unsafe files config to the pattern and its optional message.
-  //   "secret = message" => { pattern: "secret", message: "message" }
-  //   "secret"           => { pattern: "secret", message: "" }
-  // "=" in the pattern must be escaped as "\=".
-  //   "a\=b = message" => { pattern: "a=b", message: "message" }
-  static parsePatternLine(line) {
-    // A backslash is always consumed with the next character, so an escaped "=" never becomes the separator.
-    const match = line.match(/^((?:\\.|[^=\\])*)=(.*)$/);
-    if (!match) {
-      return { pattern: AttachmentClassifier.unescapePattern(line).trim(), message: "" };
-    }
-    return {
-      pattern: AttachmentClassifier.unescapePattern(match[1]).trim(),
-      message: match[2].trim(),
-    };
-  }
-
-  static unescapePattern(pattern) {
-    return pattern.replace(/\\=/g, "=");
-  }
-
   static generateMatchers(patterns) {
     const messages = new Map();
     const uniquePatterns = new Set(
       (patterns || [])
         .filter((line) => !line.startsWith("#")) // reject commented out items
         .map((line) => {
-          const parsed = AttachmentClassifier.parsePatternLine(line);
+          const parsed = parsePatternLine(line);
           if (parsed.message && !messages.has(parsed.pattern)) {
             messages.set(parsed.pattern, parsed.message);
           }

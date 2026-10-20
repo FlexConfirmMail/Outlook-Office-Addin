@@ -6,6 +6,7 @@
 "use strict";
 
 import * as RecipientParser from "./recipient-parser.mjs";
+import { parsePatternLine } from "./unsafe-pattern.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
 export class RecipientClassifier {
@@ -18,34 +19,13 @@ export class RecipientClassifier {
     this.commonConfig = commonConfig;
   }
 
-  // Split a line of the unsafe domains config to the pattern and its optional message.
-  //   "example.com = message" => { pattern: "example.com", message: "message" }
-  //   "example.com"           => { pattern: "example.com", message: "" }
-  // "=" in the pattern must be escaped as "\=".
-  //   "a\=b@example.com = message" => { pattern: "a=b@example.com", message: "message" }
-  static parsePatternLine(line) {
-    // A backslash is always consumed with the next character, so an escaped "=" never becomes the separator.
-    const match = line.match(/^((?:\\.|[^=\\])*)=(.*)$/);
-    if (!match) {
-      return { pattern: RecipientClassifier.unescapePattern(line).trim(), message: "" };
-    }
-    return {
-      pattern: RecipientClassifier.unescapePattern(match[1]).trim(),
-      message: match[2].trim(),
-    };
-  }
-
-  static unescapePattern(pattern) {
-    return pattern.replace(/\\=/g, "=");
-  }
-
   generateMatchers(patterns) {
     const messages = new Map();
     const uniquePatterns = new Set(
       (patterns || [])
         .filter((line) => !line.startsWith("#")) // reject commented out items
         .map((line) => {
-          const parsed = RecipientClassifier.parsePatternLine(line);
+          const parsed = parsePatternLine(line);
           const pattern = parsed.pattern.toLowerCase().replace(/^(-?)@/, "$1"); // delete needless "@" from domain only patterns: "@example.com" => "example.com"
           if (parsed.message && !messages.has(pattern)) {
             messages.set(pattern, parsed.message);
