@@ -67,6 +67,40 @@ function showNextWarning() {
   dialogBody.hidden = false;
 }
 
+// Push warning contents for the given items, grouped by their custom messages.
+// Items without a custom message are grouped into the content for "defaultMessageBefore".
+// The custom message can be a message ID defined in locales or custom-locales.
+// If it is not a message ID, L10n returns it with placeholders replaced.
+function pushWarningContentsByMessage({
+  items,
+  getTarget,
+  getCustomMessage,
+  getMessageParams,
+  defaultMessageBefore,
+  messageAfter,
+}) {
+  const targets = new Set();
+  const targetsByMessage = new Map();
+  for (const item of items) {
+    const customMessage = getCustomMessage(item);
+    if (!customMessage) {
+      targets.add(getTarget(item));
+      continue;
+    }
+    const message = l10n.get(customMessage, getMessageParams(item));
+    if (!targetsByMessage.has(message)) {
+      targetsByMessage.set(message, new Set());
+    }
+    targetsByMessage.get(message).add(getTarget(item));
+  }
+  if (targets.size > 0) {
+    warningContents.push({ targets, messageBefore: defaultMessageBefore, messageAfter });
+  }
+  for (const [messageBefore, targetsWithMessage] of targetsByMessage) {
+    warningContents.push({ targets: targetsWithMessage, messageBefore, messageAfter });
+  }
+}
+
 async function onMessageFromParent(arg) {
   const data = JSON.parse(arg.message);
   console.log(data);
@@ -80,43 +114,29 @@ async function onMessageFromParent(arg) {
   const attachments = data.classified.attachments.block;
   const bodyMatchedWords = data.bodyBlockTargetWords;
   if (recipients.length > 0) {
-    const targets = new Set();
-    // Recipients with custom messages: Map of message => Set of targets.
-    const targetsByMessage = new Map();
-    for (const recipient of recipients) {
-      let target = recipient.address;
-      if (!target || target === "") {
-        target = recipient.displayName;
-      }
-      if (!target || target === "") {
-        target = "Unknown";
-      }
-      if (!recipient.blockMessage) {
-        targets.add(`${recipient.type}: ${target}`);
-        continue;
-      }
-      // The custom message can be a message ID defined in locales or custom-locales.
-      // If it is not a message ID, L10n returns it with placeholders replaced.
-      const message = l10n.get(recipient.blockMessage, {
+    pushWarningContentsByMessage({
+      items: recipients,
+      getTarget: (recipient) => {
+        let target = recipient.address;
+        if (!target || target === "") {
+          target = recipient.displayName;
+        }
+        if (!target || target === "") {
+          target = "Unknown";
+        }
+        return `${recipient.type}: ${target}`;
+      },
+      getCustomMessage: (recipient) => recipient.blockMessage,
+      getMessageParams: (recipient) => ({
         domain: recipient.domain.toLowerCase(),
         address: recipient.address,
-      });
-      if (!targetsByMessage.has(message)) {
-        targetsByMessage.set(message, new Set());
-      }
-      targetsByMessage.get(message).add(`${recipient.type}: ${target}`);
-    }
-    const messageAfter = l10n.get("block_messageAfterForRecipients");
-    if (targets.size > 0) {
-      const messageBefore =
+      }),
+      defaultMessageBefore:
         data.itemType == Office.MailboxEnums.ItemType.Message
           ? l10n.get("block_messageBeforeForMailRecipients")
-          : l10n.get("block_messageBeforeForAppointmentRecipients");
-      warningContents.push({ targets, messageBefore, messageAfter });
-    }
-    for (const [messageBefore, targetsWithMessage] of targetsByMessage) {
-      warningContents.push({ targets: targetsWithMessage, messageBefore, messageAfter });
-    }
+          : l10n.get("block_messageBeforeForAppointmentRecipients"),
+      messageAfter: l10n.get("block_messageAfterForRecipients"),
+    });
   }
   if (distributionListTypeRecipients.length > 0) {
     const targets = new Set();
@@ -135,33 +155,17 @@ async function onMessageFromParent(arg) {
     warningContents.push({ targets, messageBefore, messageAfter });
   }
   if (attachments.length > 0) {
-    const targets = new Set();
-    // Attachments with custom messages: Map of message => Set of targets.
-    const targetsByMessage = new Map();
-    for (const attachment of attachments) {
-      if (!attachment.blockMessage) {
-        targets.add(attachment.name);
-        continue;
-      }
-      // The custom message can be a message ID defined in locales or custom-locales.
-      // If it is not a message ID, L10n returns it with placeholders replaced.
-      const message = l10n.get(attachment.blockMessage, { name: attachment.name });
-      if (!targetsByMessage.has(message)) {
-        targetsByMessage.set(message, new Set());
-      }
-      targetsByMessage.get(message).add(attachment.name);
-    }
-    const messageAfter = l10n.get("block_messageAfterForAttachments");
-    if (targets.size > 0) {
-      const messageBefore =
+    pushWarningContentsByMessage({
+      items: attachments,
+      getTarget: (attachment) => attachment.name,
+      getCustomMessage: (attachment) => attachment.blockMessage,
+      getMessageParams: (attachment) => ({ name: attachment.name }),
+      defaultMessageBefore:
         data.itemType == Office.MailboxEnums.ItemType.Message
           ? l10n.get("block_messageBeforeForMailAttachments")
-          : l10n.get("block_messageBeforeForAppointmentAttachments");
-      warningContents.push({ targets, messageBefore, messageAfter });
-    }
-    for (const [messageBefore, targetsWithMessage] of targetsByMessage) {
-      warningContents.push({ targets: targetsWithMessage, messageBefore, messageAfter });
-    }
+          : l10n.get("block_messageBeforeForAppointmentAttachments"),
+      messageAfter: l10n.get("block_messageAfterForAttachments"),
+    });
   }
   if (bodyMatchedWords.length > 0) {
     const targets = new Set();
