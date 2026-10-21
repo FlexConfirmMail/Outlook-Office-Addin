@@ -9,7 +9,19 @@ import * as L10nUtils from "./l10n.mjs";
 import { AddedDomainsReconfirmation } from "../../src/web/added-domains-reconfirmation.mjs";
 import * as RecipientParser from "../../src/web/recipient-parser.mjs";
 import { assert } from 'tiny-esm-test-runner';
+import { OfficeMockObject } from 'office-addin-mock';
 const { ok, ng, is } = assert;
+
+// AddedDomainsReconfirmation accesses Office.MailboxEnums on its construction.
+global.Office = new OfficeMockObject({
+  host: "outlook",
+  MailboxEnums: {
+    ItemType: {
+      Message: "message",
+      Appointment: "appointment"
+    },
+  },
+});
 
 let reconfirmation;
 
@@ -49,7 +61,7 @@ test_shouldReconfirm.parameters = {
         bcc : [],
       },
     },
-    domains: ["example.net"],
+    addresses: ["added@example.net"],
   },
   CcAdded: {
     data: {
@@ -73,7 +85,7 @@ test_shouldReconfirm.parameters = {
         bcc : [],
       },
     },
-    domains: ["example.net"],
+    addresses: ["added@example.net"],
   },
   BccAdded: {
     data: {
@@ -97,7 +109,7 @@ test_shouldReconfirm.parameters = {
         bcc : [toTarget("bcc@example.com")],
       },
     },
-    domains: ["example.net"],
+    addresses: ["added@example.net"],
   },
   AddedToDifferentTargetTo: {
     data: {
@@ -121,7 +133,7 @@ test_shouldReconfirm.parameters = {
         bcc : [],
       },
     },
-    domains: ["example.net"],
+    addresses: ["added@example.net"],
   },
   AddedToDifferentTargetCc: {
     data: {
@@ -145,7 +157,7 @@ test_shouldReconfirm.parameters = {
         bcc : [],
       },
     },
-    domains: ["example.net"],
+    addresses: ["added@example.net"],
   },
   AddedToDifferentTargetBcc: {
     data: {
@@ -169,7 +181,7 @@ test_shouldReconfirm.parameters = {
         bcc : [],
       },
     },
-    domains: ["example.net"],
+    addresses: ["added@example.net"],
   },
   MultipleDomainsAdded: {
     data: {
@@ -193,14 +205,14 @@ test_shouldReconfirm.parameters = {
         bcc : [],
       },
     },
-    domains: ["example.net", "example.org"],
+    addresses: ["added@example.net", "added@example.org"],
   },
 };
-export function test_shouldReconfirm({ data, domains }) {
+export function test_shouldReconfirm({ data, addresses }) {
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
   ok(reconfirmation.needToReconfirm);
-  is(new Set(domains), reconfirmation.newDomainAddresses);
+  is(addresses, Array.from(reconfirmation.targets));
 }
 
 test_shouldNotReconfirm.parameters = {
@@ -329,5 +341,5 @@ export function test_shouldNotReconfirm(data) {
   reconfirmation.init(data);
   ok(reconfirmation.initialized);
   ng(reconfirmation.needToReconfirm);
-  is(new Set(), reconfirmation.newDomainAddresses);
+  is([], Array.from(reconfirmation.targets));
 }
