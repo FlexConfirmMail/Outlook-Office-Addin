@@ -122,7 +122,6 @@ export class RecipientClassifier {
     return new RegExp(`^(${source})$`, "i");
   }
 
-
   classify(recipients) {
     const trusted = new Set();
     const untrusted = new Set();
