@@ -9,9 +9,14 @@ import { OfficeDataAccessHelper } from "../../src/web/office-data-access-helper.
 import { assert } from "tiny-esm-test-runner";
 const { is, ok } = assert;
 
-// "global.Office" is shared by all test files, thus it must be defined for
-// each test instead of on loading this file.
+// "global.Office" is shared by all test files, thus this mock must be used
+// only while each test in this file is running. Otherwise the mocks of other
+// test files, which have more properties like MailboxEnums.RecipientType, are
+// lost and their tests fail.
+let previousOffice;
+
 export function setUp() {
+  previousOffice = global.Office;
   global.Office = {
     AsyncResultStatus: {
       Succeeded: "succeeded",
@@ -31,6 +36,10 @@ export function setUp() {
       },
     },
   };
+}
+
+export function tearDown() {
+  global.Office = previousOffice;
 }
 
 // Define an Office API which reports the given result to its callback.
