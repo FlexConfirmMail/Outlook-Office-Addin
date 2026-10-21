@@ -192,6 +192,16 @@ function appendMiscCheckboxes({ items, warning, emphasize }) {
   }
 }
 
+// The custom message of the unsafe domains config can be a message ID defined in
+// locales or custom-locales. If it is not a message ID, L10n returns it with placeholders replaced.
+function getUnsafeRecipientLabel(recipient, defaultMessageId, params) {
+  let messageId = defaultMessageId;
+  if (recipient.unsafeMessage) {
+    messageId = recipient.unsafeMessage;
+  }
+  return l10n.get(messageId, params);
+}
+
 function displayCardsHaveCheckboxes() {
   ["trusted-domains-card", "untrusted-domains-card", "misc-card"]
     .map((id) => document.querySelector(`#${id}`))
@@ -315,20 +325,22 @@ async function onMessageFromParent(arg) {
   unsafeBodiesConfirmation.init(data);
   appendMiscCheckboxes({ items: unsafeBodiesConfirmation.warningConfirmationItems, warning: true });
 
+  // Labels are deduplicated by appendMiscCheckboxes.
   appendMiscCheckboxes({
-    items: Array.from(
-      new Set(
-        data.classified.recipients.unsafeWithDomain.map((recipient) =>
-          recipient.domain.toLowerCase()
-        )
-      ),
-      (domain) => l10n.get("confirmation_unsafeDomainRecipientCheckboxLabel", { domain })
+    items: data.classified.recipients.unsafeWithDomain.map((recipient) =>
+      getUnsafeRecipientLabel(recipient, "confirmation_unsafeDomainRecipientCheckboxLabel", {
+        domain: recipient.domain.toLowerCase(),
+        address: recipient.address,
+      })
     ),
     warning: true,
   });
   appendMiscCheckboxes({
     items: data.classified.recipients.unsafe.map((recipient) =>
-      l10n.get("confirmation_unsafeRecipientCheckboxLabel", { address: recipient.address })
+      getUnsafeRecipientLabel(recipient, "confirmation_unsafeRecipientCheckboxLabel", {
+        domain: recipient.domain.toLowerCase(),
+        address: recipient.address,
+      })
     ),
     warning: true,
   });
