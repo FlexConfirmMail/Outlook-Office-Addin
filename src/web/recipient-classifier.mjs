@@ -8,6 +8,20 @@
 import * as RecipientParser from "./recipient-parser.mjs";
 import { wildcardToRegexp } from "./wildcard-to-regexp.mjs";
 
+// Categories of the classified result. classifyAll() returns the categories
+// in this order.
+const CLASSIFIED_CATEGORIES = [
+  "trusted",
+  "untrusted",
+  "unsafeWithDomain",
+  "unsafe",
+  "blockWithDomain",
+  "block",
+  "distributionLists",
+  "rewarningWithDomain",
+  "rewarning",
+];
+
 export class RecipientClassifier {
   constructor({ trustedDomains, unsafeDomains, commonConfig } = {}) {
     this.$trustedPatternsMatchers = this.generateMatchers(trustedDomains);
@@ -213,148 +227,25 @@ export class RecipientClassifier {
       unsafeDomains: unsafeDomains || [],
       commonConfig: commonConfig || {},
     });
-    const classifiedTo = classifier.classify(to);
-    const classifiedCc = classifier.classify(cc);
-    const classifiedBcc = classifier.classify(bcc);
-    const classifiedRequiredAttendee = classifier.classify(requiredAttendees);
-    const classifiedOptionalAttendee = classifier.classify(optionalAttendees);
-
-    return {
-      trusted: [
-        ...new Set([
-          ...classifiedTo.trusted.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.trusted.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.trusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.trusted.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.trusted.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      untrusted: [
-        ...new Set([
-          ...classifiedTo.untrusted.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.untrusted.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.untrusted.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.untrusted.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.untrusted.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      unsafeWithDomain: [
-        ...new Set([
-          ...classifiedTo.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.unsafeWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.unsafeWithDomain.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.unsafeWithDomain.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      unsafe: [
-        ...new Set([
-          ...classifiedTo.unsafe.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.unsafe.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.unsafe.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.unsafe.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.unsafe.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      blockWithDomain: [
-        ...new Set([
-          ...classifiedTo.blockWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.blockWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.blockWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.blockWithDomain.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.blockWithDomain.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      block: [
-        ...new Set([
-          ...classifiedTo.block.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.block.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.block.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.block.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.block.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      distributionLists: [
-        ...new Set([
-          ...classifiedTo.distributionLists.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.distributionLists.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.distributionLists.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.distributionLists.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.distributionLists.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      rewarningWithDomain: [
-        ...new Set([
-          ...classifiedTo.rewarningWithDomain.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.rewarningWithDomain.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.rewarningWithDomain.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.rewarningWithDomain.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.rewarningWithDomain.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-      rewarning: [
-        ...new Set([
-          ...classifiedTo.rewarning.map((recipient) => ({ ...recipient, type: "To" })),
-          ...classifiedCc.rewarning.map((recipient) => ({ ...recipient, type: "Cc" })),
-          ...classifiedBcc.rewarning.map((recipient) => ({ ...recipient, type: "Bcc" })),
-          ...classifiedRequiredAttendee.rewarning.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_requiredAttendee"),
-          })),
-          ...classifiedOptionalAttendee.rewarning.map((recipient) => ({
-            ...recipient,
-            type: locale.get("confirmation_optionalAttendee"),
-          })),
-        ]),
-      ],
-    };
+    const classifiedSlots = [
+      { type: "To", classified: classifier.classify(to) },
+      { type: "Cc", classified: classifier.classify(cc) },
+      { type: "Bcc", classified: classifier.classify(bcc) },
+      {
+        type: locale.get("confirmation_requiredAttendee"),
+        classified: classifier.classify(requiredAttendees),
+      },
+      {
+        type: locale.get("confirmation_optionalAttendee"),
+        classified: classifier.classify(optionalAttendees),
+      },
+    ];
+    const classifiedAll = {};
+    for (const category of CLASSIFIED_CATEGORIES) {
+      classifiedAll[category] = classifiedSlots.flatMap(({ type, classified }) =>
+        classified[category].map((recipient) => ({ ...recipient, type }))
+      );
+    }
+    return classifiedAll;
   }
 }
