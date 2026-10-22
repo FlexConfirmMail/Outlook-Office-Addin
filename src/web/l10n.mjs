@@ -121,7 +121,7 @@ export class L10n {
     }
     if (params) {
       for (const [placeholder, value] of Object.entries(params)) {
-        message = message.replace("${" + placeholder + "}", value || "");
+        message = message.split("${" + placeholder + "}").join(value || "");
       }
     }
     return { message, type };
