@@ -87,226 +87,104 @@ function createUnsafeBodiesConfigComment(unsafeBodiesConfig) {
   return lines.join("\n# ");
 }
 
-function createDisplayTrustedDomains() {
-  if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
-    const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
-    let userDomainsString = userConfig.trustedDomainsString?.trim() ?? "";
-    if (!userDomainsString) {
-      userDomainsString = l10n.get("setting_trustedDomainsExample");
-    }
-    return l10n.get("setting_trustedDomainsPolicy", {
-      policy: policyDomainsString,
-      user: userDomainsString,
-    });
-  } else if (userConfig.trustedDomainsString) {
-    return userConfig.trustedDomainsString;
-  } else {
-    return l10n.get("setting_trustedDomainsTemplate");
-  }
+// The configs edited in a text area. Everything else is derived from the key:
+//   * the text area:       "<key>TextArea"
+//   * the messages:        "setting_<key>Policy", "setting_<key>Example" and
+//                          "setting_<key>Template"
+//   * the configs:         policyConfig["<key>String"] and userConfig["<key>String"]
+//   * the fixed parameter: the key with its first letter capitalized
+// "createPolicyComment" builds the commented out policy config shown in the
+// text area. "downloadSection" is the section declaration to be added before
+// the user's config on downloading, when the config has sections.
+const TEXT_CONFIGS = {
+  trustedDomains: {
+    createPolicyComment: () => policyConfig.trustedDomains?.join("\n# ") ?? "",
+    downloadSection: null,
+  },
+  unsafeDomains: {
+    createPolicyComment: () => createSectionableArrayConfigComment(policyConfig.unsafeDomains),
+    downloadSection: Config.defaultUnsafeDomainsConfigSection,
+  },
+  unsafeFiles: {
+    createPolicyComment: () => createSectionableArrayConfigComment(policyConfig.unsafeFiles),
+    downloadSection: Config.defaultUnsafeFilesConfigSection,
+  },
+  unsafeBodies: {
+    createPolicyComment: () => createUnsafeBodiesConfigComment(policyConfig.unsafeBodies),
+    downloadSection: null,
+  },
+};
+
+function getFixedParameterName(key) {
+  return `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
 }
 
-function serializeTrustedDomains({ mode = Setting.SerializationMode.User }) {
-  let trustedDomainsString = document.getElementById("trustedDomainsTextArea").value ?? "";
-  if (policyConfig.trustedDomains && policyConfig.trustedDomains.length > 0) {
-    const policyDomainsString = policyConfig.trustedDomains?.join("\n# ") ?? "";
+function createDisplayTextConfig(key) {
+  const policyString = TEXT_CONFIGS[key].createPolicyComment();
+  const userString = userConfig[`${key}String`];
+  if (policyString) {
+    return l10n.get(`setting_${key}Policy`, {
+      policy: policyString,
+      user: userString?.trim() || l10n.get(`setting_${key}Example`),
+    });
+  }
+  if (userString) {
+    return userString;
+  }
+  return l10n.get(`setting_${key}Template`);
+}
+
+function serializeTextConfig(key, mode = Setting.SerializationMode.User) {
+  const { createPolicyComment, downloadSection } = TEXT_CONFIGS[key];
+  let configString = document.getElementById(`${key}TextArea`).value ?? "";
+  const policyString = createPolicyComment();
+  if (policyString) {
+    // The commented out policy config is shown in the text area, but it is not
+    // a part of the user's config, thus it must be removed.
     const template = l10n
-      .get("setting_trustedDomainsPolicy", {
-        policy: policyDomainsString,
+      .get(`setting_${key}Policy`, {
+        policy: policyString,
         user: "",
       })
       .trim();
-    trustedDomainsString = trustedDomainsString.replace(template, "");
+    configString = configString.replace(template, "");
   }
   if (mode === Setting.SerializationMode.User) {
-    trustedDomainsString = trustedDomainsString.trim();
-  } else {
-    trustedDomainsString =
-      `${policyConfig.trustedDomainsString.trim()}\n\n${trustedDomainsString.trim()}`.trim();
+    return configString.trim();
   }
-  return trustedDomainsString;
-}
-
-function createDisplayUnsafeDomains() {
-  const policyUnsafeDomainsString = createSectionableArrayConfigComment(
-    policyConfig.unsafeDomains,
-    Config.defaultUnsafeDomainsConfigSection
-  );
-  if (policyUnsafeDomainsString) {
-    let userUnsafeDomainsString = userConfig.unsafeDomainsString?.trim() ?? "";
-    if (!userUnsafeDomainsString) {
-      userUnsafeDomainsString = l10n.get("setting_unsafeDomainsExample");
-    }
-    return l10n.get("setting_unsafeDomainsPolicy", {
-      policy: policyUnsafeDomainsString,
-      user: userUnsafeDomainsString,
-    });
-  } else if (userConfig.unsafeDomainsString) {
-    return userConfig.unsafeDomainsString;
-  } else {
-    return l10n.get("setting_unsafeDomainsTemplate");
-  }
-}
-
-function serializeUnsafeDomains({ mode = Setting.SerializationMode.User }) {
-  let unsafeDomainsString = document.getElementById("unsafeDomainsTextArea").value ?? "";
-  const policyUnsafeDomainsString = createSectionableArrayConfigComment(policyConfig.unsafeDomains);
-  if (policyUnsafeDomainsString) {
-    const template = l10n
-      .get("setting_unsafeDomainsPolicy", {
-        policy: policyUnsafeDomainsString,
-        user: "",
-      })
-      .trim();
-    unsafeDomainsString = unsafeDomainsString.replace(template, "");
-  }
-  if (mode === Setting.SerializationMode.User) {
-    unsafeDomainsString = unsafeDomainsString.trim();
-  } else {
-    // We must add [WARNING] just before right (user's) string.
-    // We can ommit [WARNING] section declaration, so when right ommits [WARNING] section declaration,
-    // the right [WARNING] section may be in the wrong section after merged.
-    //
-    // If [WARNING] is not added:
-    //   left:
-    //     [BLOCK]
-    //     a@example.com
-    //   right:
-    //     b@example.com
-    //   merged:
-    //     [BLOCK]
-    //     a@example.com
-    //     b@example.com
-    //
-    // In this case, b@example.com is expected in [WARNING] but in [BLOCK].
-    //
-    // By adding [WARNING]:
-    //   left:
-    //     [BLOCK]
-    //     a@example.com
-    //   right:
-    //     b@example.com
-    //   merged:
-    //     [BLOCK]
-    //     a@example.com
-    //     [WARNING]
-    //     b@example.com
-    //
-    // In this case, b@example.com is in [WARNING] as expected.
-    unsafeDomainsString =
-      `${policyConfig.unsafeDomainsString.trim()}\n\n[${Config.defaultUnsafeDomainsConfigSection}]\n${unsafeDomainsString.trim()}`.trim();
-  }
-  return unsafeDomainsString;
-}
-
-function createDisplayUnsafeFiles() {
-  const policyUnsafeFilesString = createSectionableArrayConfigComment(policyConfig.unsafeFiles);
-  if (policyUnsafeFilesString) {
-    let userUnsafeFilesString = userConfig.unsafeFilesString?.trim() ?? "";
-    if (!userUnsafeFilesString) {
-      userUnsafeFilesString = l10n.get("setting_unsafeFilesExample");
-    }
-    return l10n.get("setting_unsafeFilesPolicy", {
-      policy: policyUnsafeFilesString,
-      user: userUnsafeFilesString,
-    });
-  } else if (userConfig.unsafeFilesString) {
-    return userConfig.unsafeFilesString;
-  } else {
-    return l10n.get("setting_unsafeFilesTemplate");
-  }
-}
-
-function serializeUnsafeFiles({ mode = Setting.SerializationMode.User }) {
-  const policyUnsafeFilesString = createSectionableArrayConfigComment(
-    policyConfig.unsafeFiles,
-    Config.defaultUnsafeDomainsConfigSection
-  );
-  let unsafeFilesString = document.getElementById("unsafeFilesTextArea").value ?? "";
-  if (policyUnsafeFilesString) {
-    const template = l10n
-      .get("setting_unsafeFilesPolicy", {
-        policy: policyUnsafeFilesString,
-        user: "",
-      })
-      .trim();
-    unsafeFilesString = unsafeFilesString.replace(template, "");
-  }
-  if (mode === Setting.SerializationMode.User) {
-    unsafeFilesString = unsafeFilesString.trim();
-  } else {
-    // We must add [WARNING] just before right (user's) string.
-    // We can ommit [WARNING] section declaration, so when right ommits [WARNING] section declaration,
-    // the right [WARNING] section may be in the wrong section after merged.
-    //
-    // If [WARNING] is not added:
-    //   left:
-    //     [BLOCK]
-    //     a@example.com
-    //   right:
-    //     b@example.com
-    //   merged:
-    //     [BLOCK]
-    //     a@example.com
-    //     b@example.com
-    //
-    // In this case, b@example.com is expected in [WARNING] but in [BLOCK].
-    //
-    // By adding [WARNING]:
-    //   left:
-    //     [BLOCK]
-    //     a@example.com
-    //   right:
-    //     b@example.com
-    //   merged:
-    //     [BLOCK]
-    //     a@example.com
-    //     [WARNING]
-    //     b@example.com
-    //
-    // In this case, b@example.com is in [WARNING] as expected.
-    unsafeFilesString =
-      `${policyConfig.unsafeFilesString.trim()}\n\n[${Config.defaultUnsafeFilesConfigSection}]\n${unsafeFilesString.trim()}`.trim();
-  }
-  return unsafeFilesString;
-}
-
-function createDisplayUnsafeBodies() {
-  const policyUnsafeBodiesString = createUnsafeBodiesConfigComment(policyConfig.unsafeBodies);
-  if (policyUnsafeBodiesString) {
-    let userUnsafeBodiesString = userConfig.unsafeBodiesString?.trim() ?? "";
-    if (!userUnsafeBodiesString) {
-      userUnsafeBodiesString = l10n.get("setting_unsafeBodiesExample");
-    }
-    return l10n.get("setting_unsafeBodiesPolicy", {
-      policy: policyUnsafeBodiesString,
-      user: userUnsafeBodiesString,
-    });
-  } else if (userConfig.unsafeBodiesString) {
-    return userConfig.unsafeBodiesString;
-  } else {
-    return l10n.get("setting_unsafeBodiesTemplate");
-  }
-}
-
-function serializeUnsafeBodies({ mode = Setting.SerializationMode.User }) {
-  const policyUnsafeBodiesString = createUnsafeBodiesConfigComment(policyConfig.unsafeBodies);
-  let unsafeBodiesString = document.getElementById("unsafeBodiesTextArea").value ?? "";
-  if (policyUnsafeBodiesString) {
-    const template = l10n
-      .get("setting_unsafeBodiesPolicy", {
-        policy: policyUnsafeBodiesString,
-        user: "",
-      })
-      .trim();
-    unsafeBodiesString = unsafeBodiesString.replace(template, "");
-  }
-  if (mode === Setting.SerializationMode.User) {
-    unsafeBodiesString = unsafeBodiesString.trim();
-  } else {
-    unsafeBodiesString =
-      `${policyConfig.unsafeBodiesString.trim()}\n\n${unsafeBodiesString.trim()}`.trim();
-  }
-  return unsafeBodiesString;
+  // We must add the default section (ex. [WARNING]) just before right (user's) string.
+  // We can ommit the default section declaration, so when right ommits it,
+  // the right default section may be in the wrong section after merged.
+  //
+  // If [WARNING] is not added:
+  //   left:
+  //     [BLOCK]
+  //     a@example.com
+  //   right:
+  //     b@example.com
+  //   merged:
+  //     [BLOCK]
+  //     a@example.com
+  //     b@example.com
+  //
+  // In this case, b@example.com is expected in [WARNING] but in [BLOCK].
+  //
+  // By adding [WARNING]:
+  //   left:
+  //     [BLOCK]
+  //     a@example.com
+  //   right:
+  //     b@example.com
+  //   merged:
+  //     [BLOCK]
+  //     a@example.com
+  //     [WARNING]
+  //     b@example.com
+  //
+  // In this case, b@example.com is in [WARNING] as expected.
+  const sectionDeclaration = downloadSection ? `[${downloadSection}]\n` : "";
+  const policyConfigString = policyConfig[`${key}String`].trim();
+  return `${policyConfigString}\n\n${sectionDeclaration}${configString.trim()}`.trim();
 }
 
 async function onMessageFromParent(arg) {
@@ -351,21 +229,11 @@ function updateDialogSetting(policy, user) {
   console.debug(effectiveConfig);
   const common = effectiveConfig.common;
   const fixedParametersSet = new Set(policyConfig.common.FixedParameters ?? []);
-  const trustedDomainsString = createDisplayTrustedDomains();
-  const unsafeDomainsString = createDisplayUnsafeDomains();
-  const unsafeFilesString = createDisplayUnsafeFiles();
-  const unsafeBodiesString = createDisplayUnsafeBodies();
-
-  document.getElementById("trustedDomainsTextArea").value = trustedDomainsString;
-  document.getElementById("trustedDomainsTextArea").disabled =
-    fixedParametersSet.has("TrustedDomains");
-  document.getElementById("unsafeDomainsTextArea").value = unsafeDomainsString;
-  document.getElementById("unsafeDomainsTextArea").disabled =
-    fixedParametersSet.has("UnsafeDomains");
-  document.getElementById("unsafeFilesTextArea").value = unsafeFilesString;
-  document.getElementById("unsafeFilesTextArea").disabled = fixedParametersSet.has("UnsafeFiles");
-  document.getElementById("unsafeBodiesTextArea").value = unsafeBodiesString;
-  document.getElementById("unsafeBodiesTextArea").disabled = fixedParametersSet.has("UnsafeBodies");
+  for (const key of Object.keys(TEXT_CONFIGS)) {
+    const textArea = document.getElementById(`${key}TextArea`);
+    textArea.value = createDisplayTextConfig(key);
+    textArea.disabled = fixedParametersSet.has(getFixedParameterName(key));
+  }
 
   document.getElementById("countEnabled").checked = common.CountEnabled;
   document.getElementById("countEnabled").disabled = fixedParametersSet.has("CountEnabled");
@@ -569,10 +437,10 @@ window.onSave = () => {
   console.debug("onSave");
   const mode = Setting.SerializationMode.User;
   const commonString = serializeCommonConfigs({ mode });
-  const trustedDomainsString = serializeTrustedDomains({ mode });
-  const unsafeDomainsString = serializeUnsafeDomains({ mode });
-  const unsafeFilesString = serializeUnsafeFiles({ mode });
-  const unsafeBodiesString = serializeUnsafeBodies({ mode });
+  const trustedDomainsString = serializeTextConfig("trustedDomains", mode);
+  const unsafeDomainsString = serializeTextConfig("unsafeDomains", mode);
+  const unsafeFilesString = serializeTextConfig("unsafeFiles", mode);
+  const unsafeBodiesString = serializeTextConfig("unsafeBodies", mode);
   console.debug("commonString: ", commonString);
   console.debug("trustedDomainsString: ", trustedDomainsString);
   console.debug("unsafeDomainsString: ", unsafeDomainsString);
@@ -608,10 +476,10 @@ window.onDownload = () => {
   const mode = Setting.SerializationMode.Download;
   const commonString = serializeCommonConfigs({ mode });
   // Add policy config to downloaded config, because user may want to use policy config as reference when edit downloaded config.
-  const trustedDomainsString = serializeTrustedDomains({ mode });
-  const unsafeDomainsString = serializeUnsafeDomains({ mode });
-  const unsafeFilesString = serializeUnsafeFiles({ mode });
-  const unsafeBodiesString = serializeUnsafeBodies({ mode });
+  const trustedDomainsString = serializeTextConfig("trustedDomains", mode);
+  const unsafeDomainsString = serializeTextConfig("unsafeDomains", mode);
+  const unsafeFilesString = serializeTextConfig("unsafeFiles", mode);
+  const unsafeBodiesString = serializeTextConfig("unsafeBodies", mode);
   const targets = [
     {
       name: "Common.txt",
