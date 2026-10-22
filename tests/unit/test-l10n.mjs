@@ -84,6 +84,34 @@ test_get.parameters = {
     },
     expected: "取引先（example.com）宛です：aaa@example.com",
   },
+  // All of the same placeholders must be replaced.
+  repeatedPlaceholder: {
+    language: "ja-JP",
+    key: "${address} は ${domain} 宛です（${address}）",
+    params: {
+      domain: "example.com",
+      address: "aaa@example.com",
+    },
+    expected: "aaa@example.com は example.com 宛です（aaa@example.com）",
+  },
+  // "$" in the value must not be treated as a replacement pattern.
+  valueWithDollar: {
+    language: "ja-JP",
+    key: "宛先：${address}",
+    params: {
+      address: "a$&b$'c@example.com",
+    },
+    expected: "宛先：a$&b$'c@example.com",
+  },
+  // A placeholder without any parameter must be kept as it is.
+  missingParameter: {
+    language: "ja-JP",
+    key: "宛先：${address}",
+    params: {
+      domain: "example.com",
+    },
+    expected: "宛先：${address}",
+  },
 };
 export async function test_get({ language, key, params, expected }) {
   const l10n = await prepare(language);
