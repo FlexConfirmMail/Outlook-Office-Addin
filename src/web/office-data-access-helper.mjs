@@ -17,74 +17,83 @@ export class OfficeDataAccessHelper {
     "item", // Office.MailboxEnums.AttachmentType.Item,
   ]);
 
-  static getBccAsync() {
+  // Wrap an Office API, which reports its result to a callback, as a Promise.
+  //  * "description" is used for error logs: "Error while ${description}".
+  //  * "invoke" is called with the callback to be given to the Office API.
+  //    Note that the API must be called in it as a method, to keep its "this".
+  //  * "onSucceeded" converts the reported value to the value to be resolved.
+  //  * "onFailed" is called when the Office API reports a failure, and its
+  //    returned value is resolved. The promise is rejected when it is omitted.
+  //  * "log" is the logging function for reported failures.
+  static runAsync(description, invoke, { onSucceeded, onFailed, log = console.log } = {}) {
     return new Promise((resolve, reject) => {
+      const onResult = (asyncResult) => {
+        // Exceptions raised in this callback are never caught by the try-catch
+        // for "invoke" below, because this is called asynchronously. They must
+        // be caught here, otherwise the promise is never settled and the caller
+        // waits for it forever.
+        try {
+          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+            resolve(onSucceeded ? onSucceeded(asyncResult.value) : asyncResult.value);
+            return;
+          }
+          log(`Error while ${description}: ${asyncResult.error?.message}`);
+          if (onFailed) {
+            resolve(onFailed(asyncResult.error));
+          } else {
+            reject(asyncResult.error);
+          }
+        } catch (error) {
+          console.log(`Error while ${description}: ${error}`);
+          reject(error);
+        }
+      };
       try {
-        Office.context.mailbox.item.bcc.getAsync((asyncResult) => {
-          const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-            ...officeAddonRecipient,
-            ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-          }));
-          resolve(recipients);
-        });
+        invoke(onResult);
       } catch (error) {
-        console.log(`Error while getting Bcc: ${error}`);
+        console.log(`Error while ${description}: ${error}`);
         reject(error);
       }
     });
+  }
+
+  static toRecipients(officeAddonRecipients) {
+    return officeAddonRecipients.map((officeAddonRecipient) => ({
+      ...officeAddonRecipient,
+      ...RecipientParser.parse(officeAddonRecipient.emailAddress),
+    }));
+  }
+
+  static getBccAsync() {
+    return OfficeDataAccessHelper.runAsync(
+      "getting Bcc",
+      (onResult) => Office.context.mailbox.item.bcc.getAsync(onResult),
+      { onSucceeded: OfficeDataAccessHelper.toRecipients }
+    );
   }
 
   static setBccAsync(recipients) {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.bcc.setAsync(recipients, (asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-            resolve(recipients);
-          } else {
-            console.log(`Error while setting Bcc: ${asyncResult.error.message}`);
-            reject(asyncResult.error);
-          }
-        });
-      } catch (error) {
-        console.log(`Error while setting Bcc: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "setting Bcc",
+      (onResult) => Office.context.mailbox.item.bcc.setAsync(recipients, onResult),
+      { onSucceeded: () => recipients }
+    );
   }
 
   static getCcAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.cc.getAsync((asyncResult) => {
-          const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-            ...officeAddonRecipient,
-            ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-          }));
-          resolve(recipients);
-        });
-      } catch (error) {
-        console.log(`Error while getting Cc: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "getting Cc",
+      (onResult) => Office.context.mailbox.item.cc.getAsync(onResult),
+      { onSucceeded: OfficeDataAccessHelper.toRecipients }
+    );
   }
 
   static setCcAsync(recipients) {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.cc.setAsync(recipients, (asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-            resolve(recipients);
-          } else {
-            console.log(`Error while setting Cc: ${asyncResult.error.message}`);
-            reject(asyncResult.error);
-          }
-        });
-      } catch (error) {
-        console.log(`Error while setting Cc: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "setting Cc",
+      (onResult) => Office.context.mailbox.item.cc.setAsync(recipients, onResult),
+      { onSucceeded: () => recipients }
+    );
   }
 
   static clearCcAsync() {
@@ -92,118 +101,69 @@ export class OfficeDataAccessHelper {
   }
 
   static getSubjectAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.subject.getAsync((asyncResult) => {
-          const subject = asyncResult.value;
-          resolve(subject);
-        });
-      } catch (error) {
-        console.log(`Error while getting subject: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "getting subject",
+      (onResult) => Office.context.mailbox.item.subject.getAsync(onResult),
+      // Regards no value, as before.
+      { onFailed: () => undefined }
+    );
   }
 
   static getBodyAsync(coerctionType = Office.CoercionType.Html) {
-    return new Promise((resolve, reject) => {
-      try {
+    return OfficeDataAccessHelper.runAsync(
+      "getting body",
+      (onResult) =>
         Office.context.mailbox.item.body.getAsync(
           coerctionType,
           { bodyMode: Office.MailboxEnums.BodyMode.Full },
-          (asyncResult) => {
-            const body = asyncResult.value;
-            resolve(body);
-          }
-        );
-      } catch (error) {
-        console.log(`Error while getting body: ${error}`);
-        reject(error);
-      }
-    });
+          onResult
+        ),
+      // Regards no value, as before.
+      { onFailed: () => undefined }
+    );
   }
 
   static getItemIdAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.getItemIdAsync((asyncResult) => {
-          const id = asyncResult.value;
-          resolve(id);
-        });
-      } catch (error) {
-        console.log(`Error while getting itemId: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "getting itemId",
+      (onResult) => Office.context.mailbox.item.getItemIdAsync(onResult),
+      // The id is unavailable for a new appointment on classic Outlook, and
+      // onAppointmentOrganizer() detects it by the resolved value. Thus this
+      // must not be rejected on failure.
+      { onFailed: () => undefined }
+    );
   }
 
   static getRequiredAttendeeAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.requiredAttendees.getAsync((asyncResult) => {
-          const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-            ...officeAddonRecipient,
-            ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-          }));
-          resolve(recipients);
-        });
-      } catch (error) {
-        console.log(`Error while getting required attendees: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "getting required attendees",
+      (onResult) => Office.context.mailbox.item.requiredAttendees.getAsync(onResult),
+      { onSucceeded: OfficeDataAccessHelper.toRecipients }
+    );
   }
 
   static getOptionalAttendeeAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.optionalAttendees.getAsync((asyncResult) => {
-          const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-            ...officeAddonRecipient,
-            ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-          }));
-          resolve(recipients);
-        });
-      } catch (error) {
-        console.log(`Error while getting optional attendees: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "getting optional attendees",
+      (onResult) => Office.context.mailbox.item.optionalAttendees.getAsync(onResult),
+      { onSucceeded: OfficeDataAccessHelper.toRecipients }
+    );
   }
 
   static getToAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.to.getAsync((asyncResult) => {
-          const recipients = asyncResult.value.map((officeAddonRecipient) => ({
-            ...officeAddonRecipient,
-            ...RecipientParser.parse(officeAddonRecipient.emailAddress),
-          }));
-          resolve(recipients);
-        });
-      } catch (error) {
-        console.log(`Error while getting To: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "getting To",
+      (onResult) => Office.context.mailbox.item.to.getAsync(onResult),
+      { onSucceeded: OfficeDataAccessHelper.toRecipients }
+    );
   }
 
   static setToAsync(recipients) {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.to.setAsync(recipients, (asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-            resolve(recipients);
-          } else {
-            console.log(`Error while setting To: ${asyncResult.error.message}`);
-            reject(asyncResult.error);
-          }
-        });
-      } catch (error) {
-        console.log(`Error while setting To: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "setting To",
+      (onResult) => Office.context.mailbox.item.to.setAsync(recipients, onResult),
+      { onSucceeded: () => recipients }
+    );
   }
 
   static clearToAsync() {
@@ -211,125 +171,64 @@ export class OfficeDataAccessHelper {
   }
 
   static getSessionDataAsync(key) {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.sessionData.getAsync(key, (asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-            resolve(asyncResult.value);
-          } else {
-            console.debug(`Error while getting SessionData [${key}]: ${asyncResult.error.message}`);
-            // Regards no value
-            resolve("");
-          }
-        });
-      } catch (error) {
-        console.log(`Error while getting SessionData [${key}]: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      `getting SessionData [${key}]`,
+      (onResult) => Office.context.mailbox.item.sessionData.getAsync(key, onResult),
+      // Regards no value, as before. A missing key is not an error.
+      { onFailed: () => "", log: console.debug }
+    );
   }
 
   static getAttachmentsAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.getAttachmentsAsync((asyncResult) => {
-          const attachments = asyncResult.value;
-          const maybeFiles = attachments.filter((attachment) =>
+    return OfficeDataAccessHelper.runAsync(
+      "getting attachments",
+      (onResult) => Office.context.mailbox.item.getAttachmentsAsync(onResult),
+      {
+        onSucceeded: (attachments) =>
+          attachments.filter((attachment) =>
             OfficeDataAccessHelper.CONFIRM_ATTACHMENT_TYPES.has(attachment.attachmentType)
-          );
-          resolve(maybeFiles);
-        });
-      } catch (error) {
-        console.log(`Error while getting attachments: ${error}`);
-        reject(error);
+          ),
       }
-    });
+    );
   }
 
   static getDelayDeliveryTime() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.delayDeliveryTime.getAsync((asyncResult) => {
-          const value = asyncResult.value;
-          resolve(value);
-        });
-      } catch (error) {
-        console.log(`Error while getting DelayDeliveryTime: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "getting DelayDeliveryTime",
+      (onResult) => Office.context.mailbox.item.delayDeliveryTime.getAsync(onResult),
+      // Regards no value, as before.
+      { onFailed: () => undefined }
+    );
   }
 
   static getBodyTypeAsync() {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.body.getTypeAsync((asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
-            resolve(asyncResult.value);
-          } else {
-            console.log(`Error while getting body type: ${asyncResult.error.message}`);
-            reject(false);
-          }
-        });
-      } catch (error) {
-        console.log(`Error while getting body type: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync("getting body type", (onResult) =>
+      Office.context.mailbox.item.body.getTypeAsync(onResult)
+    );
   }
 
   static setDelayDeliveryTimeAsync(deliveryTime) {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.delayDeliveryTime.setAsync(deliveryTime, (asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-            console.log(asyncResult.error.message);
-            resolve(false);
-          } else {
-            resolve(true);
-          }
-        });
-      } catch (error) {
-        console.log(`Error while setting DelayDeliveryTime: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      "setting DelayDeliveryTime",
+      (onResult) => Office.context.mailbox.item.delayDeliveryTime.setAsync(deliveryTime, onResult),
+      { onSucceeded: () => true, onFailed: () => false }
+    );
   }
 
   static setSessionDataAsync(key, value) {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.sessionData.setAsync(key, value, (asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-            console.log(asyncResult.error.message);
-            resolve(false);
-          } else {
-            resolve(true);
-          }
-        });
-      } catch (error) {
-        console.log(`Error while setting SessionData: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      `setting SessionData [${key}]`,
+      (onResult) => Office.context.mailbox.item.sessionData.setAsync(key, value, onResult),
+      { onSucceeded: () => true, onFailed: () => false }
+    );
   }
 
   static removeSessionDataAsync(key) {
-    return new Promise((resolve, reject) => {
-      try {
-        Office.context.mailbox.item.sessionData.removeAsync(key, (asyncResult) => {
-          if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-            console.log(asyncResult.error.message);
-            resolve(false);
-          } else {
-            resolve(true);
-          }
-        });
-      } catch (error) {
-        console.log(`Error while removing SessionData: ${error}`);
-        reject(error);
-      }
-    });
+    return OfficeDataAccessHelper.runAsync(
+      `removing SessionData [${key}]`,
+      (onResult) => Office.context.mailbox.item.sessionData.removeAsync(key, onResult),
+      { onSucceeded: () => true, onFailed: () => false }
+    );
   }
 
   static async setOriginalRecipientsSessionDataAsync(itemType, value) {
