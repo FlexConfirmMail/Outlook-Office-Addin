@@ -227,29 +227,23 @@ export class RecipientClassifier {
       unsafeDomains: unsafeDomains || [],
       commonConfig: commonConfig || {},
     });
-    // The type of an attendee must be resolved lazily, because "locale" is not
-    // always given: a message has no attendee and does not require it.
-    const slots = [
-      { recipients: to, getType: () => "To" },
-      { recipients: cc, getType: () => "Cc" },
-      { recipients: bcc, getType: () => "Bcc" },
+    const classifiedSlots = [
+      { type: "To", classified: classifier.classify(to) },
+      { type: "Cc", classified: classifier.classify(cc) },
+      { type: "Bcc", classified: classifier.classify(bcc) },
       {
-        recipients: requiredAttendees,
-        getType: () => locale.get("confirmation_requiredAttendee"),
+        type: locale.get("confirmation_requiredAttendee"),
+        classified: classifier.classify(requiredAttendees),
       },
       {
-        recipients: optionalAttendees,
-        getType: () => locale.get("confirmation_optionalAttendee"),
+        type: locale.get("confirmation_optionalAttendee"),
+        classified: classifier.classify(optionalAttendees),
       },
     ];
-    const classifiedSlots = slots.map(({ recipients, getType }) => ({
-      classified: classifier.classify(recipients),
-      getType,
-    }));
     const classifiedAll = {};
     for (const category of CLASSIFIED_CATEGORIES) {
-      classifiedAll[category] = classifiedSlots.flatMap(({ classified, getType }) =>
-        classified[category].map((recipient) => ({ ...recipient, type: getType() }))
+      classifiedAll[category] = classifiedSlots.flatMap(({ type, classified }) =>
+        classified[category].map((recipient) => ({ ...recipient, type }))
       );
     }
     return classifiedAll;
