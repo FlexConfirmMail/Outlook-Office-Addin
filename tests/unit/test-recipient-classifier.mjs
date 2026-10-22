@@ -877,6 +877,11 @@ export function test_unsafeMessage({ recipients, unsafeDomains, expected }) {
   );
 }
 
+// classifyAll() always requires a locale, to resolve the types of attendees.
+const localeMock = {
+  get: (key) => key,
+};
+
 test_classifyAll.parameters = {
   'multiple slots': {
     params: {
@@ -937,7 +942,47 @@ test_classifyAll.parameters = {
       rewarning: [],
     }
   },
+  'attendees': {
+    params: {
+      requiredAttendees: [
+        'aaa@example.com',
+      ],
+      optionalAttendees: [
+        'bbb@example.net',
+      ],
+      trustedDomains: ['example.com'],
+      unsafeDomains: {
+        "WARNING": ['example.net'],
+      },
+    },
+    expected: {
+      trusted: [
+        { recipient: 'aaa@example.com',
+          address: 'aaa@example.com',
+          domain: 'example.com',
+          type: 'confirmation_requiredAttendee' },
+      ],
+      untrusted: [
+        { recipient: 'bbb@example.net',
+          address: 'bbb@example.net',
+          domain: 'example.net',
+          type: 'confirmation_optionalAttendee' },
+      ],
+      unsafeWithDomain: [
+        { recipient: 'bbb@example.net',
+          address: 'bbb@example.net',
+          domain: 'example.net',
+          type: 'confirmation_optionalAttendee' },
+      ],
+      unsafe: [],
+      blockWithDomain: [],
+      block: [],
+      distributionLists: [],
+      rewarningWithDomain: [],
+      rewarning: [],
+    }
+  },
 }
 export function test_classifyAll({ params, expected }) {
-  is(expected, RecipientClassifier.classifyAll(params));
+  is(expected, RecipientClassifier.classifyAll({ locale: localeMock, ...params }));
 }

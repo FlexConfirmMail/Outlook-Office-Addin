@@ -125,9 +125,9 @@ test_classifyTarget.parameters = {
   },
 };
 export async function test_classifyTarget({ target, config, itemType, expected }) {
-  const data = new ConfirmData({target, config, itemType});
   const locale = await prepareLocale("ja");
-  data.classifyTarget(locale);
+  const data = new ConfirmData({target, config, itemType, locale});
+  data.classifyTarget();
   data.setUnsafeBodiesBlockStatus(locale.language);
   is(expected, data.classified);
 }
@@ -241,9 +241,9 @@ test_blockSending.parameters = {
   },
 };
 export async function test_blockSending({ target, config, expected }) {
-  const data = new ConfirmData({target, config, itemType: Office.MailboxEnums.ItemType.Message});
   const locale = await prepareLocale("ja");
-  data.classifyTarget(locale);
+  const data = new ConfirmData({target, config, itemType: Office.MailboxEnums.ItemType.Message, locale});
+  data.classifyTarget();
   data.setUnsafeBodiesBlockStatus(locale.language);
   is(expected, data.blockSending);
 }
@@ -299,9 +299,9 @@ test_skipConfirm.parameters = {
   },
 };
 export async function test_skipConfirm({ target, config, expected }) {
-  const data = new ConfirmData({target, config, itemType: Office.MailboxEnums.ItemType.Message});
   const locale = await prepareLocale("ja");
-  data.classifyTarget(locale);
+  const data = new ConfirmData({target, config, itemType: Office.MailboxEnums.ItemType.Message, locale});
+  data.classifyTarget();
   data.setUnsafeBodiesBlockStatus(locale.language);
   is(expected, data.skipConfirm);
 }
@@ -417,9 +417,9 @@ test_skipCountDown.parameters = {
   },
 };
 export async function test_skipCountDown({ target, config, expected }) {
-  const data = new ConfirmData({target, config, itemType: Office.MailboxEnums.ItemType.Message});
   const locale = await prepareLocale("ja");
-  data.classifyTarget(locale);
+  const data = new ConfirmData({target, config, itemType: Office.MailboxEnums.ItemType.Message, locale});
+  data.classifyTarget();
   data.setUnsafeBodiesBlockStatus(locale.language);
   is(expected, data.skipCountDown);
 }
