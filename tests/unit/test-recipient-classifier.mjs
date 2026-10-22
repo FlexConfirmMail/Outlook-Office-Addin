@@ -79,6 +79,34 @@ test_classifyAddresses.parameters = {
       ],
     }
   },
+  'a recipient with a single letter domain must not be matched for blank list': {
+    recipients: [
+      'aaa@a'
+    ],
+    trustedDomains: [],
+    unsafeDomains: {},
+    expected: {
+      untrusted: [
+        'aaa@a'
+      ],
+    }
+  },
+  'a recipient with a single letter domain must not be matched by other patterns': {
+    recipients: [
+      'aaa@a'
+    ],
+    trustedDomains: ['clear-code.com'],
+    unsafeDomains: {
+      'WARNING': ['unsafe.example.com'],
+      'BLOCK': ['unsafe.example.com'],
+      'REWARNING': ['unsafe.example.com'],
+    },
+    expected: {
+      untrusted: [
+        'aaa@a'
+      ],
+    }
+  },
   'all recipients must be classified as trusted based on the list': {
     recipients: [
       'aaa@clear-code.com',

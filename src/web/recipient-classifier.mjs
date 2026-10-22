@@ -77,8 +77,8 @@ export class RecipientClassifier {
       uniquePatterns.delete(`-${negativeItem}`);
     }
 
-    const domainPatterns = new Set("(?!)");
-    const fullPatterns = new Set("(?!)");
+    const domainPatterns = new Set();
+    const fullPatterns = new Set();
     const domainMessages = [];
     const fullMessages = [];
     for (const pattern of uniquePatterns) {
@@ -97,14 +97,8 @@ export class RecipientClassifier {
       }
     }
     return {
-      domain: new RegExp(
-        `^(${Array.from(domainPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`,
-        "i"
-      ),
-      full: new RegExp(
-        `^(${Array.from(fullPatterns, (pattern) => wildcardToRegexp(pattern)).join("|")})$`,
-        "i"
-      ),
+      domain: this.patternsToMatcher(domainPatterns),
+      full: this.patternsToMatcher(fullPatterns),
       domainMessages,
       fullMessages,
     };
@@ -126,6 +120,20 @@ export class RecipientClassifier {
     if (message) {
       classifiedRecipient[propertyName] = message;
     }
+  }
+
+  patternsToMatcher(patterns) {
+    // An empty pattern set must never match to anything, and "(?!)" is used for it.
+    // Note that "^()$" cannot be used instead, because it matches an empty domain
+    // and address, which is a valid pattern meaning "no domain" (specified as "@").
+    // "(?!)" also must not be put into the pattern set, because wildcardToRegexp()
+    // converts its "?" to "." as a wildcard and it becomes "\(.!\)", which matches
+    // to 4 letters strings like "(a!)" instead of nothing.
+    const source =
+      patterns.size > 0
+        ? Array.from(patterns, (pattern) => wildcardToRegexp(pattern)).join("|")
+        : "(?!)";
+    return new RegExp(`^(${source})$`, "i");
   }
 
   classify(recipients) {
